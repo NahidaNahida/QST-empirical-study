@@ -1,0 +1,585 @@
+@article{WOS:000368560200016,
+ abstract = {Software reliability growth model (SRGM) with testing-effort function (TEF) is very helpful for software developers and has been widely accepted and applied. However, each SRGM with TEF ( SRGMTEF) contains some undetermined parameters. Optimization of these parameters is a necessary task. Generally, these parameters are estimated by the Least Square Estimation (LSE) or the Maximum Likelihood Estimation (MLE). We found that the MLE can be used only when the software failure data to satisfy some assumptions such as to satisfy a certain distribution. However, the software failure data may not satisfy such a distribution. In this paper, we investigate the improvement and application of a swarm intelligent optimization algorithm, namely quantum particle swarm optimization (QPSO) algorithm, to optimize these parameters of SRGMTEF. The performance of the proposed SRGMTEF model with optimized parameters is also compared with other existing models. The experiment results show that the proposed parameter optimization approach using QPSO is very effective and flexible, and the better software reliability growth performance can be obtained based on SRGMTEF on the different software failure datasets. (C) 2015 Elsevier B.V. All rights reserved.},
+ author = {Jin, Cong and Jin, Shu-Wei},
+ doi = {10.1016/j.asoc.2015.11.041},
+ journal = {APPLIED SOFT COMPUTING},
+ pages = {283-291},
+ title = {Parameter optimization of software reliability growth model with S-shaped testing-effort function using improved swarm intelligent optimization},
+ volume = {40},
+ year = {2016}
+}
+
+@inproceedings{WOS:000675593000009,
+ abstract = {Practical quantum computing is rapidly becoming a reality. To harness quantum computers' real potential in software applications, one needs to have an in-depth understanding of all such characteristics of quantum computing platforms (QCPs), relevant from the Software Engineering (SE) perspective. Restrictions on copying, deletion, the transmission of qubit states, a hard dependency on quantum algorithms are few, out of many, examples of QCP characteristics that have significant implications for building quantum software.Thus, developing quantum software requires a paradigm shift in thinking by software engineers. This paper presents the key findings from the SE perspective, resulting from an in-depth examination of state-of-the-art QCPs available today. The main contributions that we present include i) Proposing a general architecture of the QCPs, ii) Proposing a programming model for developing quantum software, iii) Determining architecturally significant characteristics of QCPs, and iv) Determining the impact of these characteristics on various Quality Attributes (QAs) and Software Development Life Cycle (SDLC) activities.We show that the nature of QCPs makes them useful mainly in specialized application areas such as scientific computing. Except for performance and scalability, most of the other QAs (e.g., maintainability, testability, and reliability) are adversely affected by different characteristics of a QCP.},
+ author = {Sodhi, Balwinder and Kapur, Ritu},
+ booktitle = {2021 IEEE 18TH INTERNATIONAL CONFERENCE ON SOFTWARE ARCHITECTURE (ICSA)},
+ doi = {10.1109/ICSA51549.2021.00016},
+ pages = {80-91},
+ title = {Quantum Computing Platforms: Assessing the Impact on Quality Attributes and SDLC Activities},
+ year = {2021}
+}
+
+@inproceedings{WOS:000680831800002,
+ abstract = {Quantum programs implement quantum algorithms solving complex computational problems. Testing such programs is challenging due to the inherent characteristics of Quantum Computing (QC), such as the probabilistic nature and computations in superposition. However, automated and systematic testing is needed to ensure the correct behavior of quantum programs. To this end, we present an approach called Quito (QUantum InpuT Output coverage) consisting of three coverage criteria defined on the inputs and outputs of a quantum program, together with their test generation strategies. Moreover, we define two types of test oracles, together with a procedure to determine the passing and failing of test suites with statistical analyses. To evaluate the cost-effectiveness of the three coverage criteria, we conducted experiments with five quantum programs. We used mutation analysis to determine the coverage criteria' effectiveness and cost in terms of the number of test cases. Based on the results of mutation analysis, we also identified equivalent mutants for quantum programs.},
+ author = {Ali, Shaukat and Arcaini, Paolo and Wang, Xinyi and Yue, Tao},
+ booktitle = {2021 14TH IEEE CONFERENCE ON SOFTWARE TESTING, VERIFICATION AND VALIDATION (ICST 2021)},
+ doi = {10.1109/ICST49551.2021.00014},
+ pages = {13-23},
+ title = {Assessing the Effectiveness of Input and Output Coverage Criteria for Testing Quantum Programs},
+ year = {2021}
+}
+
+@article{WOS:000757752700001,
+ abstract = {Combinatorial testing (CT) can efficiently detect failures caused by interactions of parameters of software under test. The CT study has undergone a transition from traditional CT to constrained CT, which is crucial for real-world systems testing. Under this scenario, constrained covering array generation (CCAG), a vital combinatorial optimisation issue targeted with constructing a test suite of minimal size while properly addressing constraints, remains challenging in CT. To the authors' best knowledge, this paper presents a synergic method first based on quantum particle swarm optimisation (QPSO) for the CCAG problems. Three auxiliary strategies, including contraction-expansion coefficient adaptive change strategy, differential evolution strategy, and discretisation strategy, are proposed to improve the performance of QPSO. Meanwhile, the improved QPSO method combines with the three different constraint handling strategies and an enhanced one-test-at-a-time strategy as a synergic QPSO method named QPIO to solve the CCAG problem. In the experiment, we investigate the impacts of parameter settings on the performance of the QPIO. Extensive experimental results show that the QPIO algorithm is a competitive method compared to the representative methods for CCAG. Besides, the QPIO method enriches the application of the QPSO algorithm in the context of CT.},
+ author = {Guo, Xu and Song, Xiaoyu and Zhou, Jian-tao},
+ doi = {10.1049/sfw2.12054},
+ journal = {IET SOFTWARE},
+ number = {3},
+ pages = {279-300},
+ title = {A synergic quantum particle swarm optimisation for constrained combinatorial test generation},
+ volume = {16},
+ year = {2022}
+}
+
+@inproceedings{WOS:000779309000136,
+ abstract = {Automation in quantum software testing is essential to support systematic and cost-effective testing. Towards this direction, we present a quantum software testing tool called Quito that can automatically generate test suites covering three coverage criteria defined on inputs and outputs of a quantum program coded in Qiskit, i.e., input coverage, output coverage, and input-output coverage. Quito also implements two types of test oracles based on program specifications, i.e., checking whether a quantum program produced a wrong output or checking a probabilistic test oracle with statistical test. We describe the architecture and methodology of the tool. We also validated the tool with one quantum program and one faulty version of it. Results indicate that Quito can generate test suites and perform test assessments that detect faults, and produce test results with a good time performance.},
+ author = {Wang, Xinyi and Arcaini, Paolo and Yue, Tao and Ali, Shaukat},
+ booktitle = {2021 36TH IEEE/ACM INTERNATIONAL CONFERENCE ON AUTOMATED SOFTWARE ENGINEERING ASE 2021},
+ doi = {10.1109/ASE51524.2021.9678798},
+ pages = {1237-1241},
+ title = {Quito: a Coverage-Guided Test Generator for Quantum Programs},
+ year = {2021}
+}
+
+@inproceedings{WOS:000779309000142,
+ abstract = {Given that quantum software testing is a new area of research, there is a lack of benchmark programs and bugs repositories to assess the effectiveness of testing techniques. To this end, quantum mutation analysis focuses on systematically generating faulty versions of Quantum Programs (QPs), called mutants, using mutation operators. Such mutants can be used as benchmarks to assess the quality of test cases in a test suite. Thus, we present Muskit - a quantum mutation analysis tool for QPs coded in IBM's Qiskit language. Muskit defines mutation operators on gates of QPs and selection criteria to reduce the number of mutants to generate. Moreover, it allows for the execution of test cases on mutants and generation of results for test analyses. Muskit is provided as command line interface, GUI, and web application. We validated Muskit by using it to generate and execute mutants for four QPs.},
+ author = {Mendiluze, Enaut and Ali, Shaukat and Arcaini, Paolo and Yue, Tao},
+ booktitle = {2021 36TH IEEE/ACM INTERNATIONAL CONFERENCE ON AUTOMATED SOFTWARE ENGINEERING ASE 2021},
+ doi = {10.1109/ASE51524.2021.9678563},
+ pages = {1266-1270},
+ title = {Muskit: A Mutation Analysis Tool for Quantum Software Testing},
+ year = {2021}
+}
+
+@inproceedings{WOS:000779309000163,
+ abstract = {Realistic benchmarks of reproducible bugs and fixes are vital to good experimental evaluation of debugging and testing approaches. However, there is no suitable benchmark suite that can systematically evaluate the debugging and testing methods of quantum programs until now. This paper proposes Bugs4Q, a benchmark of thirty-six real, manually validated Qiskit bugs from four popular Qiskit elements (Terra, Aer, Ignis, and Aqua), supplemented with the test cases for reproducing buggy behaviors. Bugs4Q also provides interfaces for accessing the buggy and fixed versions of the Qiskit programs and executing the corresponding test cases, facilitating the reproducible empirical studies and comparisons of Qiskit program debugging and testing tools. Bugs4Q is publicly available at https://github.com/z-928/Bugs4Q},
+ author = {Zhao, Pengzhan and Zhao, Jianjun and Miao, Zhongtao and Lan, Shuhan},
+ booktitle = {2021 36TH IEEE/ACM INTERNATIONAL CONFERENCE ON AUTOMATED SOFTWARE ENGINEERING ASE 2021},
+ doi = {10.1109/ASE51524.2021.9678908},
+ pages = {1373-1376},
+ title = {Bugs4Q: A Benchmark of Real Bugs for Quantum Programs},
+ year = {2021}
+}
+
+@article{WOS:000791668100001,
+ abstract = {Regression testing is essential for continuous integration and continuous development. It is needed to ensure that the modifications have not produced any errors or faults, thereby maintaining the quality and reliability of the software. The testers usually avoid exhaustive retesting because it requires lots of effort and time. The test case prioritization and minimization solve the issue by scheduling the critical test cases and removing redundant ones. Optimization techniques help by improving the efficiency of these techniques while utilizing limited resources. This paper proposed an enhanced discrete novel bat algorithm for the test case prioritization. The algorithm is modified in two ways. First, we have proposed a fix-up mechanism for the discrete combinatorial problem, which conducts the perturbation in the population using the asexual reproduction algorithm. Second, the novel bat algorithm is improved, where the bats hunt in different habitats with quantum behavior using Gaussian distribution and search in the limited habitat with Doppler effect. In addition, we have embedded the test case minimization procedure in the algorithm for redundancy reduction. The experimental results are empirically analyzed using different testing criteria, i.e., fault and statement coverage on three subject programs from the software infrastructure repository. Consequently, test selection percentage, coverage loss, fault detection loss, and cost reduction percentages are deduced for the test case minimization at program and version levels. Empirical results and statistical comparisons with the random search, bat algorithm, novel bat algorithm, birds swarm algorithm, whale optimization algorithm, and genetic algorithm show the outperformance of the proposed algorithm.},
+ author = {Bajaj, Anu and Sangwan, Om Prakash and Abraham, Ajith},
+ doi = {10.1007/s00500-022-07121-9},
+ journal = {SOFT COMPUTING},
+ number = {22},
+ pages = {12393-12419},
+ title = {Improved novel bat algorithm for test case prioritization and minimization},
+ volume = {26},
+ year = {2022}
+}
+
+@article{WOS:000803776600001,
+ abstract = {Developers of the many promising quantum computing applications that currently exist are urging companies in many different sectors seriously consider integrating this new technology into their business. For these applications to function, not only are quantum computers required, but quantum software also. Accordingly, quantum software engineering has become an important research field, in that it attempts to apply or adapt existing methods and techniques (or propose new ones) for the analysis, design, coding, and testing of quantum software, as well as playing a key role in ensuring quality in large-scale productions. The design of quantum software nevertheless poses two main challenges: the modelling of software quantum elements must be done in high-level modelling languages; and the need to further develop so-called hybrid information systems, which combine quantum and classical software. To address these challenges, we first propose a quantum UML profile for analysing and designing hybrid information systems; we then demonstrate its applicability through various structural and behavioural diagrams such as use case, class, sequence, activity, and deployment. In comparison to certain other quantum domain-specific languages, this UML profile ensures compliance with a well-known international standard that is supported by many tools and is followed by an extensive community.},
+ author = {Perez-Castillo, Ricardo and Piattini, Mario},
+ doi = {10.1007/s00607-022-01091-4},
+ journal = {COMPUTING},
+ number = {11},
+ pages = {2375-2403},
+ title = {Design of classical-quantum systems with UML},
+ volume = {104},
+ year = {2022}
+}
+
+@article{WOS:000809235700012,
+ abstract = {Software testing is an effective means of verifying software stability and trustworthiness. It is essential in the software development process and needs a huge quantity of resources such as labor, money, and time. Automated software testing can be used to save manual work, shorten testing times, and improve testing performance. Recently, Software Bug Prediction (SBP) models have been developed to improve the software quality assurance (SQA) process through the prediction of bug parts. Advanced deep learning (DL) models can be used to classify faults in software parts. Because hyperparameters have a significant impact on the performance of any DL model, a proper hyperparameter optimization approach utilizing metaheuristic methods is required. This paper provides a unique Metaheuristic Optimization with Deep Learning based SBP (MODL-SBP) methodology to ensure software dependability and trustworthiness. The suggested technique entails creating a hybrid Convolution Neural Network (CNN) bi-directional long short-term memory (BiLSTM) to forecast software problems. Furthermore, the Chaotic Quantum Grasshopper Optimization Algorithm (CQGOA) is used for hyperparameter optimization of the CNN-BiLSTM models, which enhances predictive accuracy. To demonstrate the superior performance of the MODL-SBP technique, a wide range of simulations are performed on benchmark datasets, with the results highlighting the superior performance of the proposed model over other recent techniques.},
+ author = {Sangeetha, M. and Malathi, S.},
+ doi = {10.32604/iasc.2022.025192},
+ journal = {INTELLIGENT AUTOMATION AND SOFT COMPUTING},
+ number = {3},
+ pages = {1587-1601},
+ title = {Modeling Metaheuristic Optimization with Deep Learning Software Bug Prediction Model},
+ volume = {34},
+ year = {2022}
+}
+
+@inproceedings{WOS:000814747000019,
+ abstract = {The capability of Quantum Computing (QC) in solving complex problems has been increasingly recognized. However, similar to classical computing, to fully exploit QC's potential, it is important to ensure the correctness of quantum programs. Doing so via software testing is, however, very challenging because of QC's inherent properties: superposition and entanglement. Towards the direction of ensuring the correctness of quantum programs, we propose an approach called QuCAT (QUantum CombinAtorial Testing) for systematic and automated testing of quantum programs by benefiting from combinatorial testing, which has been proven to be cost-effective in testing classical programs. QuCAT supports two combinatorial test suite generation scenarios, i.e., generating combinatorial test suites of a given strength, and incrementally generating and executing combinatorial test suites of increasing strength until a fault is found. The approach employs two types of test oracles to assess test results. We performed an empirical study with 18 faulty versions of quantum programs to evaluate QuCAT with strengths of two, three, and four in the two test generation scenarios. We compare the cost-effectiveness of combinatorial testing of various strengths and random testing (taken as baseline approach). Results show that combinatorial testing always performs better than random testing with the same cost and finds faults more quickly (in terms of required number of test cases). In addition, in most cases, combinatorial testing with a higher strength outperforms the lower strength in terms of effectiveness.},
+ author = {Wang, Xinyi and Arcaini, Paolo and Yue, Tao and Ali, Shaukat},
+ booktitle = {2021 IEEE 21ST INTERNATIONAL CONFERENCE ON SOFTWARE QUALITY, RELIABILITY AND SECURITY (QRS 2021)},
+ doi = {10.1109/QRS54544.2021.00029},
+ pages = {179-188},
+ title = {Application of Combinatorial Testing to Quantum Programs},
+ year = {2021}
+}
+
+@inproceedings{WOS:000814860600004,
+ abstract = {Bug patterns are erroneous code idioms or bad coding practices that have been proved to fail time and time again, which are usually caused by the misunderstanding of a programming language's features, the use of erroneous design patterns, or simple mistakes sharing common behaviors. This paper identifies and categorizes some bug patterns in the quantum programming language Qiskit and briefly discusses how to eliminate or prevent those bug patterns. We take this research as the first step to provide an underlying basis for debugging and testing quantum programs.},
+ author = {Zhao, Pengzhan and Zhao, Jianjun and Ma, Lei},
+ booktitle = {2021 IEEE/ACM 2ND INTERNATIONAL WORKSHOP ON QUANTUM SOFTWARE ENGINEERING (Q-SE 2021)},
+ doi = {10.1109/Q-SE52541.2021.00011},
+ pages = {16-21},
+ title = {Identifying Bug Patterns in Quantum Programs},
+ year = {2021}
+}
+
+@inproceedings{WOS:000850203800087,
+ abstract = {There is an inherent lack of knowledge and technology to test a quantum program properly. In this paper, building on the definition of syntactically equivalent quantum operations, we investigated a novel set of mutation operators to generate mutants based on qubit measurements and quantum gates. To ease the adoption of quantum mutation testing, we further discuss QMutPy, an extension of the well-known and fully automated open-source mutation tool MutPy. To evaluate QMutPy's performance we conducted a case study on 11 real quantum programs written in the IBM's QISKit library. QMutPy has proven to be an effective quantum mutation tool, providing insight on the current state of quantum tests.},
+ author = {Fortunato, Daniel and Campos, Jose and Abreu, Rui},
+ booktitle = {2022 ACM/IEEE 44TH INTERNATIONAL CONFERENCE ON SOFTWARE ENGINEERING: COMPANION PROCEEDINGS (ICSE-COMPANION 2022)},
+ doi = {10.1145/3510454.3528649},
+ pages = {358-359},
+ title = {Mutation Testing of Quantum Programs Written in QISKit},
+ year = {2022}
+}
+
+@inproceedings{WOS:000850565000002,
+ abstract = {Cause-effect graphs have shown promising results in identifying relations among causes and effects of classical software systems, followed by designing effective test cases from them. Towards this end, we investigate the use of cause-effect graphs for quantum programs. Classical cause-effect graphs apply classical logic (e.g., AND, OR) to express these relations, which might not be practical for describing similar relations in quantum programs due to quantum superposition and entanglement. Thus, we propose an extension of cause-effect graphs, where quantum logic inspired functions (e.g., Hadamard) and their generalizations are defined and applied. Moreover, we present a metamodel describing various forms of cause-effect graphs. Finally, we demonstrate a possible method for generating test cases from a quantum cause-effect graph applied to a Bell state quantum program. Lastly, the design and utility of the resulting testing method is discussed, along with future prospects for general quantum cause-effect graphs.},
+ author = {Oldfield, Noah and Yue, Tao and Ali, Shaukat},
+ booktitle = {3RD INTERNATIONAL WORKSHOP ON QUANTUM SOFTWARE ENGINEERING (Q-SE 2022)},
+ doi = {10.1145/3528230.3529186},
+ pages = {8-15},
+ title = {Investigating Quantum Cause-Effect Graphs},
+ year = {2022}
+}
+
+@inproceedings{WOS:000855050800135,
+ abstract = {As quantum programming evolves, more and more quantum programming languages are being developed. As a result, debugging and testing quantum programs have become increasingly important. While bug fixing in classical programs has come a long way, there is a lack of research in quantum programs. To this end, this paper presents a comprehensive study on bug fixing in quantum programs. We collect and investigate 96 real-world bugs and their fixes from four popular quantum programming languages (Qiskit, Cirq, Q#, and ProjectQ). Our study shows that a high proportion of bugs in quantum programs are quantum-specific bugs (over 80%), which requires further research in the bug fixing domain. We also summarize and extend the bug patterns in quantum programs and subdivide the most critical part, math-related bugs, to make it more applicable to the study of quantum programs. Our findings summarize the characteristics of bugs in quantum programs and provide a basis for studying testing and debugging quantum programs.},
+ author = {Luo, Junjie and Zhao, Pengzhan and Miao, Zhongtao and Lan, Shuhan and Zhao, Jianjun},
+ booktitle = {2022 IEEE INTERNATIONAL CONFERENCE ON SOFTWARE ANALYSIS, EVOLUTION AND REENGINEERING (SANER 2022)},
+ doi = {10.1109/SANER53432.2022.00147},
+ pages = {1239-1246},
+ title = {A Comprehensive Study of Bug Fixes in Quantum Programs},
+ year = {2022}
+}
+
+@inproceedings{WOS:000861805200020,
+ abstract = {Generative Sequence-To-Sequence models have been proposed for the task of generating well-formed programs, an important task for fuzz testing tools such as compilers. In this paper, we propose a Sequence-to-Sequence model to generate well-formed Q# Quantum programs. The ratio of syntactically valid programs among 1,000 Q# files generated by our model is 79.6%. In addition, we also contribute with a dataset of 1,723 Q# files taken from publicly available repositories on GitHub, which can be used by the growing community of Quantum Software Engineering.},
+ author = {Trinca, Miguel and Ferreira, Joao F. and Abreu, Rui},
+ booktitle = {2022 IEEE 15TH INTERNATIONAL CONFERENCE ON SOFTWARE TESTING, VERIFICATION AND VALIDATION WORKSHOPS (ICSTW 2022)},
+ doi = {10.1109/ICSTW55395.2022.00033},
+ pages = {118-121},
+ title = {A Preliminary Study on Generating Well-Formed Q# Quantum Programs for Fuzz Testing},
+ year = {2022}
+}
+
+@inproceedings{WOS:000866469000003,
+ abstract = {Testing quantum programs requires systematic, automated, and intelligent methods due to their inherent complexity, such as their superposition and entanglement. To this end, we present a search-based approach, called Quantum Search-Based Testing (QuSBT), for automatically generating test suites of a given size depending on available testing budget, with the aim of maximizing the number of failing test cases in the test suite. QuSBT consists of definitions of the problem encoding, failure types, test assessment with statistical tests, fitness function, and test case generation with a Genetic Algorithm (GA). To empirically evaluate QuSBT, we compared it with Random Search (RS) by testing six quantum programs. We assessed the effectiveness of QuSBT and RS with 30 carefully designed faulty versions of the six quantum programs. Results show that QuSBT provides a viable solution for testing quantum programs, and achieved a significant improvement over RS in 87% of the faulty programs, and no significant difference in the rest of 13% of the faulty programs.},
+ author = {Wang, Xinyi and Arcaini, Paolo and Yue, Tao and Ali, Shaukat},
+ booktitle = {SEARCH-BASED SOFTWARE ENGINEERING (SSBSE 2021)},
+ doi = {10.1007/978-3-030-88106-1_2},
+ pages = {9-25},
+ title = {Generating Failing Test Suites for Quantum Programs With Search},
+ volume = {12914},
+ year = {2021}
+}
+
+@inproceedings{WOS:000893082500059,
+ abstract = {Modern quantum computers rely heavily on real-time control systems for operation. Software for these systems is becoming increasingly more complex due to the demand for more features and more real-time devices to control. Unfortunately, testing real-time control software is often a complex process, and existing simulation software is not usable or practical for software testing. For this purpose, we implemented an interactive simulator that simulates signals at the application programming interface level. We show that our simulation infrastructure simulates kernels 6.9 times faster on average compared to execution on hardware, while the position of the timeline cursor is simulated with an average accuracy of 97.9% when choosing the appropriate configuration.},
+ author = {Riesebos, Leon and Brown, Kenneth R.},
+ booktitle = {2022 IEEE INTERNATIONAL CONFERENCE ON QUANTUM COMPUTING AND ENGINEERING (QCE 2022)},
+ doi = {10.1109/QCE53715.2022.00076},
+ pages = {535-544},
+ title = {Functional simulation of real-time quantum control software},
+ year = {2022}
+}
+
+@inproceedings{WOS:000893082500110,
+ abstract = {Duke ARTIQ Extensions (DAX) provides a framework for writing modular control software for ion-trap quantum systems. DAX allows users to interface with the system at the gate level using an intermediate representation called DAX.program. However, DAX does not have the tools needed to simulate these programs to see quantum state evolutions, as DAX only allows for simulations at the device level. We propose a modular simulation framework, DAX.program-sim (DPS), that can simulate quantum programs at the level of quantum operations. This addition to DAX for classical simulation of quantum systems is vital for testing, benchmarking, and verification of quantum hardware. The DPS pipeline is designed to have input identical to the one that runs on the hardware. Our architecture allows flexible backends for simulation, enabling both gate-level simulations and pulse-level simulations with and without noise. We demonstrate this unified workflow, executing the same DAX.program file in simulation as well as on hardware. As a specific example, we run benchmarking circuits using simulators targeting ion trap quantum computers and compare them to hardware results of the same circuits.},
+ author = {Dalvi, Aniket S. and Mazurek, Filip and Riesebos, Leon and Whitlow, Jacob and Majumder, Swarnadeep and Brown, Kenneth R.},
+ booktitle = {2022 IEEE INTERNATIONAL CONFERENCE ON QUANTUM COMPUTING AND ENGINEERING (QCE 2022)},
+ doi = {10.1109/QCE53715.2022.00127},
+ pages = {810-812},
+ title = {Modular Architecture for Classical Simulation of Quantum Circuits},
+ year = {2022}
+}
+
+@article{WOS:000940778600001,
+ abstract = {Quantum computing is a rapidly growing area that solves certain problems with exponential speed up. Quantum software is more error-prone than conventional software due to the principle of quantum mechanics and the cryogenic environment of a quantum computer. Cyclomatic complexity play a significant role in the generation of test cases. In this paper, we will introduce the Cyclomatic complexity concept to represent the logical complexity of a quantum program. Cyclomatic complexity represents the number of independent paths and paths generated due to the superposition of each control qubit. Furthermore, coverage criteria based on structural testing have been proposed for testing a quantum program.},
+ author = {Kumar, Ajay},
+ doi = {10.1007/s10773-022-05271-y},
+ journal = {INTERNATIONAL JOURNAL OF THEORETICAL PHYSICS},
+ number = {3},
+ title = {Formalization of Structural Test Cases Coverage Criteria for Quantum Software Testing},
+ volume = {62},
+ year = {2023}
+}
+
+@article{WOS:000980399700001,
+ abstract = {Quantum computing is no longer a promise of the future but a rapidly evolving reality. Advances in quan-tum hardware are making it possible to make tangible a computational reality that until now was only theoretical. The proof of this is that development languages and platforms are appearing that bring phys-ical principles closer to developers, making it feasible to begin to propose, in different areas of society, solutions to problems that until now were unsolvable. However, security vulnerabilities are also emerg-ing that could hinder the progress of quantum computing, as well as its transition and development in industry. For this reason, this article proposes a review of some of the first artefacts that are emerging in the field of quantum computing. From this analysis, we begin to identify possible security issues that could become potential vulnerabilities in the quantum software of tomorrow. Likewise, and following the experience in classical software development, the testing technique is analysed as a possible candidate for improving security in quantum software development. Following the principles of Quantum Software Engineering, we are aware of the lack of tools, techniques and knowledge necessary to guaran-tee the development of quantum software in the immediate future. Therefore, this article aims to offer some first clues on what would be a roadmap to guarantee secure quantum software development. (c) 2023 The Author(s). Published by Elsevier B.V. This is an open access article under the CC BY-NC-ND license (http://creativecommons.org/licenses/by-nc-nd/4.0/).},
+ author = {Arias, Danel and de Guzman, Ignacio Garcia Rodriguez and Rodriguez, Moises and Terres, Erik B. and Sanz, Borja and de la Puerta, Jose Gaviria and Pastor, Iker and Zubillaga, Agustin and Bringas, Pablo Garcia},
+ doi = {10.1016/j.neucom.2023.03.060},
+ journal = {NEUROCOMPUTING},
+ title = {Let?s do it right the first time: Survey on security concerns in the way to quantum software engineering},
+ volume = {538},
+ year = {2023}
+}
+
+@inproceedings{WOS:001008282200037,
+ abstract = {Quantum computing is expected to introduce the next era of computing speed and power, and its software - quantum program is gaining increasing research interest in the software engineering community. A significant characteristic of quantum computing is the existence of noise. Unlike classical computers where the output of a program is usually deterministic, the execution of a quantum program may be affected by quantum noise. Such a difference may cause difficulties or misunderstandings for developers shifting from classical programming to quantum programming. To understand the impact of quantum noise on quantum programs and its implications for software developers, we conduct a series of studies with real-world quantum programs and quantum computing environments. Specifically, we first measure and analyze the noise in a real quantum computer by testing it with a basic quantum program. We find that a non-neglectable amount of quantum noise generally exists in real quantum computers. Then we investigate the robustness of quantum programs against different quantum noises by testing 18 real -world quantum programs and 50,000 randomly generated quantum circuits in simulated and real environments. We observe that quantum noise can significantly influence the correctness of quantum programs, and different quantum circuit structures show diverse sensitivity patterns under the same noise. Based on the observations, we build a machine learning model to predict the fidelity of a quantum program under certain quantum noise. The model achieves a small average fidelity prediction error, meaning the impact of noise can be precisely estimated statistically.},
+ author = {Pan, Zhonghao and Feng, Yang and Li, Zhiyuan and Liu, Yunxin and Li, Yuanchun},
+ booktitle = {2023 IEEE INTERNATIONAL CONFERENCE ON SOFTWARE ANALYSIS, EVOLUTION AND REENGINEERING, SANER},
+ doi = {10.1109/SANER56733.2023.00047},
+ pages = {426-437},
+ title = {Understanding the Impact of Quantum Noise on Quantum Programs},
+ year = {2023}
+}
+
+@inproceedings{WOS:001032641300081,
+ abstract = {Quantum software testing concentrates on testing quantum programs to discover quantum faults in the programs cost-effectively. Given the foundations in quantum mechanics, the way quantum computations are performed is significantly different than classical computing. Therefore, quantum software testing also differs from classical software testing. There has been quite an interest in building quantum software testing techniques since 2019 in the software engineering (SE) community. Thus, we aim to introduce quantum software testing to the SE community. In particular, we will present the basic foundations of quantum computing and quantum programming as circuits, followed by the current state of the art on quantum software testing. Next, we will present some basic quantum software testing techniques and finally give the research directions that deserve attention from the SE community.},
+ author = {Ali, Shaukat and Yue, Tao},
+ booktitle = {2023 IEEE/ACM 45TH INTERNATIONAL CONFERENCE ON SOFTWARE ENGINEERING: COMPANION PROCEEDINGS, ICSE-COMPANION},
+ doi = {10.1109/ICSE-Companion58688.2023.00093},
+ pages = {332-333},
+ title = {Quantum Software Testing: A Brief Introduction},
+ year = {2023}
+}
+
+@article{WOS:001052546300001,
+ abstract = {Realistic benchmarks of reproducible bugs and fixes are vital to good experimental evaluation of debugging and testing approaches. However, there is no suitable bug benchmark suite that can systematically evaluate the debugging and testing methods of quantum programs until now. This paper proposes Bugs4Q, a benchmark of forty-two real, manually validated Qiskit bugs from three popular platforms (GitHub, StackOverflow, and Stack Exchange) in programming, supplemented with test cases to reproduce buggy behaviors. Bugs4Q also provides interfaces for accessing the buggy and fixed versions of the Qiskit programs and executing the corresponding source code and unit tests, facilitating the reproducible empirical studies and comparisons of Qiskit program debugging and testing tools. Bugs4Q is publicly available at https://github.com/Z-928/Bugs4Q-Framework. Editor's note: Open Science material was validated by the Journal of Systems and Software Open Science Board.},
+ author = {Zhao, Pengzhan and Miao, Zhongtao and Lan, Shuhan and Zhao, Jianjun},
+ doi = {10.1016/j.jss.2023.111805},
+ journal = {JOURNAL OF SYSTEMS AND SOFTWARE},
+ title = {Bugs4Q: A benchmark of existing bugs to enable controlled testing and debugging studies for quantum programs*},
+ volume = {205},
+ year = {2023}
+}
+
+@article{WOS:001054330900001,
+ abstract = {Quantum computing systems rely on the principles of quantum mechanics to perform a multitude of computationally challenging tasks more efficiently than their classical counterparts. The architecture of software-intensive systems can empower architects who can leverage architecture-centric processes, practices, description languages to model, develop, and evolve quantum computing software (quantum software for short) at higher abstraction levels. We conducted a Systematic Literature Review (SLR) to investigate (i) architectural process, (ii) modelling notations, (iii) architecture design patterns, (iv) tool support, and (iv) challenging factors for quantum software architecture. Results of the SLR indicate that quantum software represents a new genre of software-intensive systems; however, existing processes and notations can be tailored to derive the architecting activities and develop modelling languages for quantum software. Quantum bits (Qubits) mapped to Quantum gates (Qugates) can be represented as architectural components and connectors that implement quantum software. Tool-chains can incorporate reusable knowledge and human roles (e.g., quantum domain engineers, quantum code developers) to automate and customise the architectural process. Results of this SLR can facilitate researchers and practitioners to develop new hypotheses to be tested, derive reference architectures, and leverage architecture-centric principles and practices to engineer emerging and next generations of quantum software.& COPY; 2023 The Authors. Published by Elsevier Inc. This is an open access article under the CC BY license (http://creativecommons.org/licenses/by/4.0/).},
+ author = {Khan, Arif Ali and Ahmad, Aakash and Waseem, Muhammad and Liang, Peng and Fahmideh, Mahdi and Mikkonen, Tommi and Abrahamsson, Pekka},
+ doi = {10.1016/j.jss.2023.111682},
+ journal = {JOURNAL OF SYSTEMS AND SOFTWARE},
+ title = {Software architecture for quantum computing systems - A systematic review},
+ volume = {201},
+ year = {2023}
+}
+
+@inproceedings{WOS:001062730100006,
+ abstract = {As the scientific community is increasing the coverage of the quantum computing domain ranging from theoretical physics to financial applications, so does the number of quantum computing applications being developed for quantum computing hardware that is available today. As this hardware evolves towards increased capacity in terms of qubit number and increased fidelity, so does the complexity of quantum computing applications that implement the state-of-the-art of (hybrid) quantum algorithms. With this comes an increased demand for quantum software engineering practices where testing is a crucial part of the development process. Hence, a robust approach that addresses certain challenges and peculiarities related to the quantum computing domain is needed for the testing process. This paper proposes a standard-ready testing pipeline that covers the requirements of testing in a continuous development cycle as part of a modern quantum software engineering lifecycle.},
+ author = {Becker, Colin Kai-Uwe and Gheorghe-Pop, Ilie-Daniel and Tcholtchev, Nikolay},
+ booktitle = {2023 IEEE INTERNATIONAL CONFERENCE ON QUANTUM SOFTWARE, QSW},
+ doi = {10.1109/QSW59989.2023.00016},
+ pages = {54-59},
+ title = {A Testing Pipeline for Quantum Computing Applications},
+ year = {2023}
+}
+
+@inproceedings{WOS:001103357200199,
+ abstract = {With the increased developments in quantum computing, the availability of systematic and automatic testing approaches for quantum programs is becoming increasingly essential. To this end, we present the quantum software testing tool QuCAT for combinatorial testing of quantum programs. QuCAT provides two functionalities of use. With the first functionality, the tool generates a test suite of a given strength (e.g., pair-wise). With the second functionality, it generates test suites with increasing strength until a failure is triggered or a maximum strength is reached. QuCAT uses two test oracles to check the correctness of test outputs. We assess the cost and effectiveness of QuCAT with 3 faulty versions of 5 quantum programs. Results show that combinatorial test suites with a low strength can find faults with limited cost, while a higher strength performs better to trigger some difficult faults with relatively higher cost. Repository: https://github.com/Simula- COMPLEX/qucat- tool Video: https://youtu.be/UsqgOudKLio},
+ author = {Wang, Xinyi and Arcaini, Paolo and Yue, Tao and Ali, Shaukat},
+ booktitle = {2023 38TH IEEE/ACM INTERNATIONAL CONFERENCE ON AUTOMATED SOFTWARE ENGINEERING, ASE},
+ doi = {10.1109/ASE56229.2023.00062},
+ pages = {2066-2069},
+ title = {QuCAT: A Combinatorial Testing Tool for Quantum Software},
+ year = {2023}
+}
+
+@inproceedings{WOS:001118241900001,
+ abstract = {Quantum computing will make it possible to exponentially accelerate the performance of a wide range of computational problems, such as cryptography, machine learning or chemical simulation. However, the quantum potential is not only a matter of hardware, but also of software. Therefore, this new paradigm has an impact yet to be explored on software development processes and techniques, and the adaptation of classical software engineering to the new classical/quantum hybrid systems raises a number of important challenges: a new Quantum Software Engineering is therefore needed. Specifically, and focusing on quantum software quality, software verification remains an open research question, as its novelty and complexity make quantum software development a particularly error-prone process. Most current approaches to test-driven verification rely heavily on simulations, which is a problem due to the lack of scalability of simulators running on classical computers. To address this shortcoming, we define the concept of a Quantum Test Case, and then present a method to test quantum circuits on real machines, without using simulation test functionalities such as amplitude calculation or non-destructive measurement. This is achieved by automatically generating a Quantum Test Case, which wraps the circuit under test and performs the verification. We also present the process to run a set of tests on a circuit with this method, along with an example to illustrate the technique.},
+ author = {de la Barrera Amo, Antonio Garcia and Serrano, Manuel A. and Rodriguez de Guzman, Ignacio Garcia and Polo, Macario and Piattini, Mario},
+ booktitle = {PROCEEDINGS OF THE 1ST INTERNATIONAL WORKSHOP ON QUANTUM PROGRAMMING FOR SOFTWARE ENGINEERING, QP4SE 2022},
+ doi = {10.1145/3549036.3562055},
+ pages = {1-6},
+ title = {Automatic Generation of Test Circuits for the Verification of Quantum Deterministic Algorithms},
+ year = {2022}
+}
+
+@inproceedings{WOS:001122755200069,
+ abstract = {There is an inherent lack of knowledge and technology to test a quantum program properly. In this paper, building on the definition of syntactically equivalent quantum gates, we describe our efforts in developing a tool, coined QMutPy, leveraging the well-known open-source mutation tool MutPy. We further discuss the design and implementation of QMutPy, and the usage of a novel set of mutation operators that generate mutants for qubit measurements and gates. To evaluate QMutPy's performance, we conducted a preliminary study on 11 real quantum programs written in the IBM's Qiskit library. QMutPy has proven to be an effective quantum mutation tool, providing insight into the current state of quantum tests. QMutPy is publicly available at https://github.com/danielfobooss/mutpy. Tool demo: https://youtu.be/fC4tOY5trqc.},
+ author = {Fortunato, Daniel and Campos, Jose and Abreu, Rui},
+ booktitle = {PROCEEDINGS OF THE 31ST ACM SIGSOFT INTERNATIONAL SYMPOSIUM ON SOFTWARE TESTING AND ANALYSIS, ISSTA 2022},
+ doi = {10.1145/3533767.3543296},
+ pages = {797-800},
+ title = {QMutPy: A Mutation Testing Tool for Quantum Algorithms and Applications in Qiskit},
+ year = {2022}
+}
+
+@article{WOS:001188339000001,
+ abstract = {Quantum programs exhibit inherent non -deterministic behavior, which poses more significant challenges for error discovery compared to classical programs. While several testing methods have been proposed for quantum programs, they often overlook fundamental questions in black -box testing. In this paper, we bridge this gap by presenting three novel algorithms specifically designed to address the challenges of equivalence, identity, and unitarity checking in black -box testing of quantum programs. We also explore optimization techniques for these algorithms, including specialized versions for equivalence and unitarity checking, and provide valuable insights into parameter selection to maximize performance and effectiveness. To evaluate the effectiveness of our proposed methods, we conducted comprehensive experimental evaluations, which demonstrate that our methods can rigorously perform equivalence, identity, and unitarity checking, offering robust support for black -box testing of quantum programs.},
+ author = {Long, Peixun and Zhao, Jianjun},
+ doi = {10.1016/j.jss.2024.112000},
+ journal = {JOURNAL OF SYSTEMS AND SOFTWARE},
+ title = {Equivalence, identity, and unitarity checking in black-box testing of quantum programs},
+ volume = {211},
+ year = {2024}
+}
+
+@article{WOS:001283366800008,
+ abstract = {Quantum computing has emerged as a promising field with the potential to revolutionize various domains by harnessing the principles of quantum mechanics. As quantum hardware and algorithms continue to advance, developing high-quality quantum software has become crucial. However, testing quantum programs poses unique challenges due to the distinctive characteristics of quantum systems and the complexity of multi-subroutine programs. This article addresses the specific testing requirements of multi-subroutine quantum programs. We begin by investigating critical properties by surveying existing quantum libraries and providing insights into the challenges of testing these programs. Building upon this understanding, we focus on testing criteria and techniques based on the whole testing process perspective, spanning from unit testing to integration testing. We delve into various aspects, including IO analysis, quantum relation checking, structural testing, behavior testing, integration of subroutine pairs, and test case generation. We also introduce novel testing principles and criteria to guide the testing process. We conduct comprehensive testing on typical quantum subroutines, including diverse mutants and randomized inputs, to evaluate our proposed approach. The analysis of failures provides valuable insights into the effectiveness of our testing methodology. Additionally, we present case studies on representative multi-subroutine quantum programs, demonstrating the practical application and effectiveness of our proposed testing principles and criteria.},
+ author = {Long, Peixun and Zhao, Jianjun},
+ doi = {10.1145/3656339},
+ journal = {ACM TRANSACTIONS ON SOFTWARE ENGINEERING AND METHODOLOGY},
+ number = {6},
+ title = {Testing Multi-Subroutine Quantum Programs: From Unit Testing to Integration Testing},
+ volume = {33},
+ year = {2024}
+}
+
+@article{WOS:001286651600001,
+ abstract = {Context: Quantum computing is becoming a reality, and quantum software engineering (QSE) is emerging as a new discipline to enable developers to design and develop quantum programs. Objective: This paper presents a systematic mapping study of the current state of QSE research, aiming to identify the most investigated topics, the types and number of studies, the main reported results, and the most studied quantum computing tools/frameworks. Additionally, the study aims to explore the research community's interest in QSE, how it has evolved, and any prior contributions to the discipline before its formal introduction through the Talavera Manifesto. Method: We searched for relevant articles in several databases and applied inclusion and exclusion criteria to select the most relevant studies. After evaluating the quality of the selected resources, we extracted relevant data from the primary studies and analyzed them. Results: We found that QSE research has primarily focused on software testing, with little attention given to other topics, such as software engineering management. The most commonly studied technology for techniques and tools is Qiskit, although, in most studies, either multiple or none specific technologies were employed. The researchers most interested in QSE are interconnected through direct collaborations, and several strong collaboration clusters have been identified. Most articles in QSE have been published in non-thematic venues, with a preference for conferences. Conclusions: The study's implications are providing a centralized source of information for researchers and practitioners in the field, facilitating knowledge transfer, and contributing to the advancement and growth of QSE.},
+ author = {De Stefano, Manuel and Pecorelli, Fabiano and Di Nucci, Dario and Palomba, Fabio and De Lucia, Andrea},
+ doi = {10.1016/j.infsof.2024.107525},
+ journal = {INFORMATION AND SOFTWARE TECHNOLOGY},
+ title = {The quantum frontier of software engineering: A systematic mapping study},
+ volume = {175},
+ year = {2024}
+}
+
+@article{WOS:001315192100001,
+ abstract = {We provide an overview of the software engineering efforts and their impact in QMCPACK, a production-level ab-initio Quantum Monte Carlo open-source code targeting high-performance computing (HPC) systems. Aspects included are: (i) strategic expansion of continuous integration (CI) targeting CPUs, using GitHub Actions own runners, and NVIDIA and AMD GPUs used in pre-exascale systems, (ii) incremental reduction of memory leaks using sanitizers, (iii) incorporation of Docker containers for CI and reproducibility, and (iv) refactoring efforts to improve maintainability, testing coverage, and memory lifetime management. We quantify the value of these improvements by providing metrics to illustrate the shift towards a predictive, rather than reactive, maintenance approach. Our goal, in documenting the impact of these efforts on QMCPACK, is to contribute to the body of knowledge on the importance of research software engineering (RSE) for the stewardship and advancement of community HPC codes to enable scientific discovery at scale.},
+ author = {Godoy, William F. and Hahn, Steven E. and Walsh, Michael M. and Fackler, Philip W. and Krogel, Jaron T. and Doak, Peter W. and Kent, Paul R. C. and Correa, Alfredo A. and Luo, Ye and Dewing, Mark},
+ doi = {10.1016/j.future.2024.107502},
+ journal = {FUTURE GENERATION COMPUTER SYSTEMS-THE INTERNATIONAL JOURNAL OF ESCIENCE},
+ title = {Software stewardship and advancement of a high-performance computing scientific application: QMCPACK},
+ volume = {163},
+ year = {2025}
+}
+
+@inproceedings{WOS:001324606300016,
+ abstract = {High-level programming models like Q# significantly simplify the complexity of programming for quantum computing. These models are supported by a set of foundation libraries for code development. However, errors can occur in the library implementation, and one common root cause is the lack of or incomplete checks on properties like values, length, and quantum states of inputs passed to user-facing subroutines. This paper presents Upbeat, a fuzzing tool to generate random test cases for bugs related to input-checking in Q# libraries. Upbeat develops an automated process to extract constraints from the API documentation and the developer-implemented input-checking statements. It leverages open-source Q# code samples to synthesize test programs. It frames the test case generation as a constraint satisfaction problem for classical computing and a quantum state model for quantum computing to produce carefully generated subroutine inputs to test if the input-checking mechanism is appropriately implemented. Under 100 hours of automated test runs, Upbeat has successfully identified 16 bugs in API implementations and 4 documentation errors. Of these, 14 have been confirmed, and 12 have been fixed by the library developers.},
+ author = {Hu, Tianmin and Ye, Guixin and Tang, Zhanyong and Tan, Shin Hwei and Wang, Huanting and Li, Meng and Wang, Zheng},
+ booktitle = {PROCEEDINGS OF THE 33RD ACM SIGSOFT INTERNATIONAL SYMPOSIUM ON SOFTWARE TESTING AND ANALYSIS, ISSTA 2024},
+ doi = {10.1145/3650212.3652120},
+ pages = {186-198},
+ title = {UPBEAT: Test Input Checks of Q# Quantum Libraries},
+ year = {2024}
+}
+
+@inproceedings{WOS:001347445900001,
+ abstract = {The quantum computing (QC) field is rapidly moving beyond the realm of pure science to become a commercially viable technology that may be able to overcome the drawbacks of traditional computing. Major technology tycoons have spent in building coding frameworks and hardware to create applications specifically designed for quantum computing over the last few years. The development of QC hardware is accelerating, however, the requirement for software-intensive methodology, approaches, procedures, instruments, roles and responsibilities for creating industrial-focused quantum software applications arises from operationalizing the QC. This paper outlines the concept of quantum software engineering (QSE) life cycle, which entails the engineering of quantum requirements, design, implementation, testing and maintenance of quantum software. This paper notably advocates for collaborative efforts between the industrial community and software engineering research to propose practical solutions to support the complete activities for the development of quantum software. The proposed vision makes it easier for researchers and practitioners to suggest new procedures, reference designs, cutting-edge equipment, and methods for utilizing quantum computers and creating the newest and most advanced quantum software.},
+ author = {Akbar, Muhammad Azeem and Khan, Arif Ali and Mahmood, Sajjad and Rafi, Saima},
+ booktitle = {PROCEEDINGS OF THE 1ST ACM INTERNATIONAL WORKSHOP ON QUANTUM SOFTWARE ENGINEERING:THE NEXT EVOLUTION, QSE-NE 2024},
+ doi = {10.1145/3663531.3664750},
+ pages = {1-6},
+ title = {Quantum Software Engineering: A New Genre of Computing},
+ year = {2024}
+}
+
+@inproceedings{WOS:001347445900004,
+ abstract = {The inherent lack of technologies and knowledge from software developers about the intricacies of quantum physics constitutes a heavy hindrance in the development of correct quantum software. Therefore, quantum computing testing techniques are currently under heavy research. This paper proposes a new testing metric, Gate Branch Coverage. This metric aims to provide insight into the verification process status of quantum programs and enhance the quantum testing process overall. Gate Branch Coverage explores the properties of quantum controlled-type gates, measuring their number of exercised branches during the execution of quantum programs.},
+ author = {Fortunato, Daniel and Campos, Jose and Abreu, Rui},
+ booktitle = {PROCEEDINGS OF THE 1ST ACM INTERNATIONAL WORKSHOP ON QUANTUM SOFTWARE ENGINEERING:THE NEXT EVOLUTION, QSE-NE 2024},
+ doi = {10.1145/3663531.3664753},
+ pages = {15-18},
+ title = {Gate Branch Coverage: A Metric for Quantum Software Testing},
+ year = {2024}
+}
+
+@inproceedings{WOS:001353105400174,
+ abstract = {The most promising applications of quantum computing are centered around solving search and optimization tasks, particularly in fields such as physics simulations, quantum chemistry, and finance. However, the current quantum software testing methods face practical limitations when applied in industrial contexts: (i) they do not apply to quantum programs most relevant to the industry, (ii) they require a full program specification, which is usually not available for these programs, and (iii) they are incompatible with error mitigation methods currently adopted by main industry actors like IBM. To address these challenges, we present QOPS, a novel quantum software testing approach. QOPS introduces a new definition of test cases based on Pauli strings to improve compatibility with different quantum programs. QOPS also introduces a new test oracle that can be directly integrated with industrial APIs such as IBM's Estimator API and can utilize error mitigation methods for testing on real noisy quantum computers. We also leverage the commuting property of Pauli strings to relax the requirement of having complete program specifications, making QOPS practical for testing complex quantum programs in industrial settings. We empirically evaluate QOPS on 194,982 real quantum programs, demonstrating effective performance in test assessment compared to the state-of-the-art with a perfect F1-score, precision, and recall. Furthermore, we validate the industrial applicability of QOPS by assessing its performance on IBM's three real quantum computers, incorporating both industrial and open-source error mitigation methods.},
+ author = {Muqeet, Asmar and Ali, Shaukat and Arcaini, Paolo},
+ booktitle = {PROCEEDINGS OF 2024 39TH ACM/IEEE INTERNATIONAL CONFERENCE ON AUTOMATED SOFTWARE ENGINEERING, ASE 2024},
+ doi = {10.1145/3691620.3695275},
+ pages = {2130-2141},
+ title = {Quantum Program Testing Through Commuting Pauli Strings on IBM's Quantum Computers},
+ year = {2024}
+}
+
+@article{WOS:001369099900018,
+ abstract = {Quantum Computing (QC) promises computational speedup over classic computing. However, noise exists in near-term quantum computers. Quantum software testing (for gaining confidence in quantum software's correctness) is inevitably impacted by noise, i.e., it is impossible to know if a test case failed due to noise or real faults. Existing testing techniques test quantum programs without considering noise, i.e., by executing tests on ideal quantum computer simulators. Consequently, they are not directly applicable to test quantum software on real quantum computers or noisy simulators. Thus, we propose a noise-aware approach (named $\mathit{QOIN}$QOIN) to alleviate the noise effect on test results of quantum programs. $\mathit{QOIN}$QOIN employs machine learning techniques (e.g., transfer learning) to learn the noise effect of a quantum computer and filter it from a program's outputs. Such filtered outputs are then used as the input to perform test case assessments (determining the passing or failing of a test case execution against a test oracle). We evaluated $\mathit{QOIN}$QOIN on IBM's 23 noise models, Google's two available noise models, and Rigetti's Quantum Virtual Machine, with six real-world and 800 artificial programs. We also generated faulty versions of these programs to check if a failing test case execution can be determined under noise. Results show that $\mathit{QOIN}$QOIN can reduce the noise effect by more than $80\%$80% on most noise models. We used an existing test oracle to evaluate $\mathit{QOIN}$QOIN's effectiveness in quantum software testing. The results showed that $\mathit{QOIN}$QOIN attained scores of $99\%$99%, $75\%$75%, and $86\%$86% for precision, recall, and F1-score, respectively, for the test oracle across six real-world programs. For artificial programs, $\mathit{QOIN}$QOIN achieved scores of $93\%$93%, $79\%$79%, and $86\%$86% for precision, recall, and F1-score respectively. This highlights $\mathit{QOIN}$QOIN's effectiveness in learning noise patterns for noise-aware quantum software testing.},
+ author = {Muqeet, Asmar and Yue, Tao and Ali, Shaukat and Arcaini, Paolo},
+ doi = {10.1109/TSE.2024.3462974},
+ journal = {IEEE TRANSACTIONS ON SOFTWARE ENGINEERING},
+ number = {11},
+ pages = {2947-2961},
+ title = {Mitigating Noise in Quantum Software Testing Using Machine Learning},
+ volume = {50},
+ year = {2024}
+}
+
+@article{WOS:001369115500008,
+ abstract = {As quantum computing is still in its infancy, there is an inherent lack of knowledge and technology to test a quantum program properly. In the classical realm, mutation testing has been successfully used to evaluate how well a program's test suite detects seeded faults (i.e., mutants). In this article, building on the definition of syntactically equivalent quantum operations, we propose a novel set of mutation operators to generate mutants based on qubit measurements and quantum gates. To ease the adoption of quantum mutation testing, we further propose QMutPy, an extension of the well-known and fully automated open-source mutation tool MutPy. To evaluate QMutPy's performance, we conducted a case study on 24 real quantum programs written in IBM's Qiskit library. Furthermore, we show how better test suite coverage and improvements to test assertions can increase the test suites' mutation score and quality. QMutPy has proven to be an effective quantum mutation tool, providing insight into the current state of quantum tests and how to improve them.},
+ author = {Fortunato, Daniel and Campos, Jose and Abreu, Rui},
+ doi = {10.1109/TQE.2022.3195061},
+ journal = {IEEE TRANSACTIONS ON QUANTUM ENGINEERING},
+ title = {Mutation Testing of Quantum Programs: A Case Study With Qiskit},
+ volume = {3},
+ year = {2022}
+}
+
+@article{WOS:001375695900005,
+ abstract = {Test case optimization (TCO) reduces the software testing cost while preserving its effectiveness. However, to solve TCO problems for large-scale and complex software systems, substantial computational resources are required. Quantum approximate optimization algorithms (QAOAs) are promising combinatorial optimization algorithms that rely on quantum computational resources, with the potential to offer increased efficiency compared to classical approaches. Several proof-of-concept applications of QAOAs for solving combinatorial problems, such as portfolio optimization, energy optimization in power systems, and job scheduling, have been proposed. Given the lack of investigation into QAOA's application for TCO problems, and motivated by the computational challenges of TCO problems and the potential of QAOAs, we present IGDec-QAOA to formulate a TCO problem as a QAOA problem and solve it on both ideal and noisy quantum computer simulators, as well as on a real quantum computer. To solve bigger TCO problems that require many qubits, which are unavailable these days, we integrate a problem decomposition strategy with the QAOA. We performed an empirical evaluation with five TCO problems and four publicly available industrial datasets from ABB, Google, and Orona to compare various configurations of IGDec-QAOA, assess its decomposition strategy of handling large datasets, and compare its performance with classical algorithms (i.e., Genetic Algorithm (GA) and Random Search). Based on the evaluation results achieved on an ideal simulator, we recommend the best configuration of our approach for TCO problems. Also, we demonstrate that our approach can reach the same effectiveness as GA and outperform GA in two out of five test case optimization problems we conducted. In addition, we observe that, on the noisy simulator, IGDec-QAOA achieved similar performance to that from the ideal simulator. Finally, we also demonstrate the feasibility of IGDec-QAOA on a real quantum computer in the presence of noise.},
+ author = {Wang, Xinyi and Ali, Shaukat and Yue, Tao and Arcaini, Paolo},
+ doi = {10.1109/TSE.2024.3479421},
+ journal = {IEEE TRANSACTIONS ON SOFTWARE ENGINEERING},
+ number = {12},
+ pages = {3249-3264},
+ title = {Quantum Approximate Optimization Algorithm for Test Case Optimization},
+ volume = {50},
+ year = {2024}
+}
+
+@article{WOS:001381103500018,
+ abstract = {This study explores how Classical Software Engineering, especially model-driven engineering in testing, can contribute to the improvement of Quantum Software Engineering (QSE). Adopting principles of agnosticism, it seeks to develop software engineering processes that are independent of any specific language or platform for quantum software. Currently, quantum software testing is considered an emerging area with multiple proposals focused on particular languages or platforms. This work proposes an extension of the UML Testing Profile 2.0 to model quantum software testing, allowing (i) the exploration of new concepts needed to specify these tests, (ii) the modelling of different types of tests during quantum software design, and (iii) the specification of tests independent of the execution language or platform. This approach aims to establish a more flexible and extensible basis for testing in QSE.},
+ author = {de Guzman, Ignacio Garcia Rodriguez and Monje, Moises Rodriguez and Velthuis, Mario Piattini and Quintana, Maria Teresa Merchan},
+ doi = {10.36561/ING.27.18},
+ journal = {MEMORIA INVESTIGACIONES EN INGENIERIA},
+ number = {27},
+ pages = {266-284},
+ title = {An Adaptation of the UML Testing Profile for Quantum Software Testing},
+ year = {2024}
+}
+
+@article{WOS:001381103500019,
+ abstract = {This annotated bibliography delves into the field of quantum computing, focusing specifically on the resources used throughout the software life cycle. It examines several published works that analyze quantum software modelling in the context of the various phases of the life cycle, from analysis/requirements to testing and maintenance. Each annotation provides an analysis of software engineering resources applicable to quantum software development and their applicability to different phases of the software development process. By synthesizing these diverse perspectives, this bibliography illuminates the evolving landscape of quantum software development and underscores the critical role of modelling in the context of software engineering. The result provides a valuable starting point for researchers and practitioners who wish to deepen the interplay between quantum computing and software engineering, fostering innovation and advances in this evolving field.},
+ author = {Bibbo, Luis Mariano and Fernandez, Alejandro and Suarez, Jose Manuel and Pastor, Oscar},
+ doi = {10.36561/ING.27.19},
+ journal = {MEMORIA INVESTIGACIONES EN INGENIERIA},
+ number = {27},
+ pages = {285-301},
+ title = {Modelling Quantum Software: An Annotated Bibliography},
+ year = {2024}
+}
+
+@article{WOS:001400819000001,
+ abstract = {Maintaining software quality is crucial in the dynamic landscape of software development. Regression testing ensures that software works as expected after changes are implemented. However, re-executing all test cases for every modification is often impractical and costly, particularly for large systems. Although very effective, traditional test suite optimization techniques are often impractical in resource-constrained scenarios, as they are computationally expensive. Hence, quantum computing solutions have been developed to improve their efficiency, but have shown drawbacks in terms of effectiveness. We propose reformulating the regression test case selection problem to use quantum computation techniques better. Our objectives are (i) to provide more efficient solutions than traditional methods and (ii) to improve the effectiveness of previously proposed quantum-based solutions. We propose SelectQA, a quantum annealing approach that can outperform the quantum-based approach BootQA in terms of effectiveness while obtaining results comparable to those of the classic Additional Greedy and DIV-GA approaches. Regarding efficiency, SelectQA outperforms DIV-GA and has similar results with the Additional Greedy algorithm, but is exceeded by BootQA.},
+ author = {Trovato, Antonio and De Stefano, Manuel and Pecorelli, Fabiano and Di Nucci, Dario and De Lucia, Andrea},
+ doi = {10.1007/s10009-024-00775-w},
+ journal = {INTERNATIONAL JOURNAL ON SOFTWARE TOOLS FOR TECHNOLOGY TRANSFER},
+ number = {6},
+ pages = {767-780},
+ title = {Reformulating regression test suite optimization using quantum annealing - an empirical study},
+ volume = {26},
+ year = {2024}
+}
+
+@inproceedings{WOS:001423232000006,
+ abstract = {In this new era of AI with diverse hardware accelerators such as GPUs and quantum circuits, achieving system-wide robustness requires tackling issues throughout all system layers, spanning from software applications to hardware components. My research is to enhance the robustness of heterogeneity-enabled AI systems by reinventing software testing and analysis techniques via leveraging full-stack insights and advanced AI capabilities. I have completed one research project and have collaborated on a couple of others at the application and language levels. As the next steps, Iwill explore (1) holistic regression testing to prioritize test inputs associated with system-wide changes and (2) full-stack analysis to optimize computing resource allocation and reduce hardware reliance by analyzing application characteristics and using alternative resources in tandem.},
+ author = {Qiu, Yuxin},
+ booktitle = {COMPANION PROCEEDINGS OF THE 2024 ACM SIGPLAN INTERNATIONAL CONFERENCE ON SYSTEMS, PROGRAMMING, LANGUAGES, AND APPLICATIONS: SOFTWARE FOR HUMANITY, SPLASH COMPANION 2024},
+ doi = {10.1145/3689491.3691817},
+ pages = {10-12},
+ title = {Full-Stack Collaboration for Robust Heterogeneity-Enabled AI Systems},
+ year = {2024}
+}
+
+@inproceedings{WOS:001438832300122,
+ abstract = {A flaky test yields inconsistent results upon repetition, posing a significant challenge to software developers. An extensive study of their presence and characteristics has been done in classical computer software but not quantum computer software. In this paper, we outline challenges and potential solutions for the automated detection of flaky tests in bug reports of quantum software. We aim to raise awareness of flakiness in quantum software and encourage the software engineering community to work collaboratively to solve this emerging challenge.},
+ author = {Zhang, Lei and Miranskyy, Andriy},
+ booktitle = {2024 IEEE INTERNATIONAL CONFERENCE ON QUANTUM COMPUTING AND ENGINEERING, QCE, VOL 2},
+ doi = {10.1109/QCE60285.2024.10274},
+ pages = {179-181},
+ title = {Automated flakiness detection in quantum software bug reports},
+ year = {2024}
+}
+
+@inproceedings{WOS:001438832300194,
+ abstract = {The current quantum landscape is characterised by a wide variety of quantum computers, each with unique capabilities and limitations. Despite its rapid advancement, this field is still in its early stages and lacks essential software engineering principles such as resilience and customisability by design. To provide developers with a quantum technology stack that embeds these principles by design, we propose leveraging the heterogeneity of existing quantum computers. Specifically, we introduce a novel distribution methodology, termed shot-wise, to distribute the quantum computation workload of a single circuit execution (i.e., its shots) across multiple quantum computers. This shot-wise methodology is highly customisable, allowing for the embedding of user-specific and scenario-specific requirements into the distribution process. Requirements can be expressed through constraints, such as the geographical location of the QPUs, and their architecture, or ensuring or avoiding specific combinations of QPUs and quantum providers. Additionally, requirements can be defined by one or more objective functions to be minimised or maximised, such as reducing waiting time, computation cost, or energy footprint. By also combining constraints and objective functions, our shot-wise methodology enhances flexibility and improves the overall resilience of quantum computations against potential quantum computer failures. Preliminary results indicate that this approach offers error rates comparable to, or lower than, those of single-device execution even in all the tested scenarios with different numbers of qubits, families of circuits and number of QPUs to distribute the shots.},
+ author = {Bisicchia, Giuseppe and Clemente, Giuseppe and Garcia-Alonso, Jose and Murillo, Juan M. and D'Elia, Massimo and Brogi, Antonio},
+ booktitle = {2024 IEEE INTERNATIONAL CONFERENCE ON QUANTUM COMPUTING AND ENGINEERING, QCE, VOL 2},
+ doi = {10.1109/QCE60285.2024.10346},
+ pages = {442-443},
+ title = {Distributing Quantum Computation Across Multiple NISQ Computers},
+ year = {2024}
+}
+
+@inproceedings{WOS:001438832300240,
+ abstract = {In this paper, we introduce Qsyn, a novel quantum circuit synthesis (QCS) framework designed to facilitate the research, development, testing, and experimentation of QCS algorithms and tools. Our framework is more developer-friendly than other modern QCS frameworks in three aspects: (1) Qsyn provides a comprehensive command -line interface that enables developers to design various testing scenarios with ease and conduct flexible experiments on their algorithms. This feature significantly streamlines the development process, making it more efficient and user-friendly. (2) Qsyn offers detailed access to multiple data representations at different abstraction levels of quantum circuits. This capability allows developers to optimize their algorithms extensively, gaining deeper insights and control over the structure and behavior of quantum circuits. By understanding the intricacies of circuit design, developers can achieve higher levels of optimization and performance in their algorithms. (3) Qsyn implements a rigorous development flow and environment to help developers maintain high-quality standards using modern software engineering practices, including robust quality assurance measures like regression testing, continuous integration and continuous delivery (Cl/CD) pipelines, and code Tinting. We demonstrate Qsyn's superior performance through fair comparisons with PyZX In highlighting its efficiency and optimization capabilities. By providing a unified and userfriendly development environment, Qsyn empowers researchers and developers to prototype, implement, and evaluate their QCS algorithms effectively.},
+ author = {Lau, Mu-Te and Cheng, Chin-Yi and Lu, Cheng-Hua and Chuang, Chia-Hsu and Kuo, Yi-Hsiang and Yang, Hsiang-Chun and Kuo, Chien-Tung and Chen, Hsin-Yu and Tung, Chen-Ying and Tsai, Cheng-En and Chen, Guan-Hao and Lin, Leng-Kai and Wang, Ching-Huan and Wang, Tzu-Hsu and Huang, Chung-Yang Ric},
+ booktitle = {2024 IEEE INTERNATIONAL CONFERENCE ON QUANTUM COMPUTING AND ENGINEERING, QCE, VOL 2},
+ doi = {10.1109/QCE60285.2024.10392},
+ pages = {535-536},
+ title = {Qsyn: A Developer-Friendly Quantum Circuit Synthesis Framework for NISQ Era and Beyond},
+ year = {2024}
+}
+
+@inproceedings{WOS:001445664000009,
+ abstract = {In this work, we present a systematic approach to implementing basic assertions in quantum circuits in order to verify classical states across any number of qubits. Our methodology utilizes fundamental quantum gates available on all gate-based quantum computing platforms. Through strategic combinations of these gates, we construct the 'Equal to', 'Different than', 'Greater than', and 'Lower than' comparators. By introducing single-qubit comparators and demonstrating how they can be expanded to handle multiple qubits, we provide a scalable method for verifying classical states in quantum circuits. This work provides the groundwork for robust testing procedures in quantum computing, a critical factor in the continued growth and reliability of this rapidly advancing field.},
+ author = {Garcia-Rodriguez de Guzman, Ignacio and de la Barrera Amo, Antonio Garcia and Angel Serrano, Manuel and Polo, Macario and Piattini, Mario},
+ booktitle = {CLOUD COMPUTING, BIG DATA AND EMERGING TOPICS, JCC-BD&ET 2024},
+ doi = {10.1007/978-3-031-70807-7_9},
+ pages = {121-131},
+ title = {QuantumUnit: A Proposal for Classic Multi-qubit Assertion Development},
+ volume = {2189},
+ year = {2025}
+}
+
+@inproceedings{WOS:001447433100037,
+ abstract = {Context: With the rapid progress of quantum computing, Quantum Software Engineering (QSE) is establishing itself as an essential discipline to support developers throughout all stages of quantum software development. The area of testing in quantum systems has received greater attention in research on this topic to guarantee the quality and reliability of these technologies. Objective: This paper presents an empirical study focused on the testing of quantum software at its classical layer. Specifically, it aims to identify and analyze the unique characteristics of quantum software tests, particularly in terms of Test Smells, their distribution, recurrence, and differences compared to classical software tests. Method: We used two sets of software from previous studies, one comprising 12 quantum software and the other comprising 80 classical software. From these datasets, we conducted an analysis to detect 10 test smells, allowing us to map their dispersion in quantum software, identify their specific characteristics, and draw comparisons with classical software. Results: Our findings reveal a high dispersion of test smells of 51% in quantum software. Furthermore, quantum tests exhibit statistical differences from classical software tests, with the most outlier being Conditional Test Logic, which is 20% more frequent than in classical software. Conclusions: The insights gained from this study can contribute to enhancing the quality, maintainability, and readability of tests written for the classical layer of quantum software. Ultimately, this can improve the overall understanding and quality of quantum software.},
+ author = {Virginio, Tassio and Bastos, Larissa and Bezerra, Carla and Ribeiro, Marcio and Machado, Ivan},
+ booktitle = {23TH BRAZILIAN SYMPOSIUM ON SOFTWARE QUALITY, SBQS 2024},
+ doi = {10.1145/3701625.3701676},
+ pages = {383-393},
+ title = {How Aware Are We of Test Smells in Quantum Software Systems? A Preliminary Empirical Evaluation},
+ year = {2024}
+}
+
+@inproceedings{WOS:001465567400144,
+ abstract = {Quantum software testing (QST) is an emerging research area within quantum software engineering (QSE) to ensure quantum software functional and non-functional correctness and dependability. Since quantum computers perform computations significantly differently than classical computing, testing quantum software running on these quantum computers also differs due to quantum computing's unique characteristics, e.g., entanglement and superposition. Due to the rising interest of the software engineering community in QSE, we will provide an introduction to QST. We will introduce quantum computing and its various principles, quantum software development as quantum circuits, and current QST literature, including a key set of techniques with examples. Finally, a set of future research challenges related to QST will be presented.},
+ author = {Ali, Shaukat},
+ booktitle = {2024 ACM/IEEE 44TH INTERNATIONAL CONFERENCE ON SOFTWARE ENGINEERING: COMPANION PROCEEDINGS, ICSE-COMPANION 2024},
+ doi = {10.1145/3639478.3643059},
+ pages = {426-427},
+ title = {Quantum Software Testing 101},
+ year = {2024}
+}
+
+@article{WOS:001469295100001,
+ abstract = {As a new research area, quantum software testing lacks systematic testing benchmarks to assess testing techniques' effectiveness. Recently, some open-source benchmarks and mutation analysis tools have emerged. However, there is insufficient evidence on how various quantum circuit characteristics (e.g., circuit depth, number of quantum gates), algorithms (e.g., Quantum Approximate Optimization Algorithm), and mutation characteristics (e.g., mutation operators) affect the detection of mutants in quantum circuits. Studying such relations is important to systematically design faulty benchmarks with varied attributes (e.g., the difficulty in detecting a seeded fault) to facilitate assessing the cost-effectiveness of quantum software testing techniques efficiently. To this end, we present a large-scale empirical evaluation with more than 700K faulty benchmarks (quantum circuits) generated by mutating 382 real-world quantum circuits. Based on the results, we provide valuable insights for researchers to define systematic quantum mutation analysis techniques. We also provide a tool to recommend mutants to users based on chosen characteristics (e.g., a quantum algorithm type) and the required difficulty of detecting mutants. Finally, we also provide faulty benchmarks that can already be used to assess the cost-effectiveness of quantum software testing techniques.},
+ author = {Usandizaga, Enaut Mendiluze and Ali, Shaukat and Yue, Tao and Arcaini, Paolo},
+ doi = {10.1007/s10664-025-10643-z},
+ journal = {EMPIRICAL SOFTWARE ENGINEERING},
+ number = {3},
+ title = {Quantum circuit mutants: Empirical analysis and recommendations},
+ volume = {30},
+ year = {2025}
+}
+
+@inproceedings{WOS:001497934400200,
+ abstract = {This paper introduces a vision for Quantum Software Development lifecycle, proposing a hybrid full-stack iterative model that integrates quantum and classical computing. Addressing the current challenges in Quantum Computing (QC) such as the need for integrating diverse programming languages and managing the complexities of quantum-classical systems, this model is rooted in the principles of DevOps and continuous software engineering. It presents a comprehensive lifecycle for quantum software development, encompassing quantum-agnostic coding, testing, deployment, cloud computing services, orchestration, translation, execution, and interpretation phases. Each phase is designed to accommodate the unique demands of QC, enabling traditional software developers to engage with QC environments without needing in-depth QC expertise. The paper presents a detailed implementation roadmap, utilizing a range of existing tools and frameworks, thereby making quantum software development more accessible and efficient. The proposed model not only addresses current challenges in quantum software development but also makes a substantial contribution to the field of Quantum Software Engineering (QSE). By proposing a structured and accessible model, it sets the stage for further advancements and research in QSE, enhancing its practicality and relevance in a wide range of applications.},
+ author = {Khan, Arif Ali and Taibi, Davide and Perrault, Cecile M. and Akbar, Muhammad Azeem},
+ booktitle = {40TH ANNUAL ACM SYMPOSIUM ON APPLIED COMPUTING},
+ doi = {10.1145/3672608.3707725},
+ pages = {1444-1448},
+ title = {Advancing Quantum Software Engineering: A Vision of Hybrid Full-Stack Iterative Model},
+ year = {2025}
+}
+
+@article{WOS:001505551000029,
+ abstract = {Quantum computing has existed in the theoretical realm for several decades. Recently, quantum computing has re-emerged as a promising technology to solve problems that a classical computer could take hundreds of years to solve. However, there are challenges and opportunities for academics and practitioners regarding software engineering practices for testing and debugging quantum programs. This article presents a roadmap for addressing these challenges, pointing out the existing gaps in the literature and suggesting research directions. We discuss the limitations caused by noise, the no-cloning theorem, the lack of a standard architecture for quantum computers, among others. Regarding testing, we highlight gaps and opportunities related to transpilation, mutation analysis, input states with hybrid interfaces, program analysis, and coverage. For debugging, we present the current strategies, including classical techniques applied to quantum programs, quantum-specific assertions, and quantum-related bug patterns. We introduce a conceptual model to illustrate concepts regarding the testing and debugging of quantum programs and the relationship between them. Those concepts are used to identify and discuss research challenges to cope with quantum programs through 2030, focusing on the interfaces between classical and quantum computing and on creating testing and debugging techniques that take advantage of the unique quantum computing characteristics.},
+ author = {Ramalho, Neilson Carlos Leite and De Souza, Higor Amario and Chaim, Marcos Lordello},
+ doi = {10.1145/3715106},
+ journal = {ACM TRANSACTIONS ON SOFTWARE ENGINEERING AND METHODOLOGY},
+ number = {5},
+ title = {Testing and Debugging Quantum Programs: The Road to 2030},
+ volume = {34},
+ year = {2025}
+}
+
+@inproceedings{WOS:001506888600071,
+ abstract = {Although classical computing has excelled in a wide range of applications, there remain problems that push the limits of its capabilities, especially in fields like cryptography, optimization, and materials science. Quantum computing introduces a new computational paradigm, based on principles of superposition and entanglement to explore solutions beyond the capabilities of classical computation. With the increasing interest in the field, there are challenges and opportunities for academics and practitioners in terms of software engineering practices, particularly in testing quantum programs. This paper presents an empirical study of testing patterns in quantum algorithms. We analyzed all the tests handling quantum aspects of the implementations in the Qiskit Algorithms library and identified seven distinct patterns that make use of (1) fixed seeds for algorithms based on random elements; (2) deterministic oracles; (3) precise and approximate assertions; (4) Data-Driven Testing (DDT); (5) functional testing; (6) testing for intermediate parts of the algorithms being tested; and (7) equivalence checking for quantum circuits. Our results show a prevalence of classical testing techniques to test the quantum-related elements of the library, while recent advances from the research community have yet to achieve wide adoption among practitioners.},
+ author = {Ramalho, Neilson C. L. and da Silva, Erico A. and de Souza, Higor A. and Chaim, Marcos Lordello},
+ booktitle = {2025 IEEE INTERNATIONAL CONFERENCE ON SOFTWARE ANALYSIS, EVOLUTION AND REENGINEERING, SANER},
+ doi = {10.1109/SANER64311.2025.00079},
+ pages = {780-785},
+ title = {Quantum Testing in the Wild: A Case Study with Qiskit Algorithms},
+ year = {2025}
+}
+
+@article{WOS:001513703100004,
+ abstract = {In modern neural network research, quantum neural network (QNN) methodologies have been widely adopted due to their inherent quantum advantages. QNN architectures can be partitioned, with each segment distributed across multiple computing machines to preserve privacy-an approach referred to as quantum split learning. Although several novel QNN software testing techniques have been introduced, no methodology currently exists for testing quantum distributed learning software such as quantum split learning. To address this issue, this paper proposes a new software testing method for quantum distributed/split learning, named SQUAD. The proposed SQUAD automatically generates dummy code to complete QNN architectures across separate machines and subsequently performs software testing on all machines. Additionally, a graphical user interface (GUI) for SQUAD is implemented to demonstrate its novelty and feasibility.},
+ author = {Park, Soohyun and Cho, Jae Hyun and Yook, Hyun Jun and Jhun, Ga San and Lee, Youn Kyu and Kim, Joongheon},
+ doi = {10.1007/s11227-025-07556-5},
+ journal = {JOURNAL OF SUPERCOMPUTING},
+ number = {9},
+ title = {SQUAD: software testing for quantum distributed learning software},
+ volume = {81},
+ year = {2025}
+}
+
+@article{WOS:001551718300003,
+ abstract = {This paper presents the current landscape of automated testing tools for quantum software. These tools are categorized by the testing techniques and analyzed based on several characteristics. We summarize the current state of these tools and provide insights to highlight major directions for future research.-Davide Taibi},
+ author = {Wang, Xinyi and Ali, Shaukat and Taibi, Davide},
+ doi = {10.1109/MS.2025.3578154},
+ journal = {IEEE SOFTWARE},
+ number = {5},
+ pages = {136-140},
+ title = {The Landscape of Quantum Software Testing Tools},
+ volume = {42},
+ year = {2025}
+}
