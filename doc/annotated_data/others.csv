@@ -1,0 +1,16 @@
+﻿Title,Reference,Link,Note
+"CutQC: Using Small Quantum Computers for Large Quantum
+Circuit Evaluations","Tang W, Tomesh T, Suchara M, et al. Cutqc: using small quantum computers for large quantum circuit evaluations[C]//Proceedings of the 26th ACM International conference on architectural support for programming languages and operating systems. 2021: 473-486.",https://dl.acm.org/doi/abs/10.1145/3445814.3446758,"Probably, it could inspire to deal with the scalability issue"
+"A large-scale quantum circuit dataset for machine learning on/for quantum computers in the
+NISQ era","Leonardo Placidi, Ryuichiro Hataya, Toshio Mori, Koki Aoyama, Hayata Morisaki, Kosuke Mitarai, and Keisuke
+Fujii. 2023. MNISQ: A large-scale quantum circuit dataset for machine learning on/for quantum computers in the
+NISQ era. arXiv:2306.16627. Retrieved from https://arxiv.org/abs/2306.16627",,Benchmark
+QASMBench: A low-level quantum benchmark suite for nisq evaluation and simulation.,"Li A, Stein S, Krishnamoorthy S, Ang J (2023) QASMBench: A low-level quantum benchmark suite for
+nisq evaluation and simulation. ACM Transactions on Quantum Computing 4(2):1–26. https://doi.org/
+10.1145/3550488",,Benchmark
+VeriQBench: A benchmark for multiple types of quantum circuits,"Chen K, Fang W, Guan J, et al. VeriQBench: A benchmark for multiple types of quantum circuits[J]. arXiv preprint arXiv:2206.10880, 2022.",,Benchmark
+Quantum Software Experiments: A Reporting and Laboratory Package Structure Guidelines Proposal,"Moguel, Enrique and Parejo, José Antonio and Ruiz-Cortés, Antonio and Garcia-Alonso, Jose and Murillo, Juan M.",https://ieeexplore.ieee.org/abstract/document/11134350,Related work
+Challenges and Practices in Quantum Software Testing and Debugging: Insights from Practitioners,"Zappin J, Stalnaker T, Chaparro O, et al. Challenges and Practices in Quantum Software Testing and Debugging: Insights from Practitioners[J]. arXiv preprint arXiv:2506.17306, 2025.",https://arxiv.org/abs/2506.17306,Related work
+"MQT Bench: Benchmarking Software and Design Automation Tools for Quantum Computing,",,,Benchmark
+"RevLib: An Online Resource for Reversible Functions and Reversible Circuits
+",,,Benchmark

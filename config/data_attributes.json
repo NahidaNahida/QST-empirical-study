@@ -1,0 +1,10 @@
+{
+    "data_dir_list" : ["doc", "annotated_data"],
+    "keyword_name" : "keyword_search.csv",
+    "snowballing_name": "snowballing.csv",
+    "final_list_name": "final_list.csv",
+    "headers": {
+        "initial_filtering": "Basic-Testing4Quantum?",
+        "second_filtering": "Basic-QSTAndEmpirical?"
+    }
+}
