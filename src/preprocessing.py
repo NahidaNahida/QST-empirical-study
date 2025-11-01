@@ -98,7 +98,7 @@ def xls2bib(file_name: str, sheet_name: Optional[str] = None):
 
     # 构建 BibTeX 数据库
     database = BibDatabase()
-    for _, row in df.iterrows():
+    for _, row in df.iterrows(): # type: ignore
         database.entries.append(row_to_bibtex(row))
 
     output_path = os.path.join(input_dir, f"{file_name}.bib")
