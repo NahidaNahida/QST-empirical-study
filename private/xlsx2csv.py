@@ -56,7 +56,7 @@ def xlsx2csv(xlsx_path, drop_columns, output_dir=None):
 if __name__ == "__main__":
     FILE_NAME = "literature_pool.xlsx"
     FILE_DIR = ["doc", "annotated_data"]
-    DROP_COLUMNS = ["PaperID", "BibTeX", "RelatedWork?", "Remark", "RootPaperID", "SnowballingMethod"]
+    DROP_COLUMNS = ["BibTeX", "RelatedWork?", "Remark", "SnowballingMethod", "Basic-PaperScope"]
 
     root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     file_path = os.path.join(root_dir, *FILE_DIR, FILE_NAME)

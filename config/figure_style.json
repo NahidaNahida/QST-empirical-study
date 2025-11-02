@@ -1,0 +1,17 @@
+{
+    "size": {
+        "usual_fontsize": 10,
+        "axis_fontsize": 12,
+        "markersize": 4
+    },
+    "width": {
+        "linewidth": 1.5
+    },
+    "rcParams": {
+        "font.family": "Palatino Linotype",
+        "mathtext.fontset": "custom", 
+        "mathtext.rm": "Palatino Linotype",  
+        "mathtext.it": "Palatino Linotype:italic",  
+        "mathtext.bf": "Palatino Linotype:bold"
+    }
+}

@@ -5,6 +5,10 @@
     "final_list_name": "final_list.csv",
     "headers": {
         "initial_filtering": "Basic-Testing4Quantum?",
-        "second_filtering": "Basic-QSTAndEmpirical?"
+        "second_filtering": "Basic-QSTAndEmpirical?",
+        "root_paper_id": "RootPaperID",
+        "bib_year": "Year",
+        "bib_venue_name": "Basic-UnifiedVenue",
+        "bib_venue_type": "Basic-VenueType"
     }
 }
