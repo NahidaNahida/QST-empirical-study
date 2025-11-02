@@ -12,7 +12,7 @@ __pycache__/
 
 # Distribution / packaging
 .Python
-build/
+# build/ I keep it
 develop-eggs/
 dist/
 downloads/

@@ -1,5 +1,6 @@
 import os
 from src import read_csv, read_config_json, tex_command_template, tex_file_generation
+import pandas as pd
 
 # ==============================================================
 # Global variables
@@ -12,7 +13,7 @@ data_dir = os.path.join(root_dir, "doc", "annotated_data")
 
 ###################################################################
 
-def boolean_data_counts(header, df):
+def boolean_data_counts(header: str, df: pd.DataFrame) -> tuple[int, int]:
     column_data = df[header].tolist()
     counts_yes = column_data.count("[Y]")
     counts_no = column_data.count("[N]")
@@ -21,7 +22,7 @@ def boolean_data_counts(header, df):
 def paper_counts(configs: dict) -> list[str]:
     counts_dict = {
         "keyword": {"total": 0, "init_Y": 0, "sec_Y": 0},
-        "snowballing": {"total": 0, "init_Y": 0, "sec_Y": 0}
+        "snowballing": {"total": 0, "init_Y": 0, "sec_Y": 0, "num_of_roots": 0}
     }
     
     file_dict = {
@@ -36,8 +37,16 @@ def paper_counts(configs: dict) -> list[str]:
         # Collect paper counts for initial filtering
         init_filter_header = configs["headers"]["initial_filtering"]
         sec_filter_header = configs["headers"]["second_filtering"]
+        
+        # Count the number of root papers
+        if search_phase == "snowballing":
+            root_paper_header = configs["headers"]["root_paper_id"]
+            column_data = df[root_paper_header].tolist()
+            counts_dict[search_phase]["num_of_roots"] = len(set(column_data))
+ 
 
         if init_filter_header in csv_headers and sec_filter_header in csv_headers:
+            # Boolean data for filtering
             init_yes, init_no = boolean_data_counts(init_filter_header, df)
             sec_yes, _ = boolean_data_counts(sec_filter_header, df)
 
@@ -54,7 +63,8 @@ def paper_counts(configs: dict) -> list[str]:
         tex_command_template("PaperNumKeywordTotal", str(counts_dict["keyword"]["total"])),
         tex_command_template("PaperNumSnowballingInitial", str(counts_dict["snowballing"]["init_Y"])),
         tex_command_template("PaperNumSnowballingSecond", str(counts_dict["snowballing"]["sec_Y"])),
-        tex_command_template("PaperNumSnowballingTotal", str(counts_dict["snowballing"]["total"])), 
+        tex_command_template("PaperNumSnowballingTotal", str(counts_dict["snowballing"]["total"])),
+        tex_command_template("NumberOfRootsForSnowballing", str(counts_dict["snowballing"]["num_of_roots"])),        
         tex_command_template(
             "SizeOfLiteraturePool", str(counts_dict["keyword"]["total"] + counts_dict["snowballing"]["total"])
         ),
@@ -71,7 +81,7 @@ if __name__ == "__main__":
 
     PROCEDURE = [paper_counts]
     TEX_SAVING_DIR = ["build", "latex"]
-    TEX_SAVING_NAME = "numbers.tex"
+    TEX_SAVING_NAME = "auto_numbers.tex"
 
     # =================================================
  

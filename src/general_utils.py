@@ -6,7 +6,7 @@ from pathlib import Path
 
 def read_csv(
     file_dir: str, file_name: str, encoding='utf-8'
-) -> Optional[pd.DataFrame]:
+) -> pd.DataFrame:
     # Build the full directory path
     file_path = os.path.join(file_dir, file_name)
     
@@ -20,7 +20,7 @@ def read_csv(
         return df
     except Exception as e:
         print(f"Error reading CSV file: {e}")
-        return None
+        exit(-1)
 
 def read_config_json(file_name: str) -> dict:
     # Get the current directory of this script
