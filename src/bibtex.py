@@ -115,8 +115,8 @@ if __name__ == "__main__":
     PROCEDURE = ["bib", "id"]
     
     PROC_CONFIG = {
-        "bib": {"func": bib_file, "dir": ["build", "latex"]},
-        "id":  {"func": id_commands, "dir": ["build", "bib"]}
+        "bib": {"func": bib_file, "dir": ["build", "bib"]},
+        "id":  {"func": id_commands, "dir": ["build", "tex"]}
     }
  
     # =================================================

@@ -144,8 +144,8 @@ Desktop.ini
 # ========================================
 
 # Files
-literature_pool.xlsx
-others.csv
+doc/annotated_dataliterature_pool.xlsx
+doc/annotated_data/others.csv 
 
 # Directories
 private/
