@@ -7,6 +7,9 @@
         "initial_filtering": "Basic-Testing4Quantum?",
         "second_filtering": "Basic-QSTAndEmpirical?",
         "root_paper_id": "RootPaperID",
+        "primary_study_id": "PaperID",
+        "bibtex": "BibTeX",
+
         "bib_year": "Year",
         "bib_venue_name": "Basic-UnifiedVenue",
         "bib_venue_type": "Basic-VenueType"
