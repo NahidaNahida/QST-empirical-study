@@ -13,6 +13,7 @@ from .figure_templates import(
     horizontal_bar_chart
 )
 
+from .bib_title_regulator import normalize_bibtex_str
 
 __all__ = [
     # General utilities
@@ -20,6 +21,7 @@ __all__ = [
     "read_config_json",
     "tex_command_template",
     "tex_file_generation",
+    "normalize_bibtex_str",
 
     # Templates for figure
     "line_chart",

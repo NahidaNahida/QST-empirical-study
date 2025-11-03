@@ -80,7 +80,7 @@ if __name__ == "__main__":
     # =================================================
 
     PROCEDURE = [paper_counts]
-    TEX_SAVING_DIR = ["build", "latex"]
+    TEX_SAVING_DIR = ["build", "commands"]
     TEX_SAVING_NAME = "auto_numbers.tex"
 
     # =================================================
