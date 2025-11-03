@@ -1,7 +1,9 @@
 import os
-from src import read_csv, read_config_json, tex_command_template, tex_file_generation
+from src import read_csv, read_config_json, tex_command_template, tex_file_generation, normalize_bibtex_str
 from num2words import num2words
 import bibtexparser
+from bibtexparser.bwriter import BibTexWriter
+from bibtexparser.bibdatabase import BibDatabase
 import re
 
 # ==============================================================
@@ -43,7 +45,22 @@ def normalize_bib_key(entry: dict[str, str]) -> str:
     return new_key
 
 
-def bib_file(configs: dict, saving_dir: str, saving_name: str="primary_studies.bib") -> None:
+def bib_file(
+    configs: dict, 
+    saving_dir: str, 
+    saving_name: str="primary_studies.bib",
+    req_fields: set = {
+        "author", 
+        "title", 
+        "year", 
+        "journal", 
+        "booktitle", 
+        "doi",
+        "volume",
+        "number",
+        "pages"}
+) -> None:
+
     file_name = configs["final_list_name"]
     header = configs["headers"]["bibtex"]
 
@@ -65,11 +82,25 @@ def bib_file(configs: dict, saving_dir: str, saving_name: str="primary_studies.b
             # 替换旧 key
             entry["ID"] = new_key
 
-            # 将修改后的 entry 转回字符串
-            bib_str = bibtexparser.dumps(bib_db)
+            # Retain fields as needed
+            filtered_entry = {k: v for k, v in entry.items() if k in req_fields}
+            filtered_entry["ID"] = entry["ID"]  # 保留 key
+            filtered_entry["ENTRYTYPE"] = entry.get("ENTRYTYPE", "article")
 
-            # 写入文件
-            f.write(bib_str.strip() + "\n\n")
+            # Convert to bibtex format
+            new_db = BibDatabase()
+            new_db.entries = [filtered_entry]
+            writer = BibTexWriter()
+            writer.indent = "    "
+            writer.order_entries_by = None # type: ignore
+
+            bib_str = writer.write(new_db)
+
+
+            # Normalize the bib in terms of capital and lower-case letter
+            normalized_bib_str = normalize_bibtex_str(bib_str)
+
+            f.write(normalized_bib_str.strip() + "\n\n")
 
     print(f"There are {len(bibtex_list)} pieces of literature saved at {saving_path}.")
 
@@ -101,7 +132,7 @@ def id_commands(configs: dict, saving_dir: str, saving_name: str="paper_ids.tex"
 
         # Generate Latex commends
         tex_commands.append(
-            tex_command_template(f"Paper{camel_case_word}", normalized_key)
+            tex_command_template(f"Paper{camel_case_word}", normalized_key, mode="citation")
         )
 
     tex_file_generation(saving_dir, saving_name, tex_commands)
@@ -116,7 +147,7 @@ if __name__ == "__main__":
     
     PROC_CONFIG = {
         "bib": {"func": bib_file, "dir": ["build", "bib"]},
-        "id":  {"func": id_commands, "dir": ["build", "latex"]}
+        "id":  {"func": id_commands, "dir": ["build", "commands"]}
     }
  
     # =================================================

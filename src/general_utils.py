@@ -48,14 +48,18 @@ def read_config_json(file_name: str) -> dict:
         print(f"Error reading config file: {e}")
         exit(-1)
         
-def tex_command_template(command_name: str, value: str) -> str:
-    return f"\\newcommand{{\\{command_name}}}{{{value}\\xspace}}"
+def tex_command_template(command_name: str, value: str, mode: str = "text") -> str:
+    return_dict = {
+        "text": f"\\newcommand{{\\{command_name}}}{{{value}\\xspace}}",
+        "citation": f"\\newcommand{{\\{command_name}}}{{{value}}}",
+    }
+    return return_dict[mode]
 
 def tex_file_generation(
     file_dir: str, 
     file_name: str, 
     lines: list[str], 
-    encoding='utf-8', 
+    encoding: str='utf-8', 
     ensure_trailing_newline=True
 ) -> None:
     """
