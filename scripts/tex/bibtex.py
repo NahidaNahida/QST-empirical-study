@@ -1,6 +1,5 @@
 import os
-from src import read_csv, read_config_json, tex_command_template, tex_file_generation, normalize_bibtex_str
-from num2words import num2words
+from src import read_csv, read_config_json, tex_command_template, tex_file_generation, normalize_bibtex_str, number2camelform
 import bibtexparser
 from bibtexparser.bwriter import BibTexWriter
 from bibtexparser.bibdatabase import BibDatabase
@@ -12,7 +11,7 @@ import re
 CONFIG_NAME = "data_attributes.json"
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
-root_dir = os.path.dirname(current_dir)
+root_dir = os.path.dirname(os.path.dirname(current_dir))
 data_dir = os.path.join(root_dir, "doc", "annotated_data")
 
 ###################################################################
@@ -118,11 +117,8 @@ def id_commands(configs: dict, saving_dir: str, saving_name: str="paper_ids.tex"
     tex_commands = []
     for idx, bib in zip(id_list, bib_list):
         # Transfer the number to corresponding English word
-        word = num2words(int(idx), lang="en")
-
-        # Remove the hyphens and capitalize the first letter of each word
-        camel_case_word = ''.join(word.capitalize() for word in word.replace('-', ' ').split())
-
+        camel_case_word = number2camelform(int(idx))
+ 
         # Parse bib entries
         bib_db = bibtexparser.loads(bib)
         entry = bib_db.entries[0]
@@ -145,9 +141,10 @@ if __name__ == "__main__":
 
     PROCEDURE = ["bib", "id"]
     
+    from scripts import BIB_SAVING_DIR, CMD_SAVING_DIR
     PROC_CONFIG = {
-        "bib": {"func": bib_file, "dir": ["build", "bib"]},
-        "id":  {"func": id_commands, "dir": ["build", "commands"]}
+        "bib": {"func": bib_file, "dir": BIB_SAVING_DIR},
+        "id":  {"func": id_commands, "dir": CMD_SAVING_DIR}
     }
  
     # =================================================

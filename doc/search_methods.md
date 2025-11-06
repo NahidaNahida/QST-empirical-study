@@ -51,3 +51,7 @@ Google
   + excluding formal verification and validation
   + excluding papers who primary goal is not quantum software testing (e.g., QST is one of the case studies)
 + Quantum programs/circuits/software as the objects under test
+
+
+
+ 

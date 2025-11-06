@@ -12,6 +12,11 @@
 
         "bib_year": "Year",
         "bib_venue_name": "Basic-UnifiedVenue",
-        "bib_venue_type": "Basic-VenueType"
+        "bib_venue_type": "Basic-VenueType",
+
+        "rq1_program_names": "Programs-ProgramName",
+        "rq1_object_numbers": "Programs-#OfObjects",
+
+        "rq10_program_sources": "Toolings-AvailableProgramSource"
     }
 }

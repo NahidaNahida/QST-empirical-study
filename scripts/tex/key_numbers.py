@@ -8,7 +8,7 @@ import pandas as pd
 CONFIG_NAME = "data_attributes.json"
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
-root_dir = os.path.dirname(current_dir)
+root_dir = os.path.dirname(os.path.dirname(current_dir))
 data_dir = os.path.join(root_dir, "doc", "annotated_data")
 
 ###################################################################
@@ -80,7 +80,8 @@ if __name__ == "__main__":
     # =================================================
 
     PROCEDURE = [paper_counts]
-    TEX_SAVING_DIR = ["build", "commands"]
+
+    from scripts import CMD_SAVING_DIR
     TEX_SAVING_NAME = "auto_numbers.tex"
 
     # =================================================
@@ -92,5 +93,5 @@ if __name__ == "__main__":
         temp_tex = sub_proc(configs)
         final_tex.extend(temp_tex)
     
-    saving_dir = os.path.join(root_dir, *TEX_SAVING_DIR)
+    saving_dir = os.path.join(root_dir, *CMD_SAVING_DIR)
     tex_file_generation(saving_dir, TEX_SAVING_NAME, final_tex)
