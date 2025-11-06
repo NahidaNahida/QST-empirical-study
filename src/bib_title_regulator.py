@@ -101,8 +101,8 @@ def normalize_bibtex_str(bib_str: str) -> str:
     return writer.write(bib_db).strip()
 
 
-# === 示例用法 ===
 if __name__ == "__main__":
+    # Unit test
     raw_bib = """
     @inproceedings{example2025,
       title={a study on transformer and gpt models},

@@ -3,6 +3,7 @@ import pandas as pd
 import json
 from typing import Optional
 from pathlib import Path
+from num2words import num2words
 
 def read_csv(
     file_dir: str, file_name: str, encoding='utf-8'
@@ -74,3 +75,15 @@ def tex_file_generation(
         text += "\n"
     with open(file_path, "w", encoding=encoding, newline="\n") as f:
         f.write(text)
+
+def number2camelform(number: int, lang="en") -> str:
+    # Transfer the number to corresponding English word
+    word = num2words(int(number), lang=lang)
+
+    # Remove the hyphens and capitalize the first letter of each word
+    camel_case_word = ''.join(word.capitalize() for word in word.replace('-', ' ').split())
+    return camel_case_word
+
+def paperids2citation(ids: list) -> str:
+    temp_list = [f"\\Paper{number2camelform(int(idx))}" for idx in ids]
+    return f"\\cite{{{' ,'.join(temp_list)}}}"

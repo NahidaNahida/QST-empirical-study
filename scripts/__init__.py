@@ -12,7 +12,10 @@ CONFIG_DICT = {
     "CONFIG_FIGURE_NAME": "figure_style.json"
 }
 
-SAVING_DIR = ["build", "figures"]
+FIG_SAVING_DIR = ["build", "figures"]
+TAB_SAVING_DIR = ["build", "tables"]
+BIB_SAVING_DIR = ["build", "bib"]
+CMD_SAVING_DIR = ["build", "commands"]
 
 ROOT_DIR = os.path.dirname(os.path.dirname(__file__))
 FILE_DIR = os.path.join(ROOT_DIR, *FILE_DICT["FILE_DIR"])
@@ -26,5 +29,8 @@ __all__ = [
     "FILE_NAME",
     "CONFIG_DATA_NAME",
     "CONFIG_FIGURE_NAME",
-    "SAVING_DIR"
+    "FIG_SAVING_DIR",
+    "TAB_SAVING_DIR",
+    "BIB_SAVING_DIR",
+    "CMD_SAVING_DIR"
 ]

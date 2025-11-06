@@ -4,7 +4,8 @@ import matplotlib.pyplot as plt
 from matplotlib import cm
 import os
 import numpy as np
-
+import seaborn as sns
+from matplotlib.ticker import FuncFormatter, MaxNLocator
 def common_configuration(config_figure: dict) -> None:
     mapping_dict = {
         "rcParams": plt.rcParams
@@ -22,11 +23,9 @@ def line_chart(
     legends: dict[Literal["x", "y"], str], 
     save_path: str,
     config_figure: dict,
-    temporal_config: dict = {
-        "offset": 0.7,          # Offset above the data point for the label
-        "figsize": (3.5, 2.25),
-        "ylim": [0, 25],         # y-axis display range
-    }
+    fig_offset: float = 0.7,
+    fig_figsize: tuple = (3.5, 2.25),
+    fig_ylim: list = [0, 25]
 ) -> None:
     common_configuration(config_figure)
 
@@ -38,7 +37,7 @@ def line_chart(
     counts = [data_count[y] for y in data_vals]
 
     # Plot the line chart
-    plt.figure(figsize=temporal_config["figsize"])
+    plt.figure(figsize=fig_figsize)
     plt.plot(
         data_vals, 
         counts, 
@@ -52,7 +51,7 @@ def line_chart(
     for x, y in zip(data_vals, counts):
         plt.text(
             x, 
-            y + temporal_config["offset"], 
+            y + fig_offset, 
             str(y), 
             ha='center', 
             va='bottom', 
@@ -69,7 +68,7 @@ def line_chart(
     plt.yticks(fontsize=config_figure["size"]["usual_fontsize"])
 
     # Set y-axis limits
-    plt.ylim(temporal_config["ylim"])
+    plt.ylim(fig_ylim)
 
     # Save the figure to the specified path
     # Ensure the directory exists
@@ -82,13 +81,10 @@ def pie_chart(
     data: list[str],
     save_path: str,
     config_figure: dict,
-    temporal_config: dict = {
-        "figsize": (3, 3),
-        "explode": None,
-        "autopct": "%1.1f%%",
-        "startangle": 90,
-        "offset": 0.25,
-    }
+    fig_figsize: tuple = (3, 3),
+    fig_explode = None,
+    fig_startangle: int = 90,
+    fig_offset: float = 0.25
 ) -> None:
     """
     Draw a pie chart from the data, showing percentages with counts.
@@ -100,8 +96,8 @@ def pie_chart(
     labels = list(data_count.keys())
     sizes = list(data_count.values())
 
-    if temporal_config["explode"] is None:
-        temporal_config["explode"] = [0] * len(labels)
+    if fig_explode is None:
+        fig_explode = [0] * len(labels)
 
     # Custom function to show percentage + count
     def autopct_with_count(pct):
@@ -115,13 +111,13 @@ def pie_chart(
     colors = [colors[i % len(colors)] for i in range(num_slices)]
 
     # Create the pie chart
-    _, ax = plt.subplots(figsize=temporal_config["figsize"])
+    _, ax = plt.subplots(figsize=fig_figsize)
     wedges, _, autotexts = ax.pie( # type: ignore
         sizes,
         labels=None,  # 不使用默认 labels
         autopct=autopct_with_count,
-        startangle=temporal_config["startangle"],
-        explode=temporal_config["explode"],
+        startangle=fig_startangle,
+        explode=fig_explode,
         colors=colors,
         textprops={'fontsize': config_figure["size"]["usual_fontsize"]}
     )
@@ -138,7 +134,7 @@ def pie_chart(
 
         # 在百分比上方添加 label
         ax.text(
-            x, y - temporal_config["offset"],  # 微调 y 轴，让 label 在百分比上方
+            x, y - fig_offset,  # 微调 y 轴，让 label 在百分比上方
             labels[i],
             ha='center',
             va='bottom',
@@ -158,11 +154,10 @@ def horizontal_bar_chart(
     legends: dict[Literal["x", "y"], str], 
     save_path: str,
     config_figure: dict,
-    temporal_config: dict = {
-        "figsize": (3.5, 2.25),
-        "bar_height": 0.25,
-        "color": "#B7B5B7F8"
-    }
+    fig_figsize: tuple = (3.5, 2.25),
+    fig_barheight: float = 0.25,
+    fig_color: str = "#B7B5B7F8",
+    fig_xinteger: bool = True      # Whether ticks on the x-axis should be integers
 ) -> None:
     common_configuration(config_figure)
 
@@ -180,12 +175,12 @@ def horizontal_bar_chart(
     counts = [item[1] for item in sorted_items]      # 对应的频数
 
     # 绘制 Bar Chart
-    fig, ax = plt.subplots(figsize=temporal_config["figsize"])
+    _, ax = plt.subplots(figsize=fig_figsize)
 
     y = np.arange(len(data_vals))
-    bar_height = temporal_config["bar_height"]
+    bar_height = fig_barheight
 
-    bars = ax.barh(y, counts, height=bar_height, color=temporal_config["color"], alpha=0.85, edgecolor="black")
+    bars = ax.barh(y, counts, height=bar_height, color=fig_color, alpha=0.85, edgecolor="black")
     ax.set_ylim(-0.5, len(data_vals)-0.5)  # 紧凑排列
     ax.set_xlim(0, max(counts)*1.18)  # 让右边留出 15% 空间
 
@@ -205,6 +200,10 @@ def horizontal_bar_chart(
     ax.set_xlabel(legends["x"], fontsize=config_figure["size"]["axis_fontsize"], fontweight='bold')
     ax.tick_params(axis='x', labelsize=config_figure["size"]["usual_fontsize"])  # 只调整刻度字体大小
 
+    # ✅ 设置 x 轴刻度为整数
+    if fig_xinteger:
+        ax.xaxis.set_major_locator(MaxNLocator(integer=True))
+
     # 网格线
     ax.grid(axis="x", linestyle="--", alpha=0.6)
     ax.set_axisbelow(True)  # ✅ 确保网格线在柱子下方
@@ -216,4 +215,186 @@ def horizontal_bar_chart(
     # Save the figure
     os.makedirs(os.path.dirname(save_path), exist_ok=True)
     plt.savefig(save_path, format='pdf', bbox_inches='tight')
+    print(f"Number of categories: {len(set(data_vals))}.")
     print(f"The horizontal bar chart has been saved to {save_path}")
+ 
+def horizontal_boxplot(
+    data: list[np.ndarray],
+    legends: dict[Literal["x", "y"], str],
+    save_path: str,
+    config_figure: dict,
+    fig_figsize: tuple = (4, 2.5),
+    fig_color: str = "#B7B5B7F8",
+    fig_pointsize: float = 3.0,
+    fig_boxwidth: float = 0.1,
+    fig_scatteralpha: float = 0.5,     # Transparency for scatters
+    fig_extremesize: float = 25.0,
+    fig_xinteger: bool = True,  
+    samplesize_name = None,
+    show_points: bool = True,
+    point_mode: Literal["strip", "swarm"] = "swarm",
+    no_ytick: bool = False,
+    legend_only: bool = False
+) -> None:
+    # --- （1）x轴只显示整数 & 自动简化显示（1k, 1M 等） ---
+    def format_large_ticks(x, pos):
+        if abs(x) >= 1_000_000:
+            return f"{x/1_000_000:.0f}M"
+        elif abs(x) >= 1_000:
+            return f"{x/1_000:.0f}k"
+        else:
+            return f"{int(x)}" if fig_xinteger and abs(x-int(x))<1e-3 else f"{x:.2f}"
+        
+    """绘制带数据散点与统计标注的水平箱线图"""
+    common_configuration(config_figure)
+
+    plt.figure(figsize=fig_figsize)
+    ax = sns.boxplot(
+        data=data,
+        color=fig_color,
+        width=fig_boxwidth,
+        fliersize=3,
+        zorder=1,
+        orient='h'
+    )
+
+ 
+
+    # --- 绘制散点 ---
+    if show_points:
+        if point_mode == "strip":
+            sns.stripplot(
+                data=data,
+                color='grey',
+                size=fig_pointsize,
+                alpha=fig_scatteralpha,
+                jitter=True,
+                zorder=3,
+                orient='h'
+            )
+        elif point_mode == "swarm":
+            sns.swarmplot(
+                data=data,
+                color='grey',
+                size=fig_pointsize,
+                alpha=fig_scatteralpha,
+                zorder=3,
+                orient='h'
+            )
+
+    # --- 坐标轴标签 ---
+    ax.set_xlabel(legends["x"], fontsize=config_figure["size"]["axis_fontsize"], fontweight='bold')
+    ax.set_ylabel(legends["y"], fontsize=config_figure["size"]["axis_fontsize"], fontweight='bold')
+
+    # --- ✅ 如果 no_ytick 为 True，则隐藏 y 轴刻度与标签 ---
+    if no_ytick:
+        ax.set_yticks([])                      # 移除刻度位置
+        ax.set_yticklabels([])                 # 移除刻度标签
+        ax.tick_params(axis='y', length=0)     # 移除刻度线
+
+    # --- （1）x轴只显示整数 ---
+    ax.xaxis.set_major_formatter(FuncFormatter(format_large_ticks))
+
+    if fig_xinteger:
+        ax.xaxis.set_major_locator(MaxNLocator(integer=True))
+
+    # --- （3）添加灰色网格 ---
+    ax.grid(True, color="#E0E0E0", linestyle="--", linewidth=0.8, axis="x")
+    ax.set_axisbelow(True)
+
+    # # ✅ 让 x 轴从 0 开始，但保留 5% 的视觉空隙
+    # x_min = 0
+    # x_max = max(np.max(vals) for vals in data)
+    # ax.set_xlim(x_min - 0.05 * (x_max - x_min), x_max * 1.05)
+
+    # --- 标注统计信息 ---
+    for i, vals in enumerate(data):
+        vals = np.asarray(vals)
+        n = len(vals)
+        median = np.median(vals)  # （2）使用中位数
+        min_v, max_v = np.min(vals), np.max(vals)
+        y_pos = i  # 水平箱线图中是 y 位置
+
+        if samplesize_name is not None:
+            if len(data) == 1:
+                ax.set_title(f"{samplesize_name} = {n}", fontsize=11)
+            else:
+                ax.text(
+                    max_v + (max_v - min_v) * 0.05, y_pos, f"{samplesize_name} = {n}",
+                    va='center', ha='left', fontsize=8, color='black', zorder=5
+                )
+
+        # --- 中位数 ---
+        if fig_xinteger:
+            annotated_data = {
+                "median": f"{format_large_ticks(median, None)}",
+                "maximum": f"{format_large_ticks(max_v, None)}",
+                "minimum": f"{format_large_ticks(min_v, None)}",
+            }
+        else:
+            annotated_data = {
+                "median": f"{median:.2f}",
+                "maximum": f"{max_v:.2f}",
+                "minimum": f"{min_v:.2f}",
+            }
+        
+        ax.scatter(median, y_pos, color='red', marker='o', s=30, zorder=5, label='Median value' if i == 0 else "")
+        ax.annotate(annotated_data["median"], (median, y_pos), xytext=(6, 0), # type: ignore
+                    textcoords='offset points', fontsize=config_figure["size"]["usual_fontsize"],
+                    color='red', va='center', fontweight='bold')
+
+        # 最大值
+        ax.scatter(max_v, y_pos, color='#8E44AD', marker='>', 
+                   s=fig_extremesize, zorder=5, label='Maximum' if i == 0 else "")
+        ax.annotate(annotated_data["maximum"], (max_v, y_pos), xytext=(-12, 2),
+                    textcoords='offset points', fontsize=config_figure["size"]["usual_fontsize"],
+                    color='#8E44AD', va='bottom', fontweight='bold')
+
+        # 最小值
+        ax.scatter(min_v, y_pos, color='#16A085', marker='<', 
+                   s=fig_extremesize, zorder=5, label='Minimum' if i == 0 else "")
+        ax.annotate(annotated_data["minimum"], (min_v, y_pos), xytext=(-20, -2),
+                    textcoords='offset points', fontsize=config_figure["size"]["usual_fontsize"],
+                    color='#16A085', va='top', fontweight='bold')
+
+    # --- 保存图或图例 ---
+    os.makedirs(os.path.dirname(save_path), exist_ok=True)
+
+    if legend_only:
+        handles, labels = ax.get_legend_handles_labels()
+        by_label = dict(zip(labels, handles))
+        if by_label:
+            legend_fig = plt.figure(figsize=fig_figsize)
+            leg = legend_fig.legend(
+                handles=by_label.values(),
+                labels=by_label.keys(),
+                loc='center',
+                ncol=len(by_label),
+                frameon=True,  # ✅ 必须为 True，否则不会生成边框
+                fontsize=config_figure["size"]["axis_fontsize"],
+                handlelength=1.2,
+                columnspacing=0.8
+            )
+
+            # ✅ 设置边框样式
+            frame = leg.get_frame()
+            frame.set_edgecolor('black')   # 黑色边框
+            frame.set_linewidth(0.8)       # 边框线宽
+            frame.set_facecolor('white')   # 可选：背景为白色
+            frame.set_alpha(1.0)           # 可选：不透明
+            legend_fig.savefig(save_path, bbox_inches='tight', pad_inches=0)
+    else:
+        plt.savefig(save_path, format='pdf', bbox_inches='tight')
+
+    figure_type = "legend" if legend_only else "boxplot"
+    print(f"The {figure_type} has been saved to {save_path}")
+
+if __name__ == "__main__":
+    # 生成示例数据
+    data = [
+        np.random.normal(0, 10, 100),   # 组1
+        # np.random.normal(5, 2, 100),   # 组2
+        # np.random.normal(10, 1.5, 100) # 组3
+    ]
+
+ 
