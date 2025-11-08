@@ -36,7 +36,7 @@ def algorithm_and_subroutine_names(
     """
     # Instant configuration
     TEMP_CONFIG = {
-        "figsize": (4.5, 5.5),
+        "figsize": (4.5, 6),
         "bar_height": 0.25,
         "color": "#FFFCCEF8"
     }
@@ -50,7 +50,8 @@ def algorithm_and_subroutine_names(
         FIG_SAVING_DIR,
         saving_name
     )
-
+    data: list
+    saving_path: str
     # Extract the required term
     req_data: list[dict] = parse_column(data)
     # Removed the empity dictionary
@@ -58,6 +59,8 @@ def algorithm_and_subroutine_names(
 
     req_metadata = {}
     for data_dict in req_data:
+        if not isinstance(data_dict, dict):
+            continue
         for data_keyword in data_keywords:
             if data_keyword in data_dict.keys():
                 if data_keyword not in req_metadata.keys():  # Create a new key-value pair
@@ -66,6 +69,7 @@ def algorithm_and_subroutine_names(
                     req_metadata[data_keyword].extend(data_dict[data_keyword]) 
 
     # Mark algorithms with one sample as "Others"
+    algorithm_counts = len(set(req_metadata[data_keywords[0]]))
     counts = Counter(req_metadata[data_keywords[0]])  # Count the frequencies
     updated_req_metadata = []
     for temp_data in req_metadata[data_keywords[0]]:
@@ -81,7 +85,8 @@ def algorithm_and_subroutine_names(
         config_figure,
         fig_figsize=TEMP_CONFIG["figsize"],
         fig_barheight=TEMP_CONFIG["bar_height"],
-        fig_color=TEMP_CONFIG["color"]
+        fig_color=TEMP_CONFIG["color"],
+        title=f"# of quanutm algorithms or subroutines = {int(algorithm_counts)}" 
     )
     
 def learning_models_names(
@@ -114,6 +119,8 @@ def learning_models_names(
         saving_name
     )
 
+    data: list
+    saving_path: str
     # Extract the required term
     req_data: list[dict] = parse_column(data)
     req_metadata = {}
@@ -122,6 +129,8 @@ def learning_models_names(
             continue
         # Filter the data out of the keyword list
         for data_keyword in data_keywords:
+            if not isinstance(data_dict, dict):
+                continue
             if data_keyword in data_dict.keys():
                 if data_keyword not in req_metadata.keys(): # Create a dict for each keyword
                     req_metadata[data_keyword] = {}
@@ -187,10 +196,11 @@ def number_of_objects(
         saving_name
     )
 
+    data: list
+    saving_path: str
     # Extract the required term
     req_data: list[dict[str, list]] = parse_column(data)
     req_data = [elem for elem in req_data if elem != {}]
-    print(req_data)
     program_numbers_dict = {}
     for paper_data in req_data:
         for paper_data_type, paper_data_number in paper_data.items():
@@ -239,3 +249,5 @@ if __name__ == "__main__":
             sub_proc(df, config_data, config_figure) # type: ignore
         elif type == "tab":
             sub_proc(df, config_data)
+
+    print("\nRQ1 is done. \n")

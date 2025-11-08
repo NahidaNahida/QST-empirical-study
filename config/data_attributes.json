@@ -6,6 +6,7 @@
     "headers": {
         "initial_filtering": "Basic-Testing4Quantum?",
         "second_filtering": "Basic-QSTAndEmpirical?",
+        "SE_problem": "Basic-PaperScope",
         "root_paper_id": "RootPaperID",
         "primary_study_id": "PaperID",
         "bibtex": "BibTeX",
@@ -17,6 +18,12 @@
         "rq1_program_names": "Programs-ProgramName",
         "rq1_object_numbers": "Programs-#OfObjects",
 
-        "rq10_program_sources": "Toolings-AvailableProgramSource"
+        "rq3_whether_scalability": "Scalability-InvolveScalability?",
+        "rq3_qubits": "Scalability-#OfQubits",	
+        "rq3_gates": "Scalability-#OfGates",
+        "rq3_depth": "Scalability-CircuitDepth",
+
+        "rq10_program_sources": "Toolings-AvailableProgramSource",
+        "rq10_artifacts": "Toolings-ArtifactAvailableLink"
     }
 }

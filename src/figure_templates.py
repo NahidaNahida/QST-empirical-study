@@ -6,6 +6,9 @@ import os
 import numpy as np
 import seaborn as sns
 from matplotlib.ticker import FuncFormatter, MaxNLocator
+from upsetplot import UpSet, from_memberships
+
+
 def common_configuration(config_figure: dict) -> None:
     mapping_dict = {
         "rcParams": plt.rcParams
@@ -157,7 +160,8 @@ def horizontal_bar_chart(
     fig_figsize: tuple = (3.5, 2.25),
     fig_barheight: float = 0.25,
     fig_color: str = "#B7B5B7F8",
-    fig_xinteger: bool = True      # Whether ticks on the x-axis should be integers
+    fig_xinteger: bool = True,      # Whether ticks on the x-axis should be integers
+    title: str | None = None
 ) -> None:
     common_configuration(config_figure)
 
@@ -212,12 +216,120 @@ def horizontal_bar_chart(
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
 
+    if title:
+        ax.set_title(title, fontsize=config_figure["size"]["axis_fontsize"], pad=10)
+
     # Save the figure
     os.makedirs(os.path.dirname(save_path), exist_ok=True)
     plt.savefig(save_path, format='pdf', bbox_inches='tight')
     print(f"Number of categories: {len(set(data_vals))}.")
     print(f"The horizontal bar chart has been saved to {save_path}")
  
+def vertical_bar_chart(
+    data: list[str],
+    legends: dict[str, str], 
+    save_path: str,
+    config_figure: dict,
+    fig_figsize: tuple = (3.5, 2.25),
+    fig_barwidth: float = 0.5,
+    fig_color: str = "#B7B5B7F8",
+    fig_yinteger: bool = True,      # Whether ticks on the y-axis should be integers
+    title: str | None = None,
+    rotate_xticks: bool = True,     # 是否自动倾斜 x 轴标签
+    rotation_angle: int = 30        # 倾斜角度（默认 30 度）
+) -> None:
+    """
+    绘制垂直方向的柱状图。
+
+    参数说明：
+    - data: 类别数据（字符串列表）
+    - legends: {'x': '类别', 'y': '频数'}
+    - save_path: 图像保存路径
+    - config_figure: 通用绘图配置（含字体大小信息）
+    - fig_figsize: 图尺寸
+    - fig_barwidth: 柱宽
+    - fig_color: 柱子颜色
+    - fig_yinteger: y轴是否显示整数刻度
+    - title: 图标题
+    - rotate_xticks: 是否旋转x轴标签
+    - rotation_angle: 标签旋转角度
+    """
+
+    # 应用通用配置
+    common_configuration(config_figure)
+
+    # 统计频数
+    data_count = Counter(data)
+
+    # 按频数升序排序（同频时按字母顺序）
+    sorted_items = sorted(
+        data_count.items(),
+        key=lambda x: (x[1], -ord(x[0][0].lower())),
+        reverse=False
+    )
+
+    data_vals = [item[0] for item in sorted_items]
+    counts = [item[1] for item in sorted_items]
+
+    # 绘制 Bar Chart
+    _, ax = plt.subplots(figsize=fig_figsize)
+
+    x = np.arange(len(data_vals))
+    bar_width = fig_barwidth
+
+    bars = ax.bar(x, counts, width=bar_width, color=fig_color, alpha=0.85, edgecolor="black")
+
+    # 设置坐标轴范围
+    ax.set_ylim(0, max(counts) * 1.18)
+    ax.set_xlim(-0.5, len(data_vals) - 0.5)
+
+    # 在每个柱子顶部显示频次
+    for i, bar in enumerate(bars):
+        value = counts[i]
+        ax.text(
+            bar.get_x() + bar.get_width() / 2,
+            bar.get_height() + max(counts) * 0.01,
+            f"{value}",
+            ha="center",
+            va="bottom",
+            fontsize=10
+        )
+
+    # 设置 x 轴
+    ax.set_xticks(x)
+    ax.set_xticklabels(data_vals, fontsize=config_figure["size"]["usual_fontsize"])
+
+    # 如果标签过长或启用旋转
+    if rotate_xticks or any(len(label) > 8 for label in data_vals):
+        plt.setp(ax.get_xticklabels(), rotation=rotation_angle, ha="right")
+
+    ax.set_xlabel(legends["x"], fontsize=config_figure["size"]["axis_fontsize"], fontweight='bold')
+
+    # 设置 y 轴
+    ax.set_ylabel(legends["y"], fontsize=config_figure["size"]["axis_fontsize"], fontweight='bold')
+    ax.tick_params(axis='y', labelsize=config_figure["size"]["usual_fontsize"])
+
+    if fig_yinteger:
+        ax.yaxis.set_major_locator(MaxNLocator(integer=True))
+
+    # 网格线
+    ax.grid(axis="y", linestyle="--", alpha=0.6)
+    ax.set_axisbelow(True)
+
+    # 去掉边框
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+
+    if title:
+        ax.set_title(title, fontsize=config_figure["size"]["axis_fontsize"], pad=10)
+
+    # 保存图像
+    os.makedirs(os.path.dirname(save_path), exist_ok=True)
+    plt.savefig(save_path, format='pdf', bbox_inches='tight')
+    print(f"Number of categories: {len(set(data_vals))}.")
+    print(f"The vertical bar chart has been saved to {save_path}")
+
+
 def horizontal_boxplot(
     data: list[np.ndarray],
     legends: dict[Literal["x", "y"], str],
@@ -229,7 +341,9 @@ def horizontal_boxplot(
     fig_boxwidth: float = 0.1,
     fig_scatteralpha: float = 0.5,     # Transparency for scatters
     fig_extremesize: float = 25.0,
-    fig_xinteger: bool = True,  
+    fig_xinteger: bool = True,
+    fig_median_offset: tuple = (-2, 25), 
+    fig_max_offset: tuple = (0, 6), 
     samplesize_name = None,
     show_points: bool = True,
     point_mode: Literal["strip", "swarm"] = "swarm",
@@ -302,60 +416,66 @@ def horizontal_boxplot(
     ax.grid(True, color="#E0E0E0", linestyle="--", linewidth=0.8, axis="x")
     ax.set_axisbelow(True)
 
-    # # ✅ 让 x 轴从 0 开始，但保留 5% 的视觉空隙
-    # x_min = 0
-    # x_max = max(np.max(vals) for vals in data)
-    # ax.set_xlim(x_min - 0.05 * (x_max - x_min), x_max * 1.05)
+    # --- 自动获取 boxplot whisker ---
+    # matplotlib boxplot 对象
+    box_dict = ax.artists  # 每个箱体
+    whiskers = ax.lines    # whiskers 存在 lines 中，注意索引规则
 
-    # --- 标注统计信息 ---
     for i, vals in enumerate(data):
         vals = np.asarray(vals)
         n = len(vals)
-        median = np.median(vals)  # （2）使用中位数
-        min_v, max_v = np.min(vals), np.max(vals)
-        y_pos = i  # 水平箱线图中是 y 位置
+        # 中位数
+        q2 = np.percentile(vals, 50)
+
+        # 获取 whisker
+        lower_whisker = whiskers[2*i].get_xdata()[1]  # type: ignore # 第 i 个箱子的下 whisker
+        upper_whisker = whiskers[2*i+1].get_xdata()[1]  # type: ignore # 第 i 个箱子的上 whisker
+
+        min_v, max_v, median = lower_whisker, upper_whisker, q2
+        y_pos = i
 
         if samplesize_name is not None:
             if len(data) == 1:
                 ax.set_title(f"{samplesize_name} = {n}", fontsize=11)
             else:
                 ax.text(
-                    max_v + (max_v - min_v) * 0.05, y_pos, f"{samplesize_name} = {n}",
+                    max_v + (max_v - min_v) * 0.05, y_pos, # type: ignore
+                    f"{samplesize_name} = {n}",
                     va='center', ha='left', fontsize=8, color='black', zorder=5
                 )
 
+        fmt = lambda v: format_large_ticks(v, None) if fig_xinteger else f"{v:.2f}"
+        annotated_data = {"median": fmt(median), "maximum": fmt(max_v), "minimum": fmt(min_v)}
+
         # --- 中位数 ---
-        if fig_xinteger:
-            annotated_data = {
-                "median": f"{format_large_ticks(median, None)}",
-                "maximum": f"{format_large_ticks(max_v, None)}",
-                "minimum": f"{format_large_ticks(min_v, None)}",
-            }
-        else:
-            annotated_data = {
-                "median": f"{median:.2f}",
-                "maximum": f"{max_v:.2f}",
-                "minimum": f"{min_v:.2f}",
-            }
-        
-        ax.scatter(median, y_pos, color='red', marker='o', s=30, zorder=5, label='Median value' if i == 0 else "")
-        ax.annotate(annotated_data["median"], (median, y_pos), xytext=(6, 0), # type: ignore
-                    textcoords='offset points', fontsize=config_figure["size"]["usual_fontsize"],
-                    color='red', va='center', fontweight='bold')
+        ax.scatter(median, y_pos, color='red', marker='o', s=30,
+                   zorder=5, label='Median' if i == 0 else "")
+        ax.annotate(
+            annotated_data["median"], (median, y_pos), xytext=fig_median_offset, # type: ignore
+            textcoords='offset points',
+            fontsize=config_figure["size"]["usual_fontsize"],
+            color='red', va='center', fontweight='bold'
+        )
 
-        # 最大值
-        ax.scatter(max_v, y_pos, color='#8E44AD', marker='>', 
-                   s=fig_extremesize, zorder=5, label='Maximum' if i == 0 else "")
-        ax.annotate(annotated_data["maximum"], (max_v, y_pos), xytext=(-12, 2),
-                    textcoords='offset points', fontsize=config_figure["size"]["usual_fontsize"],
-                    color='#8E44AD', va='bottom', fontweight='bold')
+        # --- 最大值（upper whisker） ---
+        ax.scatter(max_v, y_pos, color='#8E44AD', marker='>',
+                   s=fig_extremesize, zorder=5, label='Upper whisker' if i == 0 else "")
+        ax.annotate(
+            annotated_data["maximum"], (max_v, y_pos), xytext=fig_max_offset, # type: ignore
+            textcoords='offset points',
+            fontsize=config_figure["size"]["usual_fontsize"],
+            color='#8E44AD', va='bottom', fontweight='bold'
+        )
 
-        # 最小值
-        ax.scatter(min_v, y_pos, color='#16A085', marker='<', 
-                   s=fig_extremesize, zorder=5, label='Minimum' if i == 0 else "")
-        ax.annotate(annotated_data["minimum"], (min_v, y_pos), xytext=(-20, -2),
-                    textcoords='offset points', fontsize=config_figure["size"]["usual_fontsize"],
-                    color='#16A085', va='top', fontweight='bold')
+        # --- 最小值（lower whisker） ---
+        ax.scatter(min_v, y_pos, color='#16A085', marker='<',
+                   s=fig_extremesize, zorder=5, label='Lower whisker' if i == 0 else "")
+        ax.annotate(
+            annotated_data["minimum"], (min_v, y_pos), xytext=(-20, -2), # type: ignore
+            textcoords='offset points',
+            fontsize=config_figure["size"]["usual_fontsize"],
+            color='#16A085', va='top', fontweight='bold'
+        )
 
     # --- 保存图或图例 ---
     os.makedirs(os.path.dirname(save_path), exist_ok=True)
@@ -389,6 +509,43 @@ def horizontal_boxplot(
     figure_type = "legend" if legend_only else "boxplot"
     print(f"The {figure_type} has been saved to {save_path}")
 
+
+def upset_plot(
+    data: dict[Literal["memberships", "values"], list],
+    save_path: str,
+    config_figure: dict,
+    fig_figsize: tuple = (2, 2.5),
+    fig_color: str = "#B7B5B7F8",
+    fig_wspace: float = -0.5
+):
+    memberships = data["memberships"]
+    values = data["values"]
+
+    # 应用通用配置（例如字体、样式等）
+    common_configuration(config_figure)
+
+    # 构造数据
+    req_data = from_memberships(memberships, data=values)
+
+    # ✅ 直接在 UpSet 内部定义 figsize
+    upset = UpSet(
+        req_data,
+        show_counts=True, # type: ignore
+        sort_by="cardinality",
+        facecolor=fig_color
+    )
+
+    # 绘制 UpSet 图
+    upset.plot(fig=plt.figure(figsize=fig_figsize))
+    fig = plt.gcf()  # 获取当前 figure
+    fig.set_size_inches(*fig_figsize)  # ✅ 之后再调整大小 
+
+    # 通过调整 subplot 参数，让左右子图更紧凑
+    plt.subplots_adjust(wspace=fig_wspace)
+
+    # Save the image
+    plt.savefig(save_path, format='pdf', bbox_inches='tight')
+    print(f"The upset plot has been saved to {save_path}")
 if __name__ == "__main__":
     # 生成示例数据
     data = [

@@ -1,6 +1,6 @@
 # utils\__init__.py
 
-from .general_utils import (
+from .file_processing import (
     read_csv, 
     read_config_json, 
     tex_command_template,
@@ -13,11 +13,14 @@ from .figure_templates import(
     line_chart,
     pie_chart,
     horizontal_bar_chart,
-    horizontal_boxplot
+    vertical_bar_chart,
+    horizontal_boxplot,
+    upset_plot
 )
 
 from .table_templates import(
-    vertical_tables
+    vertical_tables,
+    vertical_grouped_table
 )
 
 from .bib_title_regulator import normalize_bibtex_str
@@ -25,7 +28,9 @@ from .bib_title_regulator import normalize_bibtex_str
 from .data_frame import (
     data_clean,
     data_preprocess,
-    parse_column
+    parse_column,
+    get_min_max,
+    dict2upsetform
 )
 
 __all__ = [
@@ -42,13 +47,18 @@ __all__ = [
     "line_chart",
     "pie_chart",
     "horizontal_bar_chart",
+    "vertical_bar_chart",
     "horizontal_boxplot",
+    "upset_plot",
 
     # Templates for tables
     "vertical_tables",
+    "vertical_grouped_table",
 
     # Parse data for results and analysis
     "data_clean",
     "data_preprocess",
-    "parse_column"
+    "parse_column",
+    "get_min_max",
+    "dict2upsetform"
 ]

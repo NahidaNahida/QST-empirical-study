@@ -9,7 +9,7 @@ from collections import Counter
 
 from src import (
     read_csv, read_config_json, 
-    line_chart, pie_chart, horizontal_bar_chart,
+    line_chart, pie_chart, horizontal_bar_chart, vertical_bar_chart,
     data_preprocess, data_clean
 )
 from scripts import (
@@ -61,7 +61,7 @@ def venue_type(
 ) -> None:
     # Instant configuration
     TEMP_CONFIG = {
-        "figsize": (3, 3),
+        "figsize": (3, 3.5),
         "explode": None,
         "startangle": 90,
         "offset": 0.25,
@@ -98,7 +98,7 @@ def venue_name(
 ) -> None:
     # Instant configuration
     TEMP_CONFIG = {
-        "figsize": (5, 2.25),
+        "figsize": (3.8, 3.25),
         "bar_height": 0.25,
         "color": "#B7B5B7F8"
     }
@@ -141,7 +141,7 @@ def venue_name(
     for req_item, assist_item in zip(req_data, assist_data):
         if req_item.lower() != "arxiv":
             if counts[req_item] == 1:
-                temp_list.append(f"Other {assist_item}s")
+                temp_list.append(f"Other {assist_item[0].upper()}.")
             elif counts[req_item] > 1:
                 temp_list.append(req_item)
 
@@ -156,12 +156,50 @@ def venue_name(
         fig_barheight=TEMP_CONFIG["bar_height"],
         fig_color=TEMP_CONFIG["color"]
     )
-    
+
+
+def se_problem(    
+    df: pd.DataFrame,
+    config_data: dict, 
+    config_figure: dict,  
+    saving_name: str = "bib_se_problems.pdf"
+) -> None:
+    # Instant configuration
+    TEMP_CONFIG = {
+        "figsize": (2, 2.25),
+        "bar_height": 0.25,
+        "color": "#98ECF7F8"
+    }
+
+    # Extract target data for analysis
+    req_data, saving_path = data_preprocess(
+        df, 
+        "SE_problem", 
+        config_data, 
+        ROOT_DIR, 
+        FIG_SAVING_DIR,
+        saving_name
+    )   
+
+    # Extract terms within "[]"
+    req_data = data_clean(req_data)  
+ 
+    vertical_bar_chart(
+        req_data, 
+        {"x": "SE problems", "y": "# of primary studies"}, 
+        saving_path,
+        config_figure,
+        fig_figsize=TEMP_CONFIG["figsize"],
+        fig_barwidth=TEMP_CONFIG["bar_height"],
+        fig_color=TEMP_CONFIG["color"]
+    )
+
 if __name__ == "__main__":
     PROCEDURE = [
         ("fig", year), 
         ("fig", venue_type),
-        ("fig", venue_name)
+        ("fig", venue_name),
+        ("fig", se_problem)
     ]
 
 
