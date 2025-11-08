@@ -3,9 +3,9 @@ Code for the data analysis of RQ1 Quantum Programs
 """
 
 from src import (
-    read_csv, read_config_json, data_clean,
+    read_csv, read_config_json, data_clean, number2camelform,
     line_chart, pie_chart, horizontal_bar_chart, horizontal_boxplot,
-    vertical_tables,
+    vertical_tables, vertical_grouped_table,
     parse_column, data_preprocess, paperids2citation
 )
 
@@ -47,7 +47,8 @@ def available_sources(
         ROOT_DIR, 
         TAB_SAVING_DIR,
         saving_name
-    )
+    ) # type: ignore
+    saving_path: str
 
     paper_ids, _  = data_preprocess(
         df, 
@@ -86,7 +87,7 @@ def available_sources(
             # Add to the required list
             if tex_source_name not in req_metadata.keys():
                 req_metadata[tex_source_name] = {
-                    "url": f"\\footnotesize{{\\url{{{url_link}}}}}" if url_link.lower() != "un-specified" else f"List",
+                    "url": f"{{\\footnotesize \\url{{{url_link}}}}}" if url_link.lower() != "un-specified" else f"List",
                     "paper_ids": [paper_id],
                     "paper_numbers": 1
                 }
@@ -123,13 +124,105 @@ def available_sources(
     vertical_tables(sorted_metadata, TEMP_CONFIG["headers"], saving_path, TEMP_CONFIG["tab_space"])
  
     
+def available_artifact(
+    df: pd.DataFrame,
+    config_data: dict, 
+    saving_name: str = "rq10_available_artifacts.tex",
+) -> None:
 
+    TEMP_CONFIG = {
+        "tab_space": "c p{0.99\\columnwidth}"
+    }
 
+    # Get the target data
+    multi_data, saving_path = data_preprocess(
+        df, 
+        ["rq10_artifacts", "primary_study_id", "SE_problem"],         
+        config_data, 
+        ROOT_DIR, 
+        TAB_SAVING_DIR,
+        saving_name
+    ) # type: ignore
+    saving_path: str
+
+    # Extract and parse the raw data
+    artifacts = parse_column(multi_data[0])
+    paper_idxes = multi_data[1]
+    se_problems = parse_column(multi_data[2])
+  
+    tex_code = {}
+    num_artifacts = 0       # Collect the number of available artifacts
+    platform_counts = {}    # Counts the used platforms for artifact release
+    for artifact, paper_id, se_problem in zip(artifacts, paper_idxes, se_problems):
+        se_problem = f"\\makecell{{{se_problem[0]}}}" 
+        if len(artifact) == 0:  # Skip the invalid data
+            continue
+        
+        num_artifacts += 1
+        # Add the top content
+        if se_problem not in tex_code.keys():
+            tex_code[se_problem] = []
+ 
+        url_string_list = []
+        for platform, url_link_list in artifact.items():
+            url_link = url_link_list[0]
+            url_string_list.append(
+                f"\\textbf{{{platform}}}: {{\\footnotesize \\url{{{url_link}}}}}"
+            )
+
+            # Count the platforms
+            if platform not in platform_counts.keys():
+                platform_counts[platform] = 1
+            else:
+                platform_counts[platform] += 1
+    
+        url_string = ", ".join(url_string_list)
+            
+        tex_code[se_problem].append(
+            {
+                "paper_citation": f"\\cite{{\\Paper{number2camelform(int(paper_id))}}}",
+                "url": url_string
+            }
+        )
+
+    # Give the additional line
+    rate = num_artifacts / len(artifacts)
+
+    sorted_items = sorted(platform_counts.items(), key=lambda x: x[1], reverse=True)
+    platform_str = ", ".join(f"{k} ({int(v)})" for k, v in sorted_items)
+    add_platform = f"\\textbf{{Platforms: }} {platform_str}"
+
+    additional_line = (
+        f"\\multicolumn{{2}}{{l}}{{{add_platform}}} \\\\\n  "
+        "\\multicolumn{2}{l}{\\textbf{Proportion of available artifacts}: "
+        f"{rate*100:.1f}\\% "
+        f"({num_artifacts}/{len(artifacts)})}} \\\\"
+    )
+        
+    # Sort by paper_numbers from largest to smallest
+    # First, make sure paper_numbers is an int
+    sorted_metadata = dict(
+        sorted(
+            tex_code.items(),
+            key=lambda item: len(item[1]),  # 按 value 的长度排序
+            reverse=True  # 如果希望从大到小
+        )
+    )
+    
+    # Generate latex table
+    vertical_grouped_table(
+        sorted_metadata, 
+        saving_path, 
+        TEMP_CONFIG["tab_space"],
+        addition_line=additional_line,
+        # if_cmidrule=True
+    )
+ 
+ 
 if __name__ == "__main__":
     PROCEDURE = [
-        # ("fig", algorithm_and_subroutine_names),
-        # ("fig", number_of_objects),
         ("tab", available_sources),
+        ("tab", available_artifact)
     ]
 
     df = read_csv(FILE_DIR, FILE_NAME)
@@ -141,3 +234,5 @@ if __name__ == "__main__":
             sub_proc(df, config_data, config_figure) # type: ignore
         elif type == "tab":
             sub_proc(df, config_data)
+
+    print("\nRQ10 is done. \n")
