@@ -49,7 +49,7 @@ def algorithm_and_subroutine_names(
         ROOT_DIR, 
         FIG_SAVING_DIR,
         saving_name
-    )
+    ) # type: ignore
     data: list
     saving_path: str
     # Extract the required term
@@ -108,7 +108,7 @@ def learning_models_names(
         ROOT_DIR, 
         TAB_SAVING_DIR,
         saving_name
-    )
+    ) # type: ignore
 
     paper_ids, _  = data_preprocess(
         df, 
@@ -194,7 +194,7 @@ def number_of_objects(
         ROOT_DIR, 
         FIG_SAVING_DIR,
         saving_name
-    )
+    ) # type: ignore
 
     data: list
     saving_path: str

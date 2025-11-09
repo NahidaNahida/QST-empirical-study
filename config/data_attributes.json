@@ -23,6 +23,10 @@
         "rq3_gates": "Scalability-#OfGates",
         "rq3_depth": "Scalability-CircuitDepth",
 
+        "rq4_baseline_names": "AdoptedBaseline-BaselineNames",
+        "rq4_baseline_motivation": "AdoptedBaseline-InclusionMethod",
+        "rq4_baseline_comparison": "BaselineComparison-Method",
+
         "rq10_program_sources": "Toolings-AvailableProgramSource",
         "rq10_artifacts": "Toolings-ArtifactAvailableLink"
     }

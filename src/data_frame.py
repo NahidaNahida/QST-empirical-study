@@ -23,8 +23,8 @@ def data_preprocess(
     config_data: dict,
     root_dir: str,
     saving_dir: list[str],
-    saving_name: str | list[str],
-):
+    saving_name: str | list[str]
+) -> tuple[Any, Any]:
     """Preprocess data for plotting and return required data and saving path."""
     # --- 数据部分 ---
     if isinstance(header_item, str):
@@ -135,7 +135,7 @@ def parse_data_str(metadata: str, skip_invalid_key: bool = True) -> dict | list:
 
     return result
 
-def parse_column(target_data: list[str], skip_invalid_key: bool=True) -> list[dict]:
+def parse_column(target_data: list[str], skip_invalid_key: bool=True):
     """Invalid data will return "{}."""
     parsed_metadata = []
     for metadata in target_data:

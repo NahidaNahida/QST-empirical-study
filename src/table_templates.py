@@ -104,14 +104,14 @@ def vertical_tables(
                 values = list(sub_dict.values())
                 if idx == 0:
                     data_content += (
-                        f"\\multirow{{{n_rows}}}{{*}}{{{line_name}}} & "
+                        f"{line_name} & "
                         + " & ".join(map(str, values))
                         + " \\\\ \n    "
                     )
                 else:
                     data_content += " & " + " & ".join(map(str, values)) + " \\\\ \n    "
-            # ✅ add cmidrule across all columns if requested
-            if if_cmidrule:
+            # ✅ add cmidrule across all columns if requested, but not for the last block
+            if if_cmidrule and line_name != list(data.keys())[-1]:
                 data_content += f"\\cmidrule(lr){{1-{n_cols}}} \n    "
         else:
             raise ValueError(f"Unsupported data type for key '{line_name}': {type(line_data)}")
@@ -163,8 +163,7 @@ def vertical_grouped_table(
 
         # 顶层 key 作为组标题
         content_lines += f"""
-    \\multicolumn{{{num_columns}}}{{c}}{{\\textbf{{{key}}}}} \\\\
-    \\cmidrule(lr){{1-{num_columns}}}
+    \\multicolumn{{{num_columns}}}{{l}}{{\\textbf{{{key}:}}}} \\\\
     """
 
         # 子元素内容

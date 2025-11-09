@@ -153,7 +153,7 @@ def pie_chart(
     print(f"The pie chart has been saved to {save_path}")
 
 def horizontal_bar_chart(
-    data: list[str],
+    data: list[str] | list[int],
     legends: dict[Literal["x", "y"], str], 
     save_path: str,
     config_figure: dict,
@@ -161,68 +161,79 @@ def horizontal_bar_chart(
     fig_barheight: float = 0.25,
     fig_color: str = "#B7B5B7F8",
     fig_xinteger: bool = True,      # Whether ticks on the x-axis should be integers
-    title: str | None = None
+    title: str | None = None,
+    if_sort: bool = True
 ) -> None:
+    # 统一配置
     common_configuration(config_figure)
 
-    # Count the frequency of each value
+    # 统计频数
     data_count = Counter(data)
 
-    # Sort by frequency (ascending), then by name alphabetically
-    sorted_items = sorted(
-        data_count.items(),
-        key=lambda x: (x[1], -ord(x[0][0].lower())),  # 二级排序：频数 → 名称, 按频数升序，首字母逆序  
-        reverse=False
-    )
+    # 判断数据类型
+    is_int_data = all(isinstance(x, int) for x in data)
 
-    data_vals = [item[0] for item in sorted_items]   # 按频数（及字母顺序）排序后的值
-    counts = [item[1] for item in sorted_items]      # 对应的频数
+    # ✅ 排序逻辑
+    if if_sort:
+        if is_int_data:
+            # 如果是整数列表，按数值大小升序排列
+            sorted_items = sorted(data_count.items(), key=lambda x: x[0])
+        else:
+            # 否则按频数升序 + 名称逆序排列
+            sorted_items = sorted(
+                data_count.items(),
+                key=lambda x: (x[1], -ord(str(x[0])[0].lower())),  
+                reverse=False
+            )
+    else:
+        # 不排序，保持原始出现顺序
+        sorted_items = list(data_count.items())
+        
+    # 拆解数据
+    data_vals = [item[0] for item in sorted_items]
+    counts = [item[1] for item in sorted_items]
 
-    # 绘制 Bar Chart
+    # 绘图
     _, ax = plt.subplots(figsize=fig_figsize)
-
     y = np.arange(len(data_vals))
     bar_height = fig_barheight
 
     bars = ax.barh(y, counts, height=bar_height, color=fig_color, alpha=0.85, edgecolor="black")
-    ax.set_ylim(-0.5, len(data_vals)-0.5)  # 紧凑排列
-    ax.set_xlim(0, max(counts)*1.18)  # 让右边留出 15% 空间
+    ax.set_ylim(-0.5, len(data_vals)-0.5)
+    ax.set_xlim(0, max(counts)*1.18)
 
-    # 在每个柱子顶部显示频次
+    # 在柱右侧显示频数
     for i, bar in enumerate(bars):
         value = counts[i]
-        #text_str = f"{value}\n({percent:.1f}%)"
         ax.text(bar.get_width() + max(counts)*0.01, bar.get_y() + bar.get_height()/2,
                 f"{value}", va="center", ha="left", fontsize=10)
 
-    # 设置 y 轴
+    # 设置坐标轴
     ax.set_yticks(y)
-    ax.set_yticklabels(data_vals, fontsize=config_figure["size"]["usual_fontsize"])
+    ax.set_yticklabels(data_vals, fontsize=config_figure["size"]["usual_fontsize"]) # type: ignore
     ax.set_ylabel(legends["y"], fontsize=config_figure["size"]["axis_fontsize"], fontweight='bold')
 
-    # x 轴
     ax.set_xlabel(legends["x"], fontsize=config_figure["size"]["axis_fontsize"], fontweight='bold')
-    ax.tick_params(axis='x', labelsize=config_figure["size"]["usual_fontsize"])  # 只调整刻度字体大小
+    ax.tick_params(axis='x', labelsize=config_figure["size"]["usual_fontsize"])
 
-    # ✅ 设置 x 轴刻度为整数
+    # ✅ x 轴整数化
     if fig_xinteger:
         ax.xaxis.set_major_locator(MaxNLocator(integer=True))
 
-    # 网格线
+    # 网格和外观
     ax.grid(axis="x", linestyle="--", alpha=0.6)
-    ax.set_axisbelow(True)  # ✅ 确保网格线在柱子下方
-
-    # 去掉边框
+    ax.set_axisbelow(True)
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
 
     if title:
         ax.set_title(title, fontsize=config_figure["size"]["axis_fontsize"], pad=10)
 
-    # Save the figure
+    # 保存图表
     os.makedirs(os.path.dirname(save_path), exist_ok=True)
     plt.savefig(save_path, format='pdf', bbox_inches='tight')
-    print(f"Number of categories: {len(set(data_vals))}.")
+
+    # print(f"Number of categories: {len(set(data_vals))}.")
     print(f"The horizontal bar chart has been saved to {save_path}")
  
 def vertical_bar_chart(
@@ -233,57 +244,51 @@ def vertical_bar_chart(
     fig_figsize: tuple = (3.5, 2.25),
     fig_barwidth: float = 0.5,
     fig_color: str = "#B7B5B7F8",
-    fig_yinteger: bool = True,      # Whether ticks on the y-axis should be integers
+    fig_yinteger: bool = True,
     title: str | None = None,
-    rotate_xticks: bool = True,     # 是否自动倾斜 x 轴标签
-    rotation_angle: int = 30        # 倾斜角度（默认 30 度）
+    rotate_xticks: bool = True,
+    rotation_angle: int = 30,
+    if_sort: bool = True,         # ✅ 是否排序
+    is_int_data: bool = False     # ✅ 是否为整数数据
 ) -> None:
     """
-    绘制垂直方向的柱状图。
-
-    参数说明：
-    - data: 类别数据（字符串列表）
-    - legends: {'x': '类别', 'y': '频数'}
-    - save_path: 图像保存路径
-    - config_figure: 通用绘图配置（含字体大小信息）
-    - fig_figsize: 图尺寸
-    - fig_barwidth: 柱宽
-    - fig_color: 柱子颜色
-    - fig_yinteger: y轴是否显示整数刻度
-    - title: 图标题
-    - rotate_xticks: 是否旋转x轴标签
-    - rotation_angle: 标签旋转角度
+    绘制垂直柱状图，支持可选排序。
     """
 
-    # 应用通用配置
     common_configuration(config_figure)
 
     # 统计频数
     data_count = Counter(data)
 
-    # 按频数升序排序（同频时按字母顺序）
-    sorted_items = sorted(
-        data_count.items(),
-        key=lambda x: (x[1], -ord(x[0][0].lower())),
-        reverse=False
-    )
+    # ✅ 排序逻辑
+    if if_sort:
+        if is_int_data:
+            # 如果是整数列表，按数值大小升序排列
+            sorted_items = sorted(data_count.items(), key=lambda x: x[0])
+        else:
+            # 否则按频数升序 + 名称逆序排列
+            sorted_items = sorted(
+                data_count.items(),
+                key=lambda x: (x[1], -ord(str(x[0])[0].lower())),  
+                reverse=False
+            )
+    else:
+        # 不排序，保持原始出现顺序
+        sorted_items = list(data_count.items())
 
     data_vals = [item[0] for item in sorted_items]
     counts = [item[1] for item in sorted_items]
 
     # 绘制 Bar Chart
     _, ax = plt.subplots(figsize=fig_figsize)
-
     x = np.arange(len(data_vals))
-    bar_width = fig_barwidth
-
-    bars = ax.bar(x, counts, width=bar_width, color=fig_color, alpha=0.85, edgecolor="black")
+    bars = ax.bar(x, counts, width=fig_barwidth, color=fig_color, alpha=0.85, edgecolor="black")
 
     # 设置坐标轴范围
     ax.set_ylim(0, max(counts) * 1.18)
     ax.set_xlim(-0.5, len(data_vals) - 0.5)
 
-    # 在每个柱子顶部显示频次
+    # 柱子顶部显示频次
     for i, bar in enumerate(bars):
         value = counts[i]
         ax.text(
@@ -298,25 +303,17 @@ def vertical_bar_chart(
     # 设置 x 轴
     ax.set_xticks(x)
     ax.set_xticklabels(data_vals, fontsize=config_figure["size"]["usual_fontsize"])
-
-    # 如果标签过长或启用旋转
     if rotate_xticks or any(len(label) > 8 for label in data_vals):
         plt.setp(ax.get_xticklabels(), rotation=rotation_angle, ha="right")
 
     ax.set_xlabel(legends["x"], fontsize=config_figure["size"]["axis_fontsize"], fontweight='bold')
-
-    # 设置 y 轴
     ax.set_ylabel(legends["y"], fontsize=config_figure["size"]["axis_fontsize"], fontweight='bold')
     ax.tick_params(axis='y', labelsize=config_figure["size"]["usual_fontsize"])
-
     if fig_yinteger:
         ax.yaxis.set_major_locator(MaxNLocator(integer=True))
 
-    # 网格线
     ax.grid(axis="y", linestyle="--", alpha=0.6)
     ax.set_axisbelow(True)
-
-    # 去掉边框
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
 
@@ -326,7 +323,6 @@ def vertical_bar_chart(
     # 保存图像
     os.makedirs(os.path.dirname(save_path), exist_ok=True)
     plt.savefig(save_path, format='pdf', bbox_inches='tight')
-    print(f"Number of categories: {len(set(data_vals))}.")
     print(f"The vertical bar chart has been saved to {save_path}")
 
 
