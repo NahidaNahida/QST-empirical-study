@@ -43,6 +43,7 @@ def year(
         saving_name
     )
     
+    saving_path: str
     line_chart(
         req_data, 
         {"x": "Year", "y": "# of primary studies"}, 
@@ -111,7 +112,7 @@ def venue_name(
         ROOT_DIR, 
         FIG_SAVING_DIR,
         saving_name
-    )
+    ) # type: ignore
     
     # Help to classify "Others"
     assist_data, _ = data_preprocess(
@@ -146,7 +147,8 @@ def venue_name(
                 temp_list.append(req_item)
 
     req_data = temp_list.copy()
- 
+    
+    saving_path: str
     horizontal_bar_chart(
         req_data, 
         {"x": "# of primary studies", "y": "Venues"}, 
@@ -211,3 +213,4 @@ if __name__ == "__main__":
         if type == "fig":
             sub_proc(df, config_data, config_figure)
 
+    print("\nBibliometric Analysis is done. \n")

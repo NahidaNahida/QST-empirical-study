@@ -1,5 +1,5 @@
 """
-Code for the data analysis of RQ1 Quantum Programs
+Code for the data analysis of RQ10 Available Toolings
 """
 
 from src import (
@@ -87,7 +87,7 @@ def available_sources(
             # Add to the required list
             if tex_source_name not in req_metadata.keys():
                 req_metadata[tex_source_name] = {
-                    "url": f"{{\\footnotesize \\url{{{url_link}}}}}" if url_link.lower() != "un-specified" else f"List",
+                    "url": f"{{\\footnotesize \\url{{{url_link}}}}}" if url_link.lower() != "un-specified" else f"N/A",
                     "paper_ids": [paper_id],
                     "paper_numbers": 1
                 }
@@ -154,7 +154,7 @@ def available_artifact(
     num_artifacts = 0       # Collect the number of available artifacts
     platform_counts = {}    # Counts the used platforms for artifact release
     for artifact, paper_id, se_problem in zip(artifacts, paper_idxes, se_problems):
-        se_problem = f"\\makecell{{{se_problem[0]}}}" 
+        se_problem = f"{se_problem[0]}" 
         if len(artifact) == 0:  # Skip the invalid data
             continue
         
@@ -167,14 +167,14 @@ def available_artifact(
         for platform, url_link_list in artifact.items():
             url_link = url_link_list[0]
             url_string_list.append(
-                f"\\textbf{{{platform}}}: {{\\footnotesize \\url{{{url_link}}}}}"
+                f"\\textit{{{platform}}}: {{\\footnotesize \\url{{{url_link}}}}}"
             )
 
             # Count the platforms
-            if platform not in platform_counts.keys():
-                platform_counts[platform] = 1
+            if f"\\textit{{{platform}}}" not in platform_counts.keys():
+                platform_counts[f"\\textit{{{platform}}}"] = 1
             else:
-                platform_counts[platform] += 1
+                platform_counts[f"\\textit{{{platform}}}"] += 1
     
         url_string = ", ".join(url_string_list)
             
