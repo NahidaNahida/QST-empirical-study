@@ -7,7 +7,7 @@ import numpy as np
 import seaborn as sns
 from matplotlib.ticker import FuncFormatter, MaxNLocator
 from upsetplot import UpSet, from_memberships
-
+import matplotlib.colors as mcolors
 
 def common_configuration(config_figure: dict) -> None:
     mapping_dict = {
@@ -21,7 +21,7 @@ def common_configuration(config_figure: dict) -> None:
                     mapping_dict[key][sub_key] = config
     return
 
-def line_chart(
+def line_chart_frequencies(
     data: list, 
     legends: dict[Literal["x", "y"], str], 
     save_path: str,
@@ -80,6 +80,241 @@ def line_chart(
     print(f"The line chart has been saved to {save_path}")
 
 
+def line_chart_general(
+    x_data: list,                         # ✅ X-axis values
+    y_data: dict[str, list],              # ✅ Multiple line series; key = label, value = list of Y values
+    legends: dict[Literal["x", "y"], str],
+    save_path: str,
+    config_figure: dict,
+    fig_offset: float = 0.3,              # Text offset above each data point
+    fig_figsize: tuple = (5, 3),
+    fig_ylim: list | None = None          # Optional Y-axis limit
+) -> None:
+    """
+    Plot multiple line charts on the same figure.
+
+    Parameters
+    ----------
+    x_data : list
+        X-axis values (e.g., years, steps, etc.)
+    y_data : dict[str, list]
+        Dictionary of Y-axis series; each key represents a line label,
+        and its value is a list of Y values.
+    legends : dict
+        Axis labels, e.g. {"x": "Year", "y": "Count"}
+    save_path : str
+        Path to save the generated PDF figure.
+    config_figure : dict
+        Dictionary defining marker size, line width, and font sizes.
+    fig_offset : float, optional
+        Vertical offset for the text labels above data points.
+    fig_figsize : tuple, optional
+        Figure size (width, height).
+    fig_ylim : list, optional
+        Y-axis limits [min, max].
+    """
+
+    common_configuration(config_figure)  
+
+    plt.figure(figsize=fig_figsize)
+
+    for label, y_vals in y_data.items():
+        if len(x_data) != len(y_vals):
+            raise ValueError(
+                f"The length of y_data for '{label}' ({len(y_vals)}) "
+                f"does not match the length of x_data ({len(x_data)})!"
+            )
+
+        # Plot a single line
+        plt.plot(
+            x_data, y_vals,
+            marker='o',
+            markersize=config_figure["size"]["markersize"],
+            linewidth=config_figure["width"]["linewidth"],
+            label=label
+        )
+
+        # Annotate each point with its value
+        for x, y in zip(x_data, y_vals):
+            plt.text(
+                x,
+                y + fig_offset,
+                f"{y:.2f}" if isinstance(y, float) else str(y),
+                ha='center',
+                va='bottom',
+                fontsize=config_figure["size"]["usual_fontsize"]
+            )
+
+    # Axis labels and styles
+    plt.xlabel(legends["x"], fontsize=config_figure["size"]["axis_fontsize"], fontweight='bold')
+    plt.ylabel(legends["y"], fontsize=config_figure["size"]["axis_fontsize"], fontweight='bold')
+    plt.grid(True, linestyle='--', alpha=0.6)
+    plt.xticks(x_data, fontsize=config_figure["size"]["usual_fontsize"])
+    plt.yticks(fontsize=config_figure["size"]["usual_fontsize"])
+    if fig_ylim:
+        plt.ylim(fig_ylim)
+
+    # Add legend to distinguish multiple lines
+    plt.legend(title="Legend", fontsize=config_figure["size"]["usual_fontsize"])
+    plt.tight_layout()
+
+    # Save the figure
+    os.makedirs(os.path.dirname(save_path), exist_ok=True)
+    plt.savefig(save_path, format='pdf', bbox_inches='tight')
+    print(f"Line chart is saved to {save_path}")
+
+def horizontal_stacked_bar_chart(
+    counts: list[int],         # 改为输入频数
+    labels: list[str],
+    save_path: str,
+    config_figure: dict,
+    fig_figsize: tuple = (5, 3),
+    fig_anno_color: str = 'black',
+    fig_edge_color: str = 'white',
+    fig_title: str = ""
+):
+    # 计算总数与比例
+    total = sum(counts)
+    ratios = [c / total for c in counts]
+
+    # 使用浅色系调色板
+    colors = plt.cm.Pastel1.colors # type: ignore
+
+    fig, ax = plt.subplots(figsize=fig_figsize)
+
+    left = 0
+    for i, (ratio, label, count) in enumerate(zip(ratios, labels, counts)):
+        ax.barh(
+            0,
+            ratio,
+            left=left,
+            color=colors[i % len(colors)],
+            edgecolor=fig_edge_color
+        )
+        ax.text(
+            left + ratio / 2,
+            0,
+            f'{label}\n{ratio * 100:.1f}% ({count})',  # 显示“频数 (占比%)”
+            ha='center',
+            va='center',
+            color=fig_anno_color,
+            fontsize=config_figure["size"]["usual_fontsize"],
+            fontweight='bold'  # 加粗显示
+        )
+        left += ratio
+
+    # 美化
+    ax.set_xlim(0, 1)
+    ax.set_yticks([])
+    ax.set_xticks([])
+    ax.set_frame_on(False)
+
+    plt.title(fig_title, fontsize=config_figure["size"]["axis_fontsize"], fontweight='bold')
+
+    # 保存图像
+    os.makedirs(os.path.dirname(save_path), exist_ok=True)
+    plt.savefig(save_path, format='pdf', bbox_inches='tight')
+    print(f"Horizontal stacked bar chart saved to {save_path}")
+
+def bar_chart_general(
+    x_data: list,                         # X-axis values
+    y_data: dict[str, list],              # Multiple bar series
+    legends: dict[Literal["x", "y"], str],
+    save_path: str,
+    config_figure: dict,
+    fig_offset: float = 0.3,              # Text offset above each bar
+    fig_figsize: tuple = (5, 3),
+    fig_ylim: list | None = None,         # Optional Y-axis limit
+    if_data: bool = True,                  # Show values above bars
+    if_legend: bool = True,                 # Show legend
+    legend_bbox_to_anchor: tuple = (0.5, -0.25),
+    legend_handletextpad: float = 0.3,   # 标记与文字间距，默认0.8
+    legend_columnspacing: float = 0.5,   # 列间距，默认2.0
+    legend_labelspacing: float = 0.2,     # 行间距，默认0.5
+    legend_nlocal: float | None = None
+) -> None:
+    """
+    Plot multiple bar charts on the same figure (grouped bars) with optional features.
+    """
+    common_configuration(config_figure)  
+
+    plt.figure(figsize=fig_figsize)
+
+    n_series = len(y_data)
+    bar_width = config_figure.get("width", {}).get("barwidth", 0.8 / n_series)
+    x_indices = range(len(x_data))
+
+    # 自动分配颜色（淡色系）
+    base_colors = list(mcolors.TABLEAU_COLORS.values())
+    if len(y_data) > len(base_colors):
+        # 如果系列太多，扩展颜色
+        base_colors *= (len(y_data) // len(base_colors) + 1)
+    colors = [mcolors.to_rgba(c, alpha=0.7) for c in base_colors[:n_series]]
+
+    for i, (label, y_vals) in enumerate(y_data.items()):
+        if len(x_data) != len(y_vals):
+            raise ValueError(
+                f"The length of y_data for '{label}' ({len(y_vals)}) "
+                f"does not match the length of x_data ({len(x_data)})!"
+            )
+
+        # 计算每组柱子的位置
+        x_positions = [x + i * bar_width - (bar_width * (n_series - 1) / 2) for x in x_indices]
+
+        # 绘制柱子，加入黑色边框
+        bars = plt.bar(
+            x_positions,
+            y_vals,
+            width=bar_width,
+            label=label,
+            color=colors[i],
+            edgecolor='black'
+        )
+
+        # 显示柱子数值
+        if if_data:
+            for bar, y in zip(bars, y_vals):
+                plt.text(
+                    bar.get_x() + bar.get_width() / 2,
+                    y + fig_offset,
+                    f"{y:.2f}" if isinstance(y, float) else str(y),
+                    ha='center',
+                    va='bottom',
+                    fontsize=config_figure["size"]["usual_fontsize"]
+                )
+
+    # 坐标轴标签与样式
+    plt.xlabel(legends["x"], fontsize=config_figure["size"]["axis_fontsize"], fontweight='bold')
+    plt.ylabel(legends["y"], fontsize=config_figure["size"]["axis_fontsize"], fontweight='bold')
+    plt.grid(True, axis='y', linestyle='--', alpha=0.6)
+    plt.xticks(x_indices, x_data, fontsize=config_figure["size"]["usual_fontsize"])
+    plt.yticks(fontsize=config_figure["size"]["usual_fontsize"])
+    if fig_ylim:
+        plt.ylim(fig_ylim)
+
+    # 图例
+    if if_legend:
+        if legend_nlocal == None:
+            legend_nlocal = n_series
+
+        plt.legend(
+            title=None,
+            fontsize=config_figure["size"]["usual_fontsize"],
+            loc='upper center',
+            bbox_to_anchor=legend_bbox_to_anchor,
+            ncol=legend_nlocal,
+            handletextpad=legend_handletextpad,   # 标记与文字间距，默认0.8
+            columnspacing=legend_columnspacing,   # 列间距，默认2.0
+            labelspacing=legend_labelspacing     # 行间距，默认0.5
+        )
+
+    plt.tight_layout()
+
+    # 保存图表
+    os.makedirs(os.path.dirname(save_path), exist_ok=True)
+    plt.savefig(save_path, format='pdf', bbox_inches='tight')
+    print(f"Bar chart is saved to {save_path}")
+
 def pie_chart(
     data: list[str],
     save_path: str,
@@ -87,7 +322,8 @@ def pie_chart(
     fig_figsize: tuple = (3, 3),
     fig_explode = None,
     fig_startangle: int = 90,
-    fig_offset: float = 0.25
+    fig_offset: float = 0.25,
+    title: str | None = None
 ) -> None:
     """
     Draw a pie chart from the data, showing percentages with counts.
@@ -147,6 +383,9 @@ def pie_chart(
 
     plt.axis('equal')
 
+    if title:
+        ax.set_title(title, fontsize=config_figure["size"]["axis_fontsize"], pad=2)
+
     # Save the figure
     os.makedirs(os.path.dirname(save_path), exist_ok=True)
     plt.savefig(save_path, format='pdf', bbox_inches='tight')
@@ -162,7 +401,7 @@ def horizontal_bar_chart(
     fig_color: str = "#B7B5B7F8",
     fig_xinteger: bool = True,      # Whether ticks on the x-axis should be integers
     title: str | None = None,
-    if_sort: bool = True
+    if_freq_sort: bool = True
 ) -> None:
     # 统一配置
     common_configuration(config_figure)
@@ -174,7 +413,7 @@ def horizontal_bar_chart(
     is_int_data = all(isinstance(x, int) for x in data)
 
     # ✅ 排序逻辑
-    if if_sort:
+    if if_freq_sort:
         if is_int_data:
             # 如果是整数列表，按数值大小升序排列
             sorted_items = sorted(data_count.items(), key=lambda x: x[0])
@@ -236,6 +475,121 @@ def horizontal_bar_chart(
     # print(f"Number of categories: {len(set(data_vals))}.")
     print(f"The horizontal bar chart has been saved to {save_path}")
  
+def horizontal_histogram(
+    data: list[int] | list[float],
+    legends: dict[str, str], 
+    save_path: str,
+    config_figure: dict,
+    fig_figsize: tuple = (3.5, 2.25),
+    fig_barheight: float = 0.25,
+    fig_color: str = "#B7B5B7F8",
+    fig_xinteger: bool = True,
+    title: str | None = None,
+    bins: int | list[float] | list[int] = 10,        # ✅ 可以是数量或分段列表
+    upper_limit: float | None = None,    # ✅ 上限阈值
+) -> None:
+    # 检查数据类型
+    if not all(isinstance(x, (int, float)) for x in data):
+        raise ValueError("❌ data must be a list of int or float values.")
+
+    # 统一配置
+    common_configuration(config_figure)
+
+    # ✅ 拆分数据（upper_limit）
+    if upper_limit is not None:
+        lower_data = [x for x in data if x <= upper_limit]
+        upper_data = [x for x in data if x > upper_limit]
+    else:
+        lower_data = data
+        upper_data = []
+
+    # ✅ 处理 bins 参数
+    if isinstance(bins, (list, np.ndarray)):
+        # 确保最后一个 bin 边界 ≤ upper_limit
+        if upper_limit is not None and bins[-1] > upper_limit:
+            bins = [b for b in bins if b <= upper_limit]
+            if bins[-1] < upper_limit:
+                bins.append(upper_limit)
+    elif not isinstance(bins, int):
+        raise TypeError("bins must be either int or list[float|int]")
+
+    # ✅ 分段统计
+    counts, bin_edges = np.histogram(lower_data, bins=bins if len(lower_data) > 0 else 1)
+
+    bin_labels = []
+    for i in range(len(bin_edges) - 1):
+        left, right = bin_edges[i], bin_edges[i + 1]
+        # 判断整数或浮点数
+        if all(float(x).is_integer() for x in [left, right]):
+            left_str, right_str = f"{int(left)}", f"{int(right)}"
+        else:
+            left_str, right_str = f"{left:.2f}", f"{right:.2f}"
+
+        # 默认是左闭右开区间
+        interval_type = "[a, b)"
+        if i == len(bin_edges) - 2 and upper_limit is None:
+            # 最后一个区间（没有 upper_limit）右端闭
+            interval_type = "[a, b]"
+
+        # 构造 LaTeX 字符串
+        if interval_type == "[a, b)":
+            label = fr"$[{left_str},\, {right_str})$"
+        else:
+            label = fr"$[{left_str},\, {right_str}]$"
+
+        bin_labels.append(label)
+
+    # ✅ 合并 upper_limit 以上的数据
+    if upper_limit is not None and len(upper_data) > 0:
+        counts = np.append(counts, len(upper_data))
+        bin_labels.append(fr"$[{upper_limit},\, +\infty)$")
+
+    # ✅ 若 bins 是整数列表，则强制整数化 x 轴
+    if isinstance(bins, list) and all(isinstance(b, int) for b in bins):
+        fig_xinteger = True
+
+    # 绘图
+    _, ax = plt.subplots(figsize=fig_figsize)
+    y = np.arange(len(bin_labels))
+    bar_height = fig_barheight
+
+    bars = ax.barh(y, counts, height=bar_height, color=fig_color, alpha=0.85, edgecolor="black")
+    ax.set_ylim(-0.5, len(bin_labels) - 0.5)
+    ax.set_xlim(0, max(counts) * 1.18 if max(counts) > 0 else 1)
+
+    # 标注频数
+    for i, bar in enumerate(bars):
+        value = counts[i]
+        ax.text(bar.get_width() + max(counts) * 0.01 if max(counts) > 0 else 0.1,
+                bar.get_y() + bar.get_height()/2,
+                f"{value}", va="center", ha="left", fontsize=10)
+
+    # 坐标轴
+    ax.set_yticks(y)
+    ax.set_yticklabels(bin_labels, fontsize=config_figure["size"]["usual_fontsize"])  # type: ignore
+    ax.set_ylabel(legends["y"], fontsize=config_figure["size"]["axis_fontsize"], fontweight='bold')
+    ax.set_xlabel(legends["x"], fontsize=config_figure["size"]["axis_fontsize"], fontweight='bold')
+    ax.tick_params(axis='x', labelsize=config_figure["size"]["usual_fontsize"])
+
+    if fig_xinteger:
+        ax.xaxis.set_major_locator(MaxNLocator(integer=True))
+
+    # 外观
+    ax.grid(axis="x", linestyle="--", alpha=0.6)
+    ax.set_axisbelow(True)
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+
+    if title:
+        ax.set_title(title, fontsize=config_figure["size"]["axis_fontsize"], pad=10)
+
+    # 保存
+    os.makedirs(os.path.dirname(save_path), exist_ok=True)
+    plt.savefig(save_path, format='pdf', bbox_inches='tight')
+ 
+
+    print(f"The horizontal histogram has been saved to {save_path}")
+    
 def vertical_bar_chart(
     data: list[str],
     legends: dict[str, str], 
@@ -432,7 +786,7 @@ def horizontal_boxplot(
 
         if samplesize_name is not None:
             if len(data) == 1:
-                ax.set_title(f"{samplesize_name} = {n}", fontsize=11)
+                ax.set_title(f"{samplesize_name} = {n}", fontsize=config_figure["size"]["axis_fontsize"])
             else:
                 ax.text(
                     max_v + (max_v - min_v) * 0.05, y_pos, # type: ignore

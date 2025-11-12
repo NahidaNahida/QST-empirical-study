@@ -9,7 +9,7 @@ from collections import Counter
 
 from src import (
     read_csv, read_config_json, 
-    line_chart, pie_chart, horizontal_bar_chart, vertical_bar_chart,
+    line_chart_frequencies, pie_chart, horizontal_bar_chart, vertical_bar_chart,
     data_preprocess, data_clean
 )
 from scripts import (
@@ -44,7 +44,7 @@ def year(
     )
     
     saving_path: str
-    line_chart(
+    line_chart_frequencies(
         req_data, 
         {"x": "Year", "y": "# of primary studies"}, 
         saving_path,

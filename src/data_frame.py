@@ -240,6 +240,7 @@ if __name__ == "__main__":
             "[Un-specified: 456]", 
             "[Quantum state]",
             "[Quantum state], [Quantum gate]",
+            "[20, 30]",
             "[Quantum algorithms and subroutines: Hadamard Test, Superdense Coding, Un-specified]",
             "[Specific: [H gates: 233], [Pauli-X gates]]"
         ]
