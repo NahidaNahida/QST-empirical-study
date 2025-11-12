@@ -4,7 +4,7 @@ Code for the data analysis of RQ3 Scalability Issue
 
 from src import (
     read_csv, read_config_json,
-    line_chart, pie_chart, horizontal_bar_chart, horizontal_boxplot, upset_plot, data_clean,
+    line_chart_frequencies, pie_chart, horizontal_bar_chart, horizontal_boxplot, upset_plot, data_clean,
     vertical_tables,
     parse_column, data_preprocess, paperids2citation, get_min_max, dict2upsetform
 )
@@ -120,7 +120,7 @@ def circuit_complexity(
 
     number_data = {}
 
-    req_terms = ["Qubit", "Gate","Depth" ]      # Do not change their names
+    req_terms = ["Qubit", "Gate", "Depth"]      # Do not change their names
     parsed_data_dict = {
         complex_name: parse_column(data)      # Data: including {}
         for complex_name, data in zip (req_terms, multi_data) 

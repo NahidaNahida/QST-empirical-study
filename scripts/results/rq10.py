@@ -4,7 +4,7 @@ Code for the data analysis of RQ10 Available Toolings
 
 from src import (
     read_csv, read_config_json, data_clean, number2camelform,
-    line_chart, pie_chart, horizontal_bar_chart, horizontal_boxplot,
+    line_chart_frequencies, pie_chart, horizontal_bar_chart, horizontal_boxplot,
     vertical_tables, vertical_grouped_table,
     parse_column, data_preprocess, paperids2citation
 )

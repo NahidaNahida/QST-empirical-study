@@ -4,7 +4,7 @@ Code for the data analysis of RQ4 Contrastive Analysis
 
 from src import (
     read_csv, read_config_json,
-    line_chart, pie_chart, horizontal_bar_chart, vertical_bar_chart, data_clean,
+    line_chart_frequencies, pie_chart, horizontal_bar_chart, vertical_bar_chart, data_clean,
     vertical_tables,
     parse_column, data_preprocess, paperids2citation, get_min_max, dict2upsetform, number2camelform
 )

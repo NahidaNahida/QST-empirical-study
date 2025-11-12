@@ -10,10 +10,14 @@ from .file_processing import (
 )
 
 from .figure_templates import(
-    line_chart,
+    line_chart_frequencies,
+    line_chart_general,
+    bar_chart_general,
     pie_chart,
     horizontal_bar_chart,
+    horizontal_histogram,
     vertical_bar_chart,
+    horizontal_stacked_bar_chart,
     horizontal_boxplot,
     upset_plot
 )
@@ -44,10 +48,14 @@ __all__ = [
     "paperids2citation",
 
     # Templates for figure
-    "line_chart",
+    "line_chart_frequencies",
+    "line_chart_general",
     "pie_chart",
+    "bar_chart_general",
     "horizontal_bar_chart",
+    "horizontal_histogram",
     "vertical_bar_chart",
+    "horizontal_stacked_bar_chart",
     "horizontal_boxplot",
     "upset_plot",
 
