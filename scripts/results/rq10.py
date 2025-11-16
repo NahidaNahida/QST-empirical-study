@@ -60,7 +60,7 @@ def available_sources(
     )
 
     # Extract the required term
-    req_data: list[dict] = parse_column(data)  # Keep "Un-specified" in the raw data
+    req_data: list[dict] = parse_column(data, skip_invalid_key=False, skip_invalid_value=False)  # Keep "Un-specified" in the raw data
     req_metadata = {}
     new_bibtex = []  # For generate the .bib for the program sources
     for paper_id, data_dict in zip(paper_ids, req_data):
@@ -193,7 +193,7 @@ def available_artifact(
     add_platform = f"\\textbf{{Platforms: }} {platform_str}"
 
     additional_line = (
-        f"\\multicolumn{{2}}{{l}}{{{add_platform}}} \\\\\n  "
+        f"\\multicolumn{{2}}{{l}}{{{add_platform}}} \\\\\n    "
         "\\multicolumn{2}{l}{\\textbf{Proportion of available artifacts}: "
         f"{rate*100:.1f}\\% "
         f"({num_artifacts}/{len(artifacts)})}} \\\\"

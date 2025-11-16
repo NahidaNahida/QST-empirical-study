@@ -173,6 +173,8 @@ def horizontal_stacked_bar_chart(
     fig_edge_color: str = 'white',
     fig_title: str = ""
 ):
+    common_configuration(config_figure)  
+    
     # 计算总数与比例
     total = sum(counts)
     ratios = [c / total for c in counts]

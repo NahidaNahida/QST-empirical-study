@@ -10,6 +10,7 @@ python -m scripts.results.bib_analysis
 python -m scripts.results.rq1
 python -m scripts.results.rq3
 python -m scripts.results.rq4
+python -m scripts.results.rq6
 python -m scripts.results.rq8
 python -m scripts.results.rq9
 python -m scripts.results.rq10

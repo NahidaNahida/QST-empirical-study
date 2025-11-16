@@ -27,6 +27,12 @@
         "rq4_baseline_motivation": "AdoptedBaseline-InclusionMethod",
         "rq4_baseline_comparison": "BaselineComparison-Method",
 
+        "rq5_input_types": "TestCases-InputType",
+        "rq5_whether_counts": "TestCases-ReportTestCounts?",
+
+        "rq6_outputs": "TestOracle-ProgramSpecification",
+        "rq6_oracles": "TestOracle-OracleName",
+
         "rq8_shots": "StatisticalRepeats-Shots",
         "rq8_repetitions": "StatisticalRepeats-IndependentRepeats",
 

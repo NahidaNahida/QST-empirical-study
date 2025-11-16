@@ -1,5 +1,5 @@
 """
-Code for the data analysis of RQ9 Execution Backends
+Code for the data analysis of RQ8 Statistical Repetitions
 """
 
 from src import (
