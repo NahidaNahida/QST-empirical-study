@@ -47,20 +47,26 @@ def data_preprocess(
 
     return req_data, saving_path
 
-def parse_data_str(metadata: str, skip_invalid_key: bool = True) -> dict | list:
+def parse_data_str(
+    metadata: str,
+    skip_invalid_key: bool = True,
+    skip_invalid_value: bool = True
+) -> dict | list:
     """
     Parse multiple square brackets [] blocks in a string.
     Each block is in the format of [key: val1, val2, ...]
     - Support nested [] but only capture outermost blocks
     - Skip content inside <...> (may contain commas)
     - If skip_invalid_key=True, ignore keys that are 'Un-specified' (case-insensitive)
-    - If the block is [Un-specified], skip entirely
+    - If skip_invalid_value=True, ignore values that are 'Un-specified'
+    - If skip_invalid_key=True and the block is [Un-specified], skip entirely
     - 保证 [] 内部的内容完整（即使包含逗号），并保留其原始格式
     - 若输入形如 [Quantum state], [Quantum gate]（无冒号），则返回 list
     """
+
     result = {}
 
-    # --- 自定义解析逻辑：逐字符扫描最外层 [] ---
+    # --- 提取最外层 [] ---
     blocks, stack, current = [], 0, []
     for ch in metadata:
         if ch == "[":
@@ -76,13 +82,13 @@ def parse_data_str(metadata: str, skip_invalid_key: bool = True) -> dict | list:
             if stack == 0:
                 block_str = "".join(current)
                 inner_text = block_str[1:-1].strip()
-                if inner_text.lower() == "un-specified":
+                if skip_invalid_key and inner_text.lower() == "un-specified":
                     continue
                 blocks.append(inner_text)
                 current = []
 
-    # --- 函数：安全地分割 value（忽略 [] 内部的逗号） ---
-    def smart_split(s):
+    # --- Intelligent comma split ignoring nested [] ---
+    def smart_split(s: str):
         parts, buf, depth = [], [], 0
         for ch in s:
             if ch == "[":
@@ -102,7 +108,7 @@ def parse_data_str(metadata: str, skip_invalid_key: bool = True) -> dict | list:
             parts.append("".join(buf).strip())
         return parts
 
-    # --- 处理每个块 ---
+    # --- Parse key/value blocks ---
     for block in blocks:
         if ":" not in block:
             continue
@@ -112,30 +118,34 @@ def parse_data_str(metadata: str, skip_invalid_key: bool = True) -> dict | list:
         if skip_invalid_key and key.lower() == "un-specified":
             continue
 
-        # 删除 <...> 结构（非贪婪）
+        # remove <...>
         cleaned_values = re.sub(r"<.*?>", "", values)
 
-        # 智能分割
         items = [v for v in smart_split(cleaned_values) if v]
+
+        # 若 skip_invalid_value=True，则忽略 value 为 "Un-specified"
+        if skip_invalid_value:
+            items = [v for v in items if v.strip().lower() != "un-specified"]
+
+        # 若值全部被过滤掉 → 直接跳过（符合之前旧逻辑）
+        if skip_invalid_value and not items:
+            continue
 
         result.setdefault(key, []).extend(items)
 
-    # 移除 value 为 ["Un-specified"] 的键值对
-    result = {k: v for k, v in result.items() if str(v[0]).strip().lower() != "un-specified"}
-
-    # --- 若所有 block 都不含 ":"，则返回 list ---
+    # --- 若没有 key:value 格式，则返回 list ---
     if not result and blocks:
         if all(":" not in b for b in blocks):
             all_values = []
             for b in blocks:
                 inner = re.sub(r"<.*?>", "", b).strip()
-                if inner and inner.lower() != "un-specified":
+                if inner and (not skip_invalid_value or inner.lower() != "un-specified"):
                     all_values.extend(smart_split(inner))
             return all_values
 
     return result
 
-def parse_column(target_data: list[str], skip_invalid_key: bool=True):
+def parse_column(target_data: list[str], skip_invalid_key: bool=True, skip_invalid_value: bool=True):
     """Invalid data will return "{}."""
     parsed_metadata = []
     for metadata in target_data:
@@ -144,7 +154,11 @@ def parse_column(target_data: list[str], skip_invalid_key: bool=True):
         if ('['  in str(metadata) 
             and ']' in str(metadata) 
             and metadata.lower() not in ["[none]", "[un-specified]"]): 
-            parsed_metadata.append(parse_data_str(metadata, skip_invalid_key=skip_invalid_key))
+            parsed_metadata.append(parse_data_str(
+                metadata, 
+                skip_invalid_key=skip_invalid_key,
+                skip_invalid_value=skip_invalid_value
+            ))
         else:
             parsed_metadata.append({})
     return parsed_metadata
@@ -240,13 +254,16 @@ if __name__ == "__main__":
             "[Un-specified: 456]", 
             "[Quantum state]",
             "[Quantum state], [Quantum gate]",
+            "[Quantum state], [Quantum gate: 200]",
+            "[Wrong output oracle: None], [Output probability oracle: Un-specified]",
             "[20, 30]",
+            "[Ouput probability oracle: Un-specified]",
             "[Quantum algorithms and subroutines: Hadamard Test, Superdense Coding, Un-specified]",
             "[Specific: [H gates: 233], [Pauli-X gates]]"
         ]
         print(parse_column(unittest))
         print(parse_column(unittest, skip_invalid_key=False))
-
+        print(parse_column(unittest, skip_invalid_value=False))
     def unittest1():
         unittest = [
             ["300", "233", "From 100 to 400", "500"],

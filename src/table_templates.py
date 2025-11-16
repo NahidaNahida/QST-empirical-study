@@ -116,8 +116,10 @@ def vertical_tables(
         else:
             raise ValueError(f"Unsupported data type for key '{line_name}': {type(line_data)}")
 
+    # if addition_line is not None:
+    #     addition_line = f" \\\\ \n    {addition_line}"
     if addition_line is not None:
-        addition_line = f" \\\\ \n    {addition_line}"
+        addition_line = f"{addition_line}"
     else:
         addition_line = ""
 
