@@ -28,6 +28,8 @@ import os
 import warnings
 warnings.filterwarnings("ignore")
 
+BASELINE_ORDER = ["SOTA", "Ablation",  "Adaption", "Composite", "Naivety"]
+
 def baseline_numbers(
     df: pd.DataFrame,
     config_data: dict, 
@@ -37,6 +39,7 @@ def baseline_numbers(
 
     # Instant configuration
     TEMP_CONFIG = {
+        "if_sort": False,  # Sort based on the frequencies, otherwise the baseline order
         "figsize": (3, 2),
         "bar_height": 0.25,
         "color": "#FFFCCEF8"
@@ -54,8 +57,9 @@ def baseline_numbers(
     # Extract terms within "[]"
     req_data = parse_column(req_data)
     baseline_numbers = [len(meta_data) for meta_data in req_data]
+ 
+    req_baseline_order = None if TEMP_CONFIG["if_sort"] else BASELINE_ORDER
 
-    saving_path = os.path.join(ROOT_DIR, *FIG_SAVING_DIR, saving_name)
     horizontal_bar_chart(
         baseline_numbers, 
         {"x": "# of primary studies", "y": "# of baselines"}, 
@@ -75,6 +79,7 @@ def baseline_motivations(
 
     # Instant configuration
     TEMP_CONFIG = {
+        "if_sort": False,  # Sort based on the frequencies, otherwise the baseline order
         "figsize": (2.2, 1.85),
         "bar_height": 0.25,
         "color": "#B7B5B7F8"
@@ -98,7 +103,10 @@ def baseline_motivations(
         paper_data: list[str]
         category_counts.extend([meta_data for meta_data in paper_data])
 
-    saving_path = os.path.join(ROOT_DIR, *FIG_SAVING_DIR, saving_name)
+
+    req_baseline_order = None if TEMP_CONFIG["if_sort"] else BASELINE_ORDER
+
+
     vertical_bar_chart(
         category_counts, 
         {"x": "Categories of baselines", "y": "# of baselines"}, 
@@ -106,7 +114,9 @@ def baseline_motivations(
         config_figure,
         fig_figsize=TEMP_CONFIG["figsize"],
         fig_barwidth=TEMP_CONFIG["bar_height"],
-        fig_color=TEMP_CONFIG["color"]
+        fig_color=TEMP_CONFIG["color"],
+        if_freq_sort=TEMP_CONFIG["if_sort"],
+        req_sort=req_baseline_order
     )
 
 def baseline_names(
@@ -120,6 +130,7 @@ def baseline_names(
     """
 
     TEMP_CONFIG = {
+        "if_sort": False,  # Sort based on the frequencies, otherwise the baseline order
         "headers": ["SE problems", "Categories", "Baselines (Primary studies)"], 
         "tab_space": "p{0.15\\columnwidth}  p{0.18\\columnwidth} p{0.65\\columnwidth}",
         "skip_category": "Ablation"
@@ -223,16 +234,27 @@ def baseline_names(
             baseline_dict.clear()
             baseline_dict.update(new_entries)
 
-        # 对同一 se_problem 下的 category 列表按该 category 的 baseline 总数降序排序，
-        # 以便 baselines 数量大的 category 排在前面。
-        baseline_list.sort(
-            key=lambda d: sum(
-                len(v) for k, v in d.items()
-                if (not k.endswith("_formatted")) and isinstance(v, list)
-            ),
-            reverse=True
-        )
-        # ------------------------------------------------------------------------------
+ 
+        if TEMP_CONFIG["if_sort"]:
+            # 对同一 se_problem 下的 category 列表按该 category 的 baseline 总数降序排序，
+            # 以便 baselines 数量大的 category 排在前面。
+            baseline_list.sort(
+                key=lambda d: sum(
+                    len(v) for k, v in d.items()
+                    if (not k.endswith("_formatted")) and isinstance(v, list)
+                ),
+                reverse=True
+            )
+        else:
+            # 按 BASELINE_ORDER 顺序排序，未出现的元素排在后面，保持原相对顺序
+            baseline_order_index = {name: i for i, name in enumerate(BASELINE_ORDER)}
+            
+            baseline_list.sort(
+                key=lambda d: min(
+                    (baseline_order_index[k] for k in d if k in baseline_order_index),
+                    default=len(BASELINE_ORDER)
+                )
+            )
 
         # Clean up empty baseline dicts
         req_data[se_problem] = [d for d in baseline_list if d]
