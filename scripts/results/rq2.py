@@ -102,7 +102,6 @@ def variant_distribution(
     for variant_count in variant_counts:
         if len(variant_count) == 0:
             continue
-            
         num_of_studies += 1
         variant_type_list.extend(list(variant_count.keys()))
 

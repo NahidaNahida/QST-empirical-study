@@ -183,7 +183,8 @@ def metrics_table(
                     paper_str = f"""\\cite{{{', '.join(str(x) for x in paper_id_list)}}}"""
                 final_data_list.append(f"{metric_name} ({paper_str})")
 
-            new_metric_dict[metric_type] = ",\\\\".join(final_data_list)
+            new_metric_dict[metric_type] = ",\\newline ".join(final_data_list)
+            new_metric_dict[metric_type] = f"{new_metric_dict[metric_type]}."
 
         metric_dict.clear()
         metric_dict.update(new_metric_dict)
