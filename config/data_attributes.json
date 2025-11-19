@@ -16,7 +16,10 @@
         "bib_venue_type": "Basic-VenueType",
 
         "rq1_program_names": "Programs-ProgramName",
-        "rq1_object_numbers": "Programs-#OfObjects",
+        "rq1_object_numbers": "Programs-#OfAlgorithms",
+
+        "rq2_generation_approaches": "BuggyObjects-FaultGeneration",
+        "rq2_buggy_numbers": "BuggyObjects-#OfBuggyVariants",
 
         "rq3_whether_scalability": "Scalability-InvolveScalability?",
         "rq3_qubits": "Scalability-#OfQubits",	
@@ -32,6 +35,9 @@
 
         "rq6_outputs": "TestOracle-ProgramSpecification",
         "rq6_oracles": "TestOracle-OracleName",
+
+        "rq7_effectiveness": "Metrics-Effectiveness",
+        "rq7_cost": "Metrics-Cost",
 
         "rq8_shots": "StatisticalRepeats-Shots",
         "rq8_repetitions": "StatisticalRepeats-IndependentRepeats",

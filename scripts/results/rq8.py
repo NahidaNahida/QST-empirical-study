@@ -69,7 +69,6 @@ def shot_configuration_types(
                 type_list.append(list(meta_config.keys())[0])
 
     prop_of_studies = f"{num_of_studies / len(req_data) * 100:.1f}%"
-    saving_path = os.path.join(ROOT_DIR, *FIG_SAVING_DIR, saving_name)
     pie_chart(
         type_list,
         saving_path,

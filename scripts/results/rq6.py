@@ -54,23 +54,23 @@ def oracle_common(
         
         for meta_data in referred_output:
             if isinstance(referred_output, list):
-                reference = meta_data
+                specification = meta_data
                 output_types = ["N/A"]              
             elif isinstance(referred_output, dict):
-                reference = meta_data
+                specification = meta_data
                 output_types = referred_output[meta_data]    # List
 
             paper_cite = f"\\Paper{number2camelform(int(paper_idx))}"
             for output_type in output_types:
-                if reference not in output_dict.keys():
-                    output_dict[reference] = [{
+                if specification not in output_dict.keys():
+                    output_dict[specification] = [{
                         "output_type": output_type,
                         "paper_ids": [paper_cite],
                         "paper_number": 1
                     }]
-                else:   # The reference is existing, then check the existence of the output type
+                else:   # The specification is existing, then check the existence of the output type
                     if_existing = False
-                    for meta_dict in output_dict[reference]:
+                    for meta_dict in output_dict[specification]:
                         if output_type == meta_dict["output_type"]:
                             meta_dict["paper_ids"].append(paper_cite)
                             meta_dict["paper_number"] += 1
@@ -79,14 +79,14 @@ def oracle_common(
                     
                     if not if_existing:
                         # The output type does not exist
-                        output_dict[reference].append({
+                        output_dict[specification].append({
                             "output_type": output_type,
                             "paper_ids": [paper_cite],
                             "paper_number": 1
                         })
 
     # Reformulate the data
-    for reference, output_type_data in output_dict.items():
+    for specification, output_type_data in output_dict.items():
         output_type_data.sort(key=lambda x: x["paper_number"], reverse=True)
         for meta_dict in output_type_data:
             id_list = meta_dict["paper_ids"]

@@ -8,6 +8,10 @@ import seaborn as sns
 from matplotlib.ticker import FuncFormatter, MaxNLocator
 from upsetplot import UpSet, from_memberships
 import matplotlib.colors as mcolors
+from matplotlib_venn import venn2
+from matplotlib.transforms import Affine2D
+import pandas as pd
+
 
 def common_configuration(config_figure: dict) -> None:
     mapping_dict = {
@@ -386,7 +390,7 @@ def pie_chart(
     plt.axis('equal')
 
     if title:
-        ax.set_title(title, fontsize=config_figure["size"]["axis_fontsize"], pad=2)
+        ax.set_title(title, fontsize=config_figure["size"]["usual_fontsize"], pad=2)
 
     # Save the figure
     os.makedirs(os.path.dirname(save_path), exist_ok=True)
@@ -694,6 +698,7 @@ def horizontal_boxplot(
     fig_scatteralpha: float = 0.5,     # Transparency for scatters
     fig_extremesize: float = 25.0,
     fig_xinteger: bool = True,
+    fig_datainteger: bool = True,
     fig_median_offset: tuple = (-2, 25), 
     fig_max_offset: tuple = (0, 6), 
     samplesize_name = None,
@@ -707,7 +712,7 @@ def horizontal_boxplot(
         if abs(x) >= 1_000_000:
             return f"{x/1_000_000:.0f}M"
         elif abs(x) >= 1_000:
-            return f"{x/1_000:.0f}k"
+            return f"{x/1_000:.0f}K"
         else:
             return f"{int(x)}" if fig_xinteger and abs(x-int(x))<1e-3 else f"{x:.2f}"
         
@@ -796,8 +801,18 @@ def horizontal_boxplot(
                     va='center', ha='left', fontsize=8, color='black', zorder=5
                 )
 
-        fmt = lambda v: format_large_ticks(v, None) if fig_xinteger else f"{v:.2f}"
-        annotated_data = {"median": fmt(median), "maximum": fmt(max_v), "minimum": fmt(min_v)}
+        # --- 控制显示数据格式（与坐标轴分离）---
+        def format_data_value(v):
+            if fig_datainteger:
+                return f"{int(round(v))}"
+            else:
+                return f"{v:.2f}"
+
+        annotated_data = {
+            "median": format_data_value(median),
+            "maximum": format_data_value(max_v),
+            "minimum": format_data_value(min_v),
+        }
 
         # --- 中位数 ---
         ax.scatter(median, y_pos, color='red', marker='o', s=30,
@@ -898,6 +913,130 @@ def upset_plot(
     # Save the image
     plt.savefig(save_path, format='pdf', bbox_inches='tight')
     print(f"The upset plot has been saved to {save_path}")
+
+
+def two_labels_venn(
+    counts: tuple,
+    labels: tuple,
+    save_path: str,
+    config_figure: dict,
+    fig_figsize: tuple = (2, 2.5),
+    ellipse: float | None= None,               # 圆→椭圆变换系数
+    label_offset: dict | None = None            # 新增：标签偏移配置
+):
+    # 通用配置
+    common_configuration(config_figure)
+
+    plt.figure(figsize=fig_figsize)
+
+    # pastel 颜色
+    colors = cm.Pastel1.colors  # type: ignore
+    colors = [colors[i % len(colors)] for i in range(2)]
+
+    # 绘制 Venn
+    v = venn2(subsets=counts, set_labels=labels)
+
+    # 设置颜色
+    if v.get_patch_by_id("10"):
+        v.get_patch_by_id("10").set_color(colors[0])
+        v.get_patch_by_id("10").set_alpha(0.8)
+    if v.get_patch_by_id("01"):
+        v.get_patch_by_id("01").set_color(colors[1])
+        v.get_patch_by_id("01").set_alpha(0.8)
+    if v.get_patch_by_id("11"):
+        v.get_patch_by_id("11").set_alpha(0.6)
+
+    # === 标签加粗 ===
+    for region in ["10", "01", "11"]:
+        label = v.get_label_by_id(region)
+        if label:
+            label.set_fontweight("bold")
+
+    # 外侧集合名称
+    for side in ["A", "B"]:
+        label = v.get_label_by_id(side)
+        if label:
+            label.set_fontweight("bold")
+
+    # === 椭圆支持 ===
+    if ellipse is not None:
+        for region in ["10", "01", "11"]:
+            patch = v.get_patch_by_id(region)
+            if patch is not None:
+                trans = Affine2D().scale(ellipse, 1.0) + plt.gca().transData
+                patch.set_transform(trans)
+
+    # === 标签偏移功能 ===
+    if label_offset is None:
+        label_offset = {}
+
+    for key, offset in label_offset.items():
+        label = v.get_label_by_id(key)
+        if label:
+            x, y = label.get_position()
+            dx, dy = offset
+            label.set_position((x + dx, y + dy))
+
+    # 保存
+    plt.savefig(save_path, format='pdf', bbox_inches='tight')
+    print(f"The Venn plot has been saved to {save_path}")
+
+
+def two_dimensional_heatmap(
+    data_dict: dict[str, dict[str, str]],
+    save_path: str,
+    config_figure: dict,
+    fig_figsize: tuple = (2, 2.5),
+    cmap: str = "viridis",
+    annot: bool = True
+) -> None:
+    """
+    将二维字典转换为热力图并保存为图片(如 .png/.jpg/.pdf).
+    data_dict: dict[row][col] = value(字符串，但会尝试转换为数字)
+    """
+    # 通用配置
+    common_configuration(config_figure)
+
+    plt.figure(figsize=fig_figsize)
+
+    # 行
+    rows = sorted(data_dict.keys())
+
+    # 所有列名
+    col_set = set()
+    for r in rows:
+        col_set.update(data_dict[r].keys())
+    cols = sorted(col_set)
+
+    # 构建 DataFrame
+    table = []
+    for r in rows:
+        row_vals = []
+        for c in cols:
+            v = data_dict[r].get(c, "")
+            # 尝试把字符串转为浮点数
+            try:
+                v = float(v)
+            except:
+                v = np.nan
+            row_vals.append(v)
+        table.append(row_vals)
+
+    df = pd.DataFrame(table, index=rows, columns=cols)
+
+    # 绘制热力图
+    plt.figure(figsize=(1.2 * len(cols), 0.8 * len(rows)))
+    sns.heatmap(df, cmap=cmap, annot=annot, fmt=".2f",
+                linewidths=0.5, linecolor="white")
+
+    plt.tight_layout()
+
+    # 保存文件
+    os.makedirs(os.path.dirname(save_path), exist_ok=True)
+    plt.savefig(save_path, format='pdf', bbox_inches='tight')
+    print(f"Heatmap saved to {save_path}")
+
+
 if __name__ == "__main__":
     # 生成示例数据
     data = [

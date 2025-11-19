@@ -19,12 +19,15 @@ from .figure_templates import(
     vertical_bar_chart,
     horizontal_stacked_bar_chart,
     horizontal_boxplot,
-    upset_plot
+    upset_plot,
+    two_labels_venn,
+    two_dimensional_heatmap
 )
 
 from .table_templates import(
     vertical_tables,
-    vertical_grouped_table
+    vertical_grouped_table,
+    two_dimensional_table
 )
 
 from .bib_title_regulator import normalize_bibtex_str
@@ -58,10 +61,13 @@ __all__ = [
     "horizontal_stacked_bar_chart",
     "horizontal_boxplot",
     "upset_plot",
+    "two_labels_venn",
+    "two_dimensional_heatmap",
 
     # Templates for tables
     "vertical_tables",
     "vertical_grouped_table",
+    "two_dimensional_table",
 
     # Parse data for results and analysis
     "data_clean",

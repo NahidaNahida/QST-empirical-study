@@ -97,7 +97,7 @@ def learning_models_names(
 ) -> None:
     TEMP_CONFIG = {
         "headers": ["Quantum learning-based models", "Primary studies", "\\#"],
-        "tab_space": "p{{0.7\\columnwidth}}  p{{0.2\\columnwidth}} c"
+        "tab_space": "p{0.7\\columnwidth}  p{0.2\\columnwidth} c"
     }
 
     # Get the target data

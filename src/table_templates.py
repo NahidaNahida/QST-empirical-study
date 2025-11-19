@@ -49,7 +49,8 @@ def vertical_tables(
     save_path: str,
     tab_space: str,   # e.g., p{{0.14\\textwidth}}|c|p{{0.42\\textwidth}}|p{{0.42\\textwidth}}
     addition_line: str | None = None,
-    if_cmidrule: bool = False   # \cmidrule follows multiple rows
+    if_cmidrule: bool = False,   # \cmidrule follows multiple rows
+    if_midrule_each_line: bool = False
 ) -> None:
     r"""
     Generate vertical LaTeX tables from nested dictionaries.
@@ -96,7 +97,8 @@ def vertical_tables(
         if isinstance(line_data, dict):
             values = list(line_data.values())
             data_content += f"{line_name} & " + " & ".join(map(str, values)) + " \\\\ \n    "
-
+            if if_midrule_each_line == True and line_name != list(data.keys())[-1]:
+                data_content += f"\\cmidrule(lr){{1-{n_cols}}} \n    "
         # Case 2️⃣: inner value is a list of dicts
         elif isinstance(line_data, list):
             n_rows = len(line_data)
@@ -110,6 +112,9 @@ def vertical_tables(
                     )
                 else:
                     data_content += " & " + " & ".join(map(str, values)) + " \\\\ \n    "
+                    if if_midrule_each_line == True and line_name != list(data.keys())[-1]:
+                        data_content += f"\\cmidrule(lr){{1-{n_cols}}} \n    "
+                        
             # ✅ add cmidrule across all columns if requested, but not for the last block
             if if_cmidrule and line_name != list(data.keys())[-1]:
                 data_content += f"\\cmidrule(lr){{1-{n_cols}}} \n    "
@@ -196,3 +201,56 @@ def vertical_grouped_table(
         f.write(latex_code)
     
     print(f"LaTeX code saved to {save_path}")
+
+def two_dimensional_table(
+    data_dict: dict[str, dict[str, str]],
+    save_path: str
+) -> None:
+    # 行、列（按字典键排序，也可改成 list(data_dict.keys()) 保持原顺序）
+    rows = sorted(data_dict.keys())
+
+    col_set = set()
+    for r in rows:
+        col_set.update(data_dict[r].keys())
+    cols = sorted(col_set)
+
+    # 对齐方式：第一列 l，其他列 c
+    tab_space = "c|" + "c" * len(cols)
+
+    # 表头（第一行）
+    headers_str = " & ".join([""] + cols)  # 第一列是 row 名，所以列标题第一格空
+
+    # cmidrule
+    # 若 C 列为列名数量，则为：\cmidrule(r){2-<C+1>}
+    cmidrule_header = rf"\cmidrule(r){{2-{len(cols)+1}}}"
+
+    # 数据内容
+    lines = []
+    for r in rows:
+        row_vals = [r]  # 第一列是行名
+        for c in cols:
+            row_vals.append(data_dict[r].get(c, ""))
+        lines.append(" & ".join(row_vals) + "\\\\")
+    data_content = "\n    ".join(lines)
+
+    # 若需要额外加一行，可修改此处
+    addition_line = ""  # 默认为空
+
+    # 整体模板
+    latex_code = f"""
+\\begin{{tabular}}{{{tab_space}}}
+    \\toprule[1pt]
+    {headers_str} \\\\
+    {cmidrule_header}  
+    {data_content}
+    {addition_line}
+    \\bottomrule[1pt]
+\\end{{tabular}}
+    """
+
+    os.makedirs(os.path.dirname(save_path), exist_ok=True)
+    with open(save_path, "w", encoding="utf-8") as f:
+        f.write(latex_code)
+    
+    print(f"LaTeX code saved to {save_path}")
+
