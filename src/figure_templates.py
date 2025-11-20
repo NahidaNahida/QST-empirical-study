@@ -407,7 +407,8 @@ def horizontal_bar_chart(
     fig_color: str = "#B7B5B7F8",
     fig_xinteger: bool = True,      # Whether ticks on the x-axis should be integers
     title: str | None = None,
-    if_freq_sort: bool = True
+    if_freq_sort: bool = True,
+    req_sort: list | None = None
 ) -> None:
     # 统一配置
     common_configuration(config_figure)
@@ -419,7 +420,13 @@ def horizontal_bar_chart(
     is_int_data = all(isinstance(x, int) for x in data)
 
     # ✅ 排序逻辑
-    if if_freq_sort:
+    if req_sort is not None and not if_freq_sort:
+        # 如果提供了 req_sort，按 req_sort 的顺序排列 keys
+        sorted_items = sorted(
+            data_count.items(),
+            key=lambda x: req_sort.index(x[0]) if x[0] in req_sort else len(req_sort)
+        )
+    elif if_freq_sort:
         if is_int_data:
             # 如果是整数列表，按数值大小升序排列
             sorted_items = sorted(data_count.items(), key=lambda x: x[0])
@@ -608,8 +615,9 @@ def vertical_bar_chart(
     title: str | None = None,
     rotate_xticks: bool = True,
     rotation_angle: int = 30,
-    if_sort: bool = True,         # ✅ 是否排序
-    is_int_data: bool = False     # ✅ 是否为整数数据
+    if_freq_sort: bool = True,         # ✅ 是否排序
+    is_int_data: bool = False,     # ✅ 是否为整数数据
+    req_sort: list | None = None
 ) -> None:
     """
     绘制垂直柱状图，支持可选排序。
@@ -621,7 +629,13 @@ def vertical_bar_chart(
     data_count = Counter(data)
 
     # ✅ 排序逻辑
-    if if_sort:
+    if req_sort is not None and not if_freq_sort:
+        # 如果提供了 req_sort，按 req_sort 的顺序排列 keys
+        sorted_items = sorted(
+            data_count.items(),
+            key=lambda x: req_sort.index(x[0]) if x[0] in req_sort else len(req_sort)
+        )
+    elif if_freq_sort:
         if is_int_data:
             # 如果是整数列表，按数值大小升序排列
             sorted_items = sorted(data_count.items(), key=lambda x: x[0])
