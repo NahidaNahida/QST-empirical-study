@@ -1001,7 +1001,7 @@ def two_dimensional_heatmap(
     save_path: str,
     config_figure: dict,
     fig_figsize: tuple = (2, 2.5),
-    cmap: str = "viridis",
+    cmap: str = "Blues",
     annot: bool = True
 ) -> None:
     """
@@ -1020,7 +1020,23 @@ def two_dimensional_heatmap(
     col_set = set()
     for r in rows:
         col_set.update(data_dict[r].keys())
-    cols = sorted(col_set)
+    ori_cols = sorted(col_set)
+
+    desired_order = [
+        "Gate",
+        "Measurement",  # quantum
+        "Conditional",
+        "Expression",
+        "Variable",  # classical
+        "Subroutine",
+        "Branch",  # hybrid
+    ]
+    cols: list[str] = []
+    for d in desired_order:
+        for c in ori_cols:
+            if c == d and c not in cols:
+                cols.append(c)
+                break
 
     # 构建 DataFrame
     table = []
@@ -1040,8 +1056,9 @@ def two_dimensional_heatmap(
 
     # 绘制热力图
     plt.figure(figsize=(1.2 * len(cols), 0.8 * len(rows)))
-    sns.heatmap(df, cmap=cmap, annot=annot, fmt=".2f",
+    ax = sns.heatmap(df, cmap=cmap, annot=annot, fmt=".0f",
                 linewidths=0.5, linecolor="white")
+
 
     plt.tight_layout()
 
