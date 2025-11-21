@@ -1055,10 +1055,11 @@ def two_dimensional_heatmap(
     df = pd.DataFrame(table, index=rows, columns=cols)
 
     # 绘制热力图
-    plt.figure(figsize=(1.2 * len(cols), 0.8 * len(rows)))
+    plt.figure(figsize=(1. * len(cols), 0.67 * len(rows)))
     ax = sns.heatmap(df, cmap=cmap, annot=annot, fmt=".0f",
-                linewidths=0.5, linecolor="white")
-
+                linewidths=0.5, linecolor="white", annot_kws={"fontsize": 15})
+    ax.tick_params(axis="x", labelrotation=30, labelsize=15)
+    ax.tick_params(axis="y", labelrotation=0, labelsize=15)
 
     plt.tight_layout()
 
