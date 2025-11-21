@@ -998,6 +998,8 @@ def two_labels_venn(
 
 def two_dimensional_heatmap(
     data_dict: dict[str, dict[str, str]],
+    legends: dict[Literal["x", "y"], str],
+    desired_order: list[str],
     save_path: str,
     config_figure: dict,
     fig_figsize: tuple = (2, 2.5),
@@ -1008,10 +1010,9 @@ def two_dimensional_heatmap(
     将二维字典转换为热力图并保存为图片(如 .png/.jpg/.pdf).
     data_dict: dict[row][col] = value(字符串，但会尝试转换为数字)
     """
-    # 通用配置
-    common_configuration(config_figure)
-
-    plt.figure(figsize=fig_figsize)
+ 
+    common_configuration(config_figure)  # 假设你有自己的配置函数
+   
 
     # 行
     rows = sorted(data_dict.keys())
@@ -1020,23 +1021,9 @@ def two_dimensional_heatmap(
     col_set = set()
     for r in rows:
         col_set.update(data_dict[r].keys())
-    ori_cols = sorted(col_set)
-
-    desired_order = [
-        "Gate",
-        "Measurement",  # quantum
-        "Conditional",
-        "Expression",
-        "Variable",  # classical
-        "Subroutine",
-        "Branch",  # hybrid
-    ]
-    cols: list[str] = []
-    for d in desired_order:
-        for c in ori_cols:
-            if c == d and c not in cols:
-                cols.append(c)
-                break
+    
+    # x 轴列顺序：按 desired_order 排序，只保留存在于数据中的列
+    cols = [c for c in desired_order if c in col_set]
 
     # 构建 DataFrame
     table = []
@@ -1044,7 +1031,6 @@ def two_dimensional_heatmap(
         row_vals = []
         for c in cols:
             v = data_dict[r].get(c, "")
-            # 尝试把字符串转为浮点数
             try:
                 v = float(v)
             except:
@@ -1055,17 +1041,43 @@ def two_dimensional_heatmap(
     df = pd.DataFrame(table, index=rows, columns=cols)
 
     # 绘制热力图
-    plt.figure(figsize=(1. * len(cols), 0.67 * len(rows)))
-    ax = sns.heatmap(df, cmap=cmap, annot=annot, fmt=".0f",
-                linewidths=0.5, linecolor="white", annot_kws={"fontsize": 15})
-    ax.tick_params(axis="x", labelrotation=30, labelsize=15)
-    ax.tick_params(axis="y", labelrotation=0, labelsize=15)
+    plt.figure(figsize=fig_figsize)
+    ax = sns.heatmap(
+        df,
+        cmap=cmap,
+        annot=annot,
+        fmt=".0f",
+        linewidths=1,          # 单元格边框宽度
+        linecolor="black",     # 网格颜色
+        annot_kws={
+            "fontsize": config_figure["size"]["usual_fontsize"],
+            "fontweight": "bold"   # 这里设置加粗
+        },
+        cbar_kws={"shrink": 0.8}  # colorbar 缩放
+    )
 
-    plt.tight_layout()
+    # 确保 x 轴和 y 轴 tick 对齐单元格中心
+    ax.set_xticks(np.arange(len(cols)) + 0.5)
+    ax.set_yticks(np.arange(len(rows)) + 0.5)
+    ax.set_xticklabels(cols, rotation=30, fontsize=config_figure["size"]["usual_fontsize"], ha='right')
+    ax.set_yticklabels(rows, rotation=0, fontsize=config_figure["size"]["usual_fontsize"])
+
+    ax.set_xlabel(legends["x"], fontsize=config_figure["size"]["axis_fontsize"], fontweight='bold')
+    ax.set_ylabel(legends["y"], fontsize=config_figure["size"]["axis_fontsize"], fontweight='bold')
+
+    # 移除多余的 minor ticks
+    ax.tick_params(which='minor', length=0)
+
+    # 坐标轴样式
+    ax.tick_params(axis="x", labelrotation=30, labelsize=config_figure["size"]["axis_fontsize"])
+    ax.tick_params(axis="y", labelrotation=0, labelsize=config_figure["size"]["axis_fontsize"])
+
+ 
 
     # 保存文件
     os.makedirs(os.path.dirname(save_path), exist_ok=True)
     plt.savefig(save_path, format='pdf', bbox_inches='tight')
+ 
     print(f"Heatmap saved to {save_path}")
 
 

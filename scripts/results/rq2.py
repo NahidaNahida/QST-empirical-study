@@ -275,7 +275,16 @@ def mutation_operators(
 ) -> None:
     TEMP_CONFIG = {
         "target_item": "Mutation operators",
-        "figsize": (3.5, 0.55)
+        "desired_order": [
+            "Gate",
+            "Measurement",
+            "Conditional",
+            "Expression",
+            "Variable",
+            "Subroutine",
+            "Branch",
+        ],
+        "figsize": (5, 4)
     }
 
     req_data, saving_path = data_preprocess(
@@ -332,6 +341,8 @@ def mutation_operators(
 
     two_dimensional_heatmap(
         count_dict,
+        {"x": "Objects", "y": "Actions"},
+        TEMP_CONFIG["desired_order"],
         saving_path,
         config_figure,
         fig_figsize=TEMP_CONFIG["figsize"],
