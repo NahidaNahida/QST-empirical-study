@@ -1069,8 +1069,8 @@ def two_dimensional_heatmap(
     ax.tick_params(which='minor', length=0)
 
     # 坐标轴样式
-    ax.tick_params(axis="x", labelrotation=30, labelsize=config_figure["size"]["axis_fontsize"])
-    ax.tick_params(axis="y", labelrotation=0, labelsize=config_figure["size"]["axis_fontsize"])
+    ax.tick_params(axis="x", labelrotation=30)
+    ax.tick_params(axis="y", labelrotation=0)
 
  
 
