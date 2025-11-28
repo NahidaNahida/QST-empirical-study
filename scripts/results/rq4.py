@@ -23,7 +23,7 @@ from scripts import (
 import pandas as pd
 from collections import Counter
 import numpy as np
-import os
+from collections import OrderedDict
 
 import warnings
 warnings.filterwarnings("ignore")
@@ -131,7 +131,7 @@ def baseline_names(
 
     TEMP_CONFIG = {
         "if_sort": False,  # Sort based on the frequencies, otherwise the baseline order
-        "headers": ["SE problems", "Categories", "Baselines (Primary studies)"], 
+        "headers": ["SE problems", "Categories", "Baselines (Correspondings primary studies)"], 
         "tab_space": "p{0.15\\columnwidth}  p{0.18\\columnwidth} p{0.65\\columnwidth}",
         "skip_category": "Ablation"
     }
@@ -259,20 +259,52 @@ def baseline_names(
         # Clean up empty baseline dicts
         req_data[se_problem] = [d for d in baseline_list if d]
 
+
     # --------------------------------------------------------------------------
-    # Transform to LaTeX table-friendly format
+    # Transform to LaTeX table-friendly format + Build summary_dict
     # --------------------------------------------------------------------------
+    summary_dict = {}
+
     for se_problem, baseline_list in req_data.items():
         new_list = []
+        category_count_map = {}  # 记录各类 baseline 频数
+
         for baseline_dict in baseline_list:
             for category, baseline in baseline_dict.items():
-                if category.endswith("_formatted"):  # only include formatted text
+                if category.endswith("_formatted"):  # only include formatted entries
+                    clean_category = category.replace("_formatted", "")
+
+                    # baseline 为字符串，因此需要得到原 baseline 个数
+                    # baseline_dict 内部的同名非-formatted key是列表，长度就是数量
+                    raw_list = baseline_dict.get(clean_category, [])
+                    count = len(raw_list)
+
+                    # 记录计数
+                    if count > 0:
+                        category_count_map[clean_category] = count
+
+                    # 保存给 req_data 用（LaTeX）
                     new_list.append({
-                        "category": category.replace("_formatted", ""),
+                        "category": clean_category,
                         "baseline": baseline
                     })
+
+        # 替换回 req_data
         req_data[se_problem] = new_list
 
+        # -------------------------
+        # Build summary entry
+        # -------------------------
+        total_count = sum(category_count_map.values())
+        category_parts = [
+            f"{cata} ({num})" for cata, num in category_count_map.items() if num > 0
+        ]
+        summary_dict[f"{se_problem} ({total_count})"] = ", ".join(category_parts)
+
+    additional_line = "\\newline\n    ".join(f"{key}: {val}" for key, val in summary_dict.items())
+    additional_line = f"\\textbf{{Number of deduplicated baselines:}} \\newline\n    {additional_line}"
+    additional_line = f"\\multicolumn{{{len(TEMP_CONFIG['headers'])}}}{{p{{\\columnwidth}}}}{{{additional_line}}}\\\\"
+    additional_line = f"\\cmidrule(lr){{1-{len(TEMP_CONFIG['headers'])}}}\n{additional_line}"
     # --------------------------------------------------------------------------
     # Generate LaTeX table
     # --------------------------------------------------------------------------
@@ -281,7 +313,8 @@ def baseline_names(
         TEMP_CONFIG["headers"],
         saving_path,
         TEMP_CONFIG["tab_space"],
-        if_cmidrule=True
+        if_cmidrule=True,
+        addition_line=additional_line
     )
  
  
@@ -296,8 +329,8 @@ def statistical_tests_for_comparison(
     """
 
     TEMP_CONFIG = {
-        "headers": ["Statistical tests", "Statistics (\# of primary studies)"], 
-        "tab_space": "p{0.48\columnwidth}  p{0.5\columnwidth}"
+        "headers": ["Statistical tests (\#)", "Associated statistics (\#)"], 
+        "tab_space": "p{0.5\columnwidth}  p{0.48\columnwidth}"
     }
 
     data, saving_path = data_preprocess(
@@ -313,25 +346,33 @@ def statistical_tests_for_comparison(
     comparison_methods = parse_column(data)
 
     # Record the Statistical tests and Statistics
-    req_data = {}
+    statistics_data = {}
+    num_of_tests = {}
+    total_num_of_studies = 0
     for comparison_method in comparison_methods:
         if len(comparison_method) == 0:     # Skip invalid data
             continue
- 
+        
+        total_num_of_studies += 1
         for statistical_tests, statistics_list in comparison_method.items():
-            if statistical_tests not in req_data.keys():
-                req_data[statistical_tests] = {}  
+            if statistical_tests not in statistics_data.keys():
+                statistics_data[statistical_tests] = {}  
             
+            if statistical_tests not in num_of_tests.keys():
+                num_of_tests[statistical_tests] = 1
+            else:
+                num_of_tests[statistical_tests] += 1
+
             for statistics in statistics_list:
-                temp_dict = req_data[statistical_tests]
+                temp_dict = statistics_data[statistical_tests]
                 if statistics not in temp_dict.keys():
                     temp_dict[statistics] = 1       # {stat: freq}
                 else:
                     temp_dict[statistics] += 1
 
     # Reformulate the data
-    final_req_data = req_data.copy()
-    for statistical_tests, statistics_dict in req_data.items():
+    final_req_data = statistics_data.copy()
+    for statistical_tests, statistics_dict in statistics_data.items():
         stat_list = [
             f"{statistics} ({frequencies})"
             for statistics, frequencies in statistics_dict.items()
@@ -340,8 +381,17 @@ def statistical_tests_for_comparison(
         stat_str = ", ".join(str(x) for x in stat_list)
         final_req_data[statistical_tests] = {"stat_str": stat_str}
 
+    # Change the key, including the frequencies
+    new_req_data = OrderedDict()
+    for raw_key, data_str in final_req_data.items():
+        new_req_data[f"{raw_key} ({num_of_tests[raw_key]})"] = data_str
+
+    additional_line = f"\\textbf{{Total number of primary studies:}} {total_num_of_studies}"
+    additional_line = f"    \\multicolumn{{{len(TEMP_CONFIG['headers'])}}}{{p{{\\columnwidth}}}}{{{additional_line}}}\\\\"
+    additional_line = f"\\cmidrule(lr){{1-{len(TEMP_CONFIG['headers'])}}}\n{additional_line}"
+
     # Generate latex table
-    vertical_tables(final_req_data, TEMP_CONFIG["headers"], saving_path, TEMP_CONFIG["tab_space"])
+    vertical_tables(new_req_data, TEMP_CONFIG["headers"], saving_path, TEMP_CONFIG["tab_space"], addition_line=additional_line)
 
 if __name__ == "__main__":
     PROCEDURE = [

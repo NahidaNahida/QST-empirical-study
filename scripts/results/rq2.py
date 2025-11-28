@@ -284,7 +284,7 @@ def mutation_operators(
             "Subroutine",
             "Branch",
         ],
-        "figsize": (5, 4)
+        "figsize": (4, 2.5)
     }
 
     req_data, saving_path = data_preprocess(

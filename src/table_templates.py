@@ -90,7 +90,7 @@ def vertical_tables(
     cmidrule_header = " ".join([f"\\cmidrule(lr){{{idx+1}-{idx+1}}}" for idx in range(len(headers))])
 
     data_content = ""
-    n_cols = len(headers)
+ 
 
     for line_name, line_data in data.items():
         # Case 1️⃣: inner value is a dict
@@ -98,10 +98,10 @@ def vertical_tables(
             values = list(line_data.values())
             data_content += f"{line_name} & " + " & ".join(map(str, values)) + " \\\\ \n    "
             if if_midrule_each_line == True and line_name != list(data.keys())[-1]:
-                data_content += f"\\cmidrule(lr){{1-{n_cols}}} \n    "
+                # data_content += f"\\cmidrule(lr){{1-{n_cols}}} \n    "
+                data_content += f"{cmidrule_header} \n"
         # Case 2️⃣: inner value is a list of dicts
         elif isinstance(line_data, list):
-            n_rows = len(line_data)
             for idx, sub_dict in enumerate(line_data):
                 values = list(sub_dict.values())
                 if idx == 0:
@@ -111,33 +111,40 @@ def vertical_tables(
                         + " \\\\ \n    "
                     )
                 else:
-                    data_content += " & " + " & ".join(map(str, values)) + " \\\\ \n    "
+                    if line_name != list(data.keys())[-1]:
+                        data_content += " & " + " & ".join(map(str, values)) + " \\\\ \n    "
+                    else:
+                        data_content += " & " + " & ".join(map(str, values)) + " \\\\    "
                     if if_midrule_each_line == True and line_name != list(data.keys())[-1]:
-                        data_content += f"\\cmidrule(lr){{1-{n_cols}}} \n    "
+                        # data_content += f"\\cmidrule(lr){{1-{n_cols}}} \n    "
+                        data_content += f"{cmidrule_header} \n        "
                         
             # ✅ add cmidrule across all columns if requested, but not for the last block
             if if_cmidrule and line_name != list(data.keys())[-1]:
-                data_content += f"\\cmidrule(lr){{1-{n_cols}}} \n    "
+                # data_content += f"\\cmidrule(lr){{1-{n_cols}}} \n    "
+                data_content += f"{cmidrule_header} \n    "
         else:
             raise ValueError(f"Unsupported data type for key '{line_name}': {type(line_data)}")
 
     # if addition_line is not None:
     #     addition_line = f" \\\\ \n    {addition_line}"
     if addition_line is not None:
-        addition_line = f"{addition_line}"
+        addition_line = f"\n    {addition_line}"
     else:
         addition_line = ""
+
+    # Remove trailing spaces and newlines
+    data_content = data_content.rstrip()
 
     latex_code = f"""
 \\begin{{tabular}}{{{tab_space}}}
     \\toprule[1pt]
     {headers_str} \\\\
     {cmidrule_header}  
-    {data_content}
-    {addition_line}
+    {data_content}{addition_line}
     \\bottomrule[1pt]
 \\end{{tabular}}
-    """
+        """
 
     os.makedirs(os.path.dirname(save_path), exist_ok=True)
     with open(save_path, "w", encoding="utf-8") as f:
