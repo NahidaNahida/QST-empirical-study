@@ -1,10 +1,10 @@
 """
-Code for the data analysis of RQ6 Test Oracles
+Code for the data analysis of RQ6 Evaluation Metrics
 """
 
 from src import (
     read_csv, read_config_json,
-    pie_chart, horizontal_histogram, horizontal_bar_chart,
+    two_labels_venn, upset_plot,
     vertical_tables,
     parse_column, data_preprocess, paperids2citation, get_min_max, dict2upsetform, number2camelform
 )
@@ -23,200 +23,198 @@ from scripts import (
 import pandas as pd
 from collections import Counter
 import numpy as np
-import re
-from typing import Literal, Any
+import os
+
 import warnings
 warnings.filterwarnings("ignore")
 
-def oracle_common(
+
+def top_k_with_ties(sorted_list, k):
+    """
+    sorted_list: 已按目标值降序排序的列表，如 [(metric, [paper_ids]), ...]
+    k: 希望至少保留的前 k 项，但会继续保留并列的项
+
+    返回：保留并列后的列表
+    """
+    if not isinstance(k, int) or k <= 0 or len(sorted_list) <= k:
+        return sorted_list
+
+    # 第 k 个元素的 count
+    kth_count = len(sorted_list[k - 1][1])
+
+    # 保留所有 count >= kth_count
+    return [
+        item for item in sorted_list
+        if len(item[1]) >= kth_count
+    ]
+
+def whether_reporting_metrics(
     df: pd.DataFrame,
-    config_data: dict,
-    target_headers: str | list, 
-    saving_name: str = "rq6_reference_output.tex",        
-) -> tuple[dict, str]:
+    config_data: dict, 
+    config_figure: dict,  
+    saving_name: str = "rq6_metrics_venn.pdf",
+) -> None:
+
+    # Instant configuration
+    TEMP_CONFIG = {
+        "figsize": (4, 2),
+        "annote_color": "black",
+        "ellipse": 1.15,  # Eccentricity of the ellipse
+        "offset": {"A": (0.2, 0),"B": (0.2, 0.05), "01": (0.08, 0)}
+    }
+    
     multi_data, saving_path = data_preprocess(
         df, 
-        target_headers, 
+        ["rq6_effectiveness", "rq6_cost"], 
+        config_data, 
+        ROOT_DIR, 
+        FIG_SAVING_DIR,
+        saving_name
+    )    
+
+    effect_metrics = parse_column(multi_data[0])
+    cost_metrics = parse_column(multi_data[1])    
+ 
+    counts_dict = {"Effectiveness": 0, "Cost": 0, "Intersection": 0}
+    
+    for effect_metric, cost_metric in zip(effect_metrics, cost_metrics):
+        if len(effect_metric) == 0 and len(cost_metric) > 0:
+            counts_dict["Cost"] += 1
+        elif len(effect_metric) > 0 and len(cost_metric) == 0:
+            counts_dict["Effectiveness"] += 1
+        elif len(effect_metric) > 0 and len(cost_metric) > 0:
+            counts_dict["Intersection"] += 1
+    
+
+    counts_tuple = tuple(counts_dict.values())
+    labels_tuple = tuple(list(counts_dict.keys())[:2])
+
+    two_labels_venn(
+        counts_tuple, 
+        labels_tuple,
+        saving_path,
+        config_figure,
+        fig_figsize=TEMP_CONFIG["figsize"],
+        ellipse=TEMP_CONFIG["ellipse"],
+        label_offset=TEMP_CONFIG["offset"]
+    )
+
+def metrics_table(
+    df: pd.DataFrame,
+    config_data: dict,
+    saving_name: str = "rq6_metrics_names.tex",     
+) -> None:
+
+    # Instant configuration
+    TEMP_CONFIG = {
+        "headers": ["SE problems", "Effectiveness (\#)", "Cost (\#)"],
+        "tab_space": "p{0.14\\columnwidth}  p{0.42\\columnwidth} p{0.42\\columnwidth}",
+        "if_top_k": 5,
+        "if_only_numbers": True
+    }
+
+    multi_data, saving_path = data_preprocess(
+        df, 
+        ["rq6_effectiveness", "rq6_cost", "primary_study_id", "SE_problem"], 
         config_data, 
         ROOT_DIR, 
         TAB_SAVING_DIR,
         saving_name
     )    
-    
-    referred_outputs = parse_column(multi_data[0])
-    paper_idxes = multi_data[1]
-
-    saving_path: str
-    output_dict = {}      # Store the type name
-    for paper_idx, referred_output in zip(paper_idxes, referred_outputs):
-        if len(referred_output) == 0:
-            continue
-        
-        for meta_data in referred_output:
-            if isinstance(referred_output, list):
-                specification = meta_data
-                output_types = ["N/A"]              
-            elif isinstance(referred_output, dict):
-                specification = meta_data
-                output_types = referred_output[meta_data]    # List
-
-            paper_cite = f"\\Paper{number2camelform(int(paper_idx))}"
-            for output_type in output_types:
-                if specification not in output_dict.keys():
-                    output_dict[specification] = [{
-                        "output_type": output_type,
-                        "paper_ids": [paper_cite],
-                        "paper_number": 1
-                    }]
-                else:   # The specification is existing, then check the existence of the output type
-                    if_existing = False
-                    for meta_dict in output_dict[specification]:
-                        if output_type == meta_dict["output_type"]:
-                            meta_dict["paper_ids"].append(paper_cite)
-                            meta_dict["paper_number"] += 1
-                            if_existing = True
-                            break
-                    
-                    if not if_existing:
-                        # The output type does not exist
-                        output_dict[specification].append({
-                            "output_type": output_type,
-                            "paper_ids": [paper_cite],
-                            "paper_number": 1
-                        })
-
-    # Reformulate the data
-    for specification, output_type_data in output_dict.items():
-        output_type_data.sort(key=lambda x: x["paper_number"], reverse=True)
-        for meta_dict in output_type_data:
-            id_list = meta_dict["paper_ids"]
-            meta_dict["paper_ids"] = f"\\cite{{{', '.join(str(x) for x in id_list)}}}"
-
-    return output_dict, saving_path
-
-def specification(
-    df: pd.DataFrame,
-    config_data: dict,
-    saving_name: str = "rq6_program_specification.tex",     
-) -> None:
-    TEMP_CONFIG = {
-        "headers": ["Program specifications", "Output types", "Primary studies", "\#"],
-        "tab_space": "p{0.25\\columnwidth}  p{0.35\\columnwidth} p{0.38\\columnwidth} c",
-    }
-
-    output_dict, saving_path = oracle_common(
-        df,
-        config_data,
-        ["rq6_outputs", "primary_study_id"],
-        saving_name
-    )
 
 
-    # Add a line record the number of primary studies for each type of oracle
-    add_list = []
-    for oracle_type, oracle_data_list in output_dict.items():
-        paper_id_collection = []
-        for meta_dict in oracle_data_list:
-            match = re.search(r"\{(.*)\}", meta_dict["paper_ids"])
-            if match:
-                content = match.group(1)  # \PaperOneHundredAndFourteen, \PaperOneHundredAndSeventeen
-                # 按逗号拆分，并去掉多余空格
-                items = [item.strip() for item in content.split(",")]
-            paper_id_collection.extend(items)
-        temp_num = len(set(paper_id_collection))
-        add_list.append((oracle_type, temp_num))  # 临时存成元组 (类型, 数量)
-
-
-    # 按 temp_num 从大到小排序
-    add_list.sort(key=lambda x: x[1], reverse=True)
-
-    # 再格式化成字符串
-    add_list = [f"{oracle_type} ({temp_num})" for oracle_type, temp_num in add_list]
-    
-    add_line = f"""\\cmidrule(lr){{1-4}} \n    
-    \\multicolumn{{{len(TEMP_CONFIG['headers'])}}}{{p{{1.2\\columnwidth}}}}{{\\textbf{{Total number 
-    of primary studies for each program specification:}} {
-        ', '.join(str(x) for x in add_list)
-    }}}\\\\"""
-
-    vertical_tables(
-        output_dict,
-        TEMP_CONFIG["headers"],
-        saving_path,
-        TEMP_CONFIG["tab_space"],
-        addition_line=add_line,
-        if_cmidrule=True
-    )
-
-
-def oracle(
-    df: pd.DataFrame,
-    config_data: dict,
-    saving_name: str = "rq6_oracle_type.tex",     
-) -> None:
-    TEMP_CONFIG = {
-        "headers": ["Test oracles", "Testing protocols", "Primary studies", "\#"],
-        "tab_space": "p{0.2\columnwidth}  p{0.44\columnwidth} p{0.34\columnwidth} c",
-    }
-
-    output_dict, saving_path = oracle_common(
-        df,
-        config_data,
-        ["rq6_oracles", "primary_study_id"],
-        saving_name
-    )
-
-    # Add a line record the number of primary studies for each type of oracle
-    add_list = []
-    for oracle_type, oracle_data_list in output_dict.items():
-        paper_id_collection = []
-        for meta_dict in oracle_data_list:
-            match = re.search(r"\{(.*)\}", meta_dict["paper_ids"])
-            if match:
-                content = match.group(1)  # \PaperOneHundredAndFourteen, \PaperOneHundredAndSeventeen
-                # 按逗号拆分，并去掉多余空格
-                items = [item.strip() for item in content.split(",")]
-            paper_id_collection.extend(items)
-        temp_num = len(set(paper_id_collection))
-        add_list.append((oracle_type, temp_num))  # 临时存成元组 (类型, 数量)
-
-    # 按 temp_num 从大到小排序
-    add_list.sort(key=lambda x: x[1], reverse=True)
-
-    # 再格式化成字符串
-    add_list = [f"{oracle_type} ({temp_num})" for oracle_type, temp_num in add_list]
-    
-    add_line = f"""\\cmidrule(lr){{1-4}} \n    
-    \\multicolumn{{{len(TEMP_CONFIG['headers'])}}}{{p{{1.2\\columnwidth}}}}{{\\textbf{{Total number 
-    of primary studies for each test oracle:}} {
-        ', '.join(str(x) for x in add_list)
-    }}}\\\\"""
+    effect_metrics = parse_column(multi_data[0])
+    cost_metrics = parse_column(multi_data[1])
+    paper_idxes = multi_data[2]
+    se_problems = parse_column(multi_data[3])
  
+    # Build data structure
+    final_metric_names = {}
+    for effect_metric, cost_metric, paper_idx, se_problem_list in zip(
+        effect_metrics, cost_metrics, paper_idxes, se_problems
+    ):
+        if len(effect_metric) == 0 and len(cost_metric) == 0:
+            continue
+
+        se_problem = se_problem_list[0]
+
+        # Initialize SE problem entry
+        if se_problem not in final_metric_names.keys():
+            final_metric_names[se_problem] = {"Effectiveness": {}, "Cost": {}}
+
+        # Check the effectiveness
+        effect_dict = final_metric_names[se_problem]["Effectiveness"]
+        for meta_effect in effect_metric:
+            if meta_effect not in effect_dict.keys():
+                effect_dict[meta_effect] = [f"\\Paper{number2camelform(int(paper_idx))}"]
+            else:
+                effect_dict[meta_effect].append(f"\\Paper{number2camelform(int(paper_idx))}")
+
+        # Check the cost
+        cost_dict = final_metric_names[se_problem]["Cost"]
+        for meta_cost in cost_metric:
+            if meta_cost not in cost_dict.keys():
+                cost_dict[meta_cost] = [f"\\Paper{number2camelform(int(paper_idx))}"]
+            else:
+                cost_dict[meta_cost].append(f"\\Paper{number2camelform(int(paper_idx))}") 
+
+    for se_problem, metric_dict in final_metric_names.items():
+        new_metric_dict = {}
+        for metric_type, meta_metric_data in metric_dict.items():
+
+            # 排序：根据出现次数（list 长度）降序
+            sorted_meta_metric_data = sorted(
+                meta_metric_data.items(),
+                key=lambda x: len(x[1]),
+                reverse=True
+            )
+
+            # ====== 新增功能：保留 top-k ======
+            top_k = TEMP_CONFIG.get("if_top_k", None)
+            if isinstance(top_k, int) and top_k > 0:
+                sorted_meta_metric_data = top_k_with_ties(sorted_meta_metric_data, top_k)
+            # =================================
+
+            final_data_list = []
+            for metric_name, paper_id_list in sorted_meta_metric_data:
+                if TEMP_CONFIG["if_only_numbers"]:      # Only display the number of primary studies
+                    paper_str = str(len(paper_id_list))
+                else:
+                    paper_str = f"""\\cite{{{', '.join(str(x) for x in paper_id_list)}}}"""
+                final_data_list.append(f"{metric_name} ({paper_str})")
+
+            new_metric_dict[metric_type] = ",\\newline ".join(final_data_list)
+            new_metric_dict[metric_type] = f"{new_metric_dict[metric_type]}."
+
+        metric_dict.clear()
+        metric_dict.update(new_metric_dict)
+        
+
+
     vertical_tables(
-        output_dict,
+        final_metric_names,
         TEMP_CONFIG["headers"],
         saving_path,
         TEMP_CONFIG["tab_space"],
-        addition_line=add_line,
-        if_cmidrule=True
+        if_midrule_each_line=True
     )
-
 
 
 if __name__ == "__main__":
     PROCEDURE = [
-        ("tab", specification),
-        ("tab", oracle)
+        ("fig", whether_reporting_metrics),
+        ("tab", metrics_table),
+        # ("tab", input_type_name)
     ]
 
     df = read_csv(FILE_DIR, FILE_NAME)
     config_data = read_config_json(CONFIG_DATA_NAME)
     config_figure = read_config_json(CONFIG_FIGURE_NAME)
-
+    
     for type, sub_proc in PROCEDURE:
         if type == "fig":
-            sub_proc(df, config_data, config_figure)    # type: ignore
+            sub_proc(df, config_data, config_figure) # type: ignore
         elif type == "tab":
-            sub_proc(df, config_data)
+            sub_proc(df, config_data) # type: ignore
 
-    print("\nRQ6 is done. \n")
+    print("\nrq6 is done. \n")

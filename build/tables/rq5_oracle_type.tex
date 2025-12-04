@@ -1,15 +1,14 @@
 
-    \begin{tabular}{p{0.2\columnwidth}  p{0.44\columnwidth} p{0.34\columnwidth} c}
-        \toprule[1pt]
-        \multicolumn{1}{c}{\textbf{Test oracles}} & \multicolumn{1}{c}{\textbf{Testing protocols}} & \multicolumn{1}{c}{\textbf{Primary studies}} & \multicolumn{1}{c}{\textbf{\#}} \\
-        \cmidrule(lr){1-1} \cmidrule(lr){2-2} \cmidrule(lr){3-3} \cmidrule(lr){4-4}  
-        Wrong output oracle & Original outcome & \cite{\PaperOne, \PaperThree, \PaperFive, \PaperSeventeen, \PaperTwenty, \PaperTwentyOne, \PaperFortyThree, \PaperFiftyNine, \PaperSixty, \PaperSeventyThree, \PaperSeventyEight} & 11 \\ 
+\begin{tabular}{p{0.2\columnwidth}  p{0.44\columnwidth} p{0.34\columnwidth} c}
+    \toprule[1pt]
+    \multicolumn{1}{c}{\textbf{Test oracles}} & \multicolumn{1}{c}{\textbf{Testing protocols}} & \multicolumn{1}{c}{\textbf{Primary studies}} & \multicolumn{1}{c}{\textbf{\#}} \\
+    \cmidrule(lr){1-1} \cmidrule(lr){2-2} \cmidrule(lr){3-3} \cmidrule(lr){4-4}  
+    Wrong output oracle & Original outcome & \cite{\PaperOne, \PaperThree, \PaperFive, \PaperSeventeen, \PaperTwenty, \PaperTwentyOne, \PaperFortyThree, \PaperFiftyNine, \PaperSixty, \PaperSeventyOne, \PaperSeventyThree, \PaperSeventyEight} & 12 \\ 
      & Inverse test & \cite{\PaperSeventyOne, \PaperOneHundredAndSix, \PaperOneHundredAndEight, \PaperOneHundredAndTwelve} & 4 \\ 
      & Swap test & \cite{\PaperFiftyTwo, \PaperOneHundredAndTwelve} & 2 \\ 
-     & Original outcomes & \cite{\PaperSeventyOne} & 1 \\ 
      & Measurement projector & \cite{\PaperOneHundredAndTwentyOne} & 1 \\ 
     \cmidrule(lr){1-1} \cmidrule(lr){2-2} \cmidrule(lr){3-3} \cmidrule(lr){4-4} 
-Output probability oracle & Pearson's chi-squared test & \cite{\PaperFive, \PaperSeventeen, \PaperTwenty, \PaperTwentyOne, \PaperThirtyOne, \PaperFortyThree, \PaperFiftyTwo, \PaperSixty, \PaperSeventyThree, \PaperSeventyEight, \PaperEightyFour, \PaperOneHundredAndTwelve, \PaperOneHundredAndThirteen, \PaperOneHundredAndFourteen, \PaperOneHundredAndSeventeen} & 15 \\ 
+    Output probability oracle & Pearson's chi-squared test & \cite{\PaperFive, \PaperSeventeen, \PaperTwenty, \PaperTwentyOne, \PaperThirtyOne, \PaperFortyThree, \PaperFiftyTwo, \PaperSixty, \PaperSeventyThree, \PaperSeventyEight, \PaperEightyFour, \PaperOneHundredAndTwelve, \PaperOneHundredAndThirteen, \PaperOneHundredAndFourteen, \PaperOneHundredAndSeventeen} & 15 \\ 
      & Wilcoxon signed rank test & \cite{\PaperThree, \PaperFiftyNine} & 2 \\ 
      & Expectation value & \cite{\PaperThirtyNine} & 1 \\ 
      & Mann-Whitney U test & \cite{\PaperFortySix} & 1 \\ 
@@ -18,9 +17,9 @@ Output probability oracle & Pearson's chi-squared test & \cite{\PaperFive, \Pape
      & Multinomial test & \cite{\PaperOneHundredAndTwelve} & 1 \\ 
      & Monte Carlo Pearson's chi-squared test & \cite{\PaperOneHundredAndTwelve} & 1 \\ 
      & Monte Carlo G-test & \cite{\PaperOneHundredAndTwelve} & 1 \\ 
-     & Monte Carlo Multionmial test & \cite{\PaperOneHundredAndTwelve} & 1 \\ 
+     & Monte Carlo multionmial test & \cite{\PaperOneHundredAndTwelve} & 1 \\ 
     \cmidrule(lr){1-1} \cmidrule(lr){2-2} \cmidrule(lr){3-3} \cmidrule(lr){4-4} 
-Property-based oracle & Original outcome & \cite{\PaperTwentyFour, \PaperTwentySeven, \PaperNinetyFour} & 3 \\ 
+    Property-based oracle & Original outcome & \cite{\PaperTwentyFour, \PaperTwentySeven, \PaperNinetyFour} & 3 \\ 
      & Pearson's chi-squared test & \cite{\PaperTwelve, \PaperThirteen} & 2 \\ 
      & Fisher's exact test & \cite{\PaperThirtyThree, \PaperOneHundredAndNineteen} & 2 \\ 
      & T test & \cite{\PaperThirteen} & 1 \\ 
@@ -29,18 +28,18 @@ Property-based oracle & Original outcome & \cite{\PaperTwentyFour, \PaperTwentyS
      & Holm-Bonferroni correction & \cite{\PaperOneHundredAndNineteen} & 1 \\ 
      & Ancillary qubit & \cite{\PaperOneHundredAndTwentyTwo} & 1 \\ 
     \cmidrule(lr){1-1} \cmidrule(lr){2-2} \cmidrule(lr){3-3} \cmidrule(lr){4-4} 
-Dominant output oracle & Original outcome & \cite{\PaperFifteen, \PaperSeventyOne, \PaperSeventyEight} & 3 \\ 
+    Dominant output oracle & Original outcome & \cite{\PaperFifteen, \PaperSeventyOne, \PaperSeventyEight} & 3 \\ 
     \cmidrule(lr){1-1} \cmidrule(lr){2-2} \cmidrule(lr){3-3} \cmidrule(lr){4-4} 
-Quantum state oracle & Quantum fidelity & \cite{\PaperOneHundredAndFourteen, \PaperOneHundredAndFifteen, \PaperOneHundredAndSeventeen} & 3 \\ 
+    Quantum state oracle & Quantum fidelity & \cite{\PaperOneHundredAndFourteen, \PaperOneHundredAndFifteen, \PaperOneHundredAndSeventeen} & 3 \\ 
      & Quantum state tomography & \cite{\PaperOneHundredAndFourteen, \PaperOneHundredAndSeventeen} & 2 \\ 
      & Expectation value & \cite{\PaperOneHundredAndFifteen} & 1 \\ 
     \cmidrule(lr){1-1} \cmidrule(lr){2-2} \cmidrule(lr){3-3} \cmidrule(lr){4-4} 
-Quantum operation oracle & Quantum process tomography & \cite{\PaperOneHundredAndFourteen, \PaperOneHundredAndSeventeen} & 2 \\ 
+    Quantum operation oracle & Quantum process tomography & \cite{\PaperOneHundredAndFourteen, \PaperOneHundredAndSeventeen} & 2 \\ 
      & Quantum fidelity & \cite{\PaperOneHundredAndFourteen, \PaperOneHundredAndSeventeen} & 2 \\
-        \cmidrule(lr){1-4} 
+    \cmidrule(lr){1-4} 
     
     \multicolumn{4}{p{1.2\columnwidth}}{\textbf{Total number 
     of primary studies for each test oracle:} Output probability oracle (20), Wrong output oracle (17), Property-based oracle (9), Dominant output oracle (3), Quantum state oracle (3), Quantum operation oracle (2)}\\
-        \bottomrule[1pt]
-    \end{tabular}
+    \bottomrule[1pt]
+\end{tabular}
         

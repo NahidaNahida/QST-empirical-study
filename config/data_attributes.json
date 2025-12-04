@@ -26,18 +26,18 @@
         "rq3_gates": "Scalability-#OfGates",
         "rq3_depth": "Scalability-CircuitDepth",
 
-        "rq4_baseline_names": "AdoptedBaseline-BaselineNames",
-        "rq4_baseline_motivation": "AdoptedBaseline-InclusionMethod",
-        "rq4_baseline_comparison": "BaselineComparison-Method",
+        "rq4_input_types": "TestCases-InputType",
+        "rq4_whether_counts": "TestCases-ReportTestCounts?",
 
-        "rq5_input_types": "TestCases-InputType",
-        "rq5_whether_counts": "TestCases-ReportTestCounts?",
+        "rq5_outputs": "TestOracle-ProgramSpecification",
+        "rq5_oracles": "TestOracle-OracleName",
 
-        "rq6_outputs": "TestOracle-ProgramSpecification",
-        "rq6_oracles": "TestOracle-OracleName",
+        "rq6_effectiveness": "Metrics-Effectiveness",
+        "rq6_cost": "Metrics-Cost",
 
-        "rq7_effectiveness": "Metrics-Effectiveness",
-        "rq7_cost": "Metrics-Cost",
+        "rq7_baseline_names": "AdoptedBaseline-BaselineNames",
+        "rq7_baseline_motivation": "AdoptedBaseline-InclusionMethod",
+        "rq7_baseline_comparison": "BaselineComparison-Method",
 
         "rq8_shots": "StatisticalRepeats-Shots",
         "rq8_repetitions": "StatisticalRepeats-IndependentRepeats",

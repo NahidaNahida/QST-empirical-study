@@ -1,10 +1,9 @@
 """
-Code for the data analysis of RQ5 Test Cases
+Code for the data analysis of RQ5 Test Oracles
 """
 
 from src import (
     read_csv, read_config_json,
-    horizontal_stacked_bar_chart, upset_plot,
     vertical_tables,
     parse_column, data_preprocess, paperids2citation, get_min_max, dict2upsetform, number2camelform
 )
@@ -23,194 +22,181 @@ from scripts import (
 import pandas as pd
 from collections import Counter
 import numpy as np
-import os
-
+import re
+from typing import Literal, Any
 import warnings
 warnings.filterwarnings("ignore")
 
-def whether_reporting_test_counts(
+def oracle_common(
     df: pd.DataFrame,
-    config_data: dict, 
-    config_figure: dict,  
-    saving_name: str = "rq5_whether_counts.pdf",
-) -> None:
-
-    # Instant configuration
-    TEMP_CONFIG = {
-        "figsize": (6, 0.5),
-        "annote_color": "black"
-    }
-    
-    req_data, saving_path = data_preprocess(
-        df, 
-        "rq5_whether_counts", 
-        config_data, 
-        ROOT_DIR, 
-        FIG_SAVING_DIR,
-        saving_name
-    )    
-    
-    counts_boolean = parse_column(req_data)    
-    # Replace "Y" to "Yes" and "N" to "No"
-    counts = [0, 0]
-    labels = ["Yes", "No"]
-    for meta_data in counts_boolean:
-        if meta_data[0].lower() == "y":
-            counts[0] += 1
-        elif meta_data[0].lower() == "n":
-            counts[1] += 1
-
-    saving_path = os.path.join(ROOT_DIR, *FIG_SAVING_DIR, saving_name)
-    horizontal_stacked_bar_chart(
-        counts,
-        labels,
-        saving_path,
-        config_figure,
-        fig_figsize=TEMP_CONFIG["figsize"],
-        fig_anno_color=TEMP_CONFIG["annote_color"]
-    )    
-
-
-def input_type_distribution(    
-    df: pd.DataFrame,
-    config_data: dict, 
-    config_figure: dict,  
-    saving_name: str = "rq5_input_type_distribution.pdf",
-) -> None:
-    # Instant configuration
-    TEMP_CONFIG_UPSET = {
-        "figsize": (5, 2.5),
-        "legendsize": (10, 1),
-        "bar_height": 0.25,
-        "color": "black",
-        "wspace": 0.5
-    }
-    
-    # Get the target data
-    req_data, saving_path = data_preprocess(
-        df, 
-        "rq5_input_types",         
-        config_data, 
-        ROOT_DIR, 
-        FIG_SAVING_DIR,
-        saving_name
-    ) # type: ignore
-    saving_path: str
-
-    input_types = parse_column(req_data, skip_invalid_value=False)  # Including invalid values
-
-    # Collect possible types
-    category_counts = []
-    for paper_data in input_types:
-        if len(paper_data) == 0:  # Skip invalid data
-            continue
-        paper_data: list
-
-        if isinstance(paper_data, str):
-            category_counts.extend(paper_data)
-        elif isinstance(paper_data, dict):
-            category_counts.extend(list(paper_data.keys()))
-
-    categories = list(set(category_counts))
-
-    # Generate the required dictionary for upset plotting
-    input_type_dict = {category: [] for category in categories}
-    for paper_data in input_types:
-        for category in categories:
-            current_data = {}
-            if category in paper_data.keys(): # type: ignore
-                current_data = paper_data[category]
-            input_type_dict[category].append(current_data)
-        
- 
-    # Analyse the upset relation
-    combo_list, count_list = dict2upsetform(input_type_dict)    
- 
-    # Generate the upset plot
-    upset_plot(
-        {"memberships": combo_list, "values": count_list}, 
-        # {"x": "# of primary studies", "y": "# of intersaction"},
-        saving_path,
-        config_figure,
-        fig_color=TEMP_CONFIG_UPSET["color"],
-        fig_figsize=TEMP_CONFIG_UPSET["figsize"],
-        fig_wspace=TEMP_CONFIG_UPSET["wspace"]
-    )
-
-def input_type_name(    
-    df: pd.DataFrame,
-    config_data: dict, 
-    saving_name: str = "rq5_input_type_names.tex",
-) -> None:
-    # Instant configuration
-    TEMP_CONFIG = {
-        "headers": ["Test input types", "Input properties", "Primary studies", "\#"],
-        "tab_space": "p{0.25\\columnwidth}  p{0.35\\columnwidth} p{0.38\\columnwidth} c",
-    }
-    
-    # Get the target data
+    config_data: dict,
+    target_headers: str | list, 
+    saving_name: str = "rq5_reference_output.tex",        
+) -> tuple[dict, str]:
     multi_data, saving_path = data_preprocess(
         df, 
-        ["rq5_input_types", "primary_study_id"],         
+        target_headers, 
         config_data, 
         ROOT_DIR, 
         TAB_SAVING_DIR,
         saving_name
-    ) # type: ignore
-    saving_path: str
-
-    input_types = parse_column(multi_data[0])  # excluding invalid values
+    )    
+    
+    referred_outputs = parse_column(multi_data[0])
     paper_idxes = multi_data[1]
 
-    input_type_dict = {}
-    # Generate the required dictionary for upset plotting
-    for paper_idx, input_type in zip(paper_idxes, input_types):
-        if len(input_type) == 0:
+    saving_path: str
+    output_dict = {}      # Store the type name
+    for paper_idx, referred_output in zip(paper_idxes, referred_outputs):
+        if len(referred_output) == 0:
             continue
-            
-        for meta_data in input_type:
-            meta_data: dict
-            input_name = meta_data
-            input_properties = input_type[meta_data]
         
-            paper_cite = f"\\Paper{number2camelform(int(paper_idx))}"
+        for meta_data in referred_output:
+            if isinstance(referred_output, list):
+                specification = meta_data
+                output_types = ["N/A"]              
+            elif isinstance(referred_output, dict):
+                specification = meta_data
+                output_types = referred_output[meta_data]    # List
 
-            for input_property in input_properties:
-                if input_name not in input_type_dict.keys():
-                    input_type_dict[input_name] = [{
-                        "input_property": input_property,
+            paper_cite = f"\\Paper{number2camelform(int(paper_idx))}"
+            for output_type in output_types:
+                if specification not in output_dict.keys():
+                    output_dict[specification] = [{
+                        "output_type": output_type,
                         "paper_ids": [paper_cite],
                         "paper_number": 1
                     }]
-                else:
+                else:   # The specification is existing, then check the existence of the output type
                     if_existing = False
-                    for meta_dict in input_type_dict[input_name]:
-                        if input_property == meta_dict["input_property"]:
+                    for meta_dict in output_dict[specification]:
+                        if output_type == meta_dict["output_type"]:
                             meta_dict["paper_ids"].append(paper_cite)
                             meta_dict["paper_number"] += 1
                             if_existing = True
                             break
                     
                     if not if_existing:
-                        input_type_dict[input_name].append({
-                            "input_property": input_property,
+                        # The output type does not exist
+                        output_dict[specification].append({
+                            "output_type": output_type,
                             "paper_ids": [paper_cite],
                             "paper_number": 1
                         })
 
     # Reformulate the data
-    for output_type_data in input_type_dict.values():
+    for specification, output_type_data in output_dict.items():
         output_type_data.sort(key=lambda x: x["paper_number"], reverse=True)
         for meta_dict in output_type_data:
             id_list = meta_dict["paper_ids"]
             meta_dict["paper_ids"] = f"\\cite{{{', '.join(str(x) for x in id_list)}}}"
- 
+
+    return output_dict, saving_path
+
+def specification(
+    df: pd.DataFrame,
+    config_data: dict,
+    saving_name: str = "rq5_program_specification.tex",     
+) -> None:
+    TEMP_CONFIG = {
+        "headers": ["Program specifications", "Output types", "Primary studies", "\#"],
+        "tab_space": "p{0.25\\columnwidth}  p{0.35\\columnwidth} p{0.38\\columnwidth} c",
+    }
+
+    output_dict, saving_path = oracle_common(
+        df,
+        config_data,
+        ["rq5_outputs", "primary_study_id"],
+        saving_name
+    )
+
+
+    # Add a line record the number of primary studies for each type of oracle
+    add_list = []
+    for oracle_type, oracle_data_list in output_dict.items():
+        paper_id_collection = []
+        for meta_dict in oracle_data_list:
+            match = re.search(r"\{(.*)\}", meta_dict["paper_ids"])
+            if match:
+                content = match.group(1)  # \PaperOneHundredAndFourteen, \PaperOneHundredAndSeventeen
+                # 按逗号拆分，并去掉多余空格
+                items = [item.strip() for item in content.split(",")]
+            paper_id_collection.extend(items)
+        temp_num = len(set(paper_id_collection))
+        add_list.append((oracle_type, temp_num))  # 临时存成元组 (类型, 数量)
+
+
+    # 按 temp_num 从大到小排序
+    add_list.sort(key=lambda x: x[1], reverse=True)
+
+    # 再格式化成字符串
+    add_list = [f"{oracle_type} ({temp_num})" for oracle_type, temp_num in add_list]
+    
+    add_line = f"""\\cmidrule(lr){{1-4}} \n    
+    \\multicolumn{{{len(TEMP_CONFIG['headers'])}}}{{p{{1.2\\columnwidth}}}}{{\\textbf{{Total number 
+    of primary studies for each program specification:}} {
+        ', '.join(str(x) for x in add_list)
+    }}}\\\\"""
 
     vertical_tables(
-        input_type_dict,
+        output_dict,
         TEMP_CONFIG["headers"],
         saving_path,
         TEMP_CONFIG["tab_space"],
+        addition_line=add_line,
+        if_cmidrule=True
+    )
+
+
+def oracle(
+    df: pd.DataFrame,
+    config_data: dict,
+    saving_name: str = "rq5_oracle_type.tex",     
+) -> None:
+    TEMP_CONFIG = {
+        "headers": ["Test oracles", "Testing protocols", "Primary studies", "\#"],
+        "tab_space": "p{0.2\columnwidth}  p{0.44\columnwidth} p{0.34\columnwidth} c",
+    }
+
+    output_dict, saving_path = oracle_common(
+        df,
+        config_data,
+        ["rq5_oracles", "primary_study_id"],
+        saving_name
+    )
+
+    # Add a line record the number of primary studies for each type of oracle
+    add_list = []
+    for oracle_type, oracle_data_list in output_dict.items():
+        paper_id_collection = []
+        for meta_dict in oracle_data_list:
+            match = re.search(r"\{(.*)\}", meta_dict["paper_ids"])
+            if match:
+                content = match.group(1)  # \PaperOneHundredAndFourteen, \PaperOneHundredAndSeventeen
+                # 按逗号拆分，并去掉多余空格
+                items = [item.strip() for item in content.split(",")]
+            paper_id_collection.extend(items)
+        temp_num = len(set(paper_id_collection))
+        add_list.append((oracle_type, temp_num))  # 临时存成元组 (类型, 数量)
+
+    # 按 temp_num 从大到小排序
+    add_list.sort(key=lambda x: x[1], reverse=True)
+
+    # 再格式化成字符串
+    add_list = [f"{oracle_type} ({temp_num})" for oracle_type, temp_num in add_list]
+    
+    add_line = f"""\\cmidrule(lr){{1-4}} \n    
+    \\multicolumn{{{len(TEMP_CONFIG['headers'])}}}{{p{{1.2\\columnwidth}}}}{{\\textbf{{Total number 
+    of primary studies for each test oracle:}} {
+        ', '.join(str(x) for x in add_list)
+    }}}\\\\"""
+ 
+    vertical_tables(
+        output_dict,
+        TEMP_CONFIG["headers"],
+        saving_path,
+        TEMP_CONFIG["tab_space"],
+        addition_line=add_line,
         if_cmidrule=True
     )
 
@@ -218,19 +204,18 @@ def input_type_name(
 
 if __name__ == "__main__":
     PROCEDURE = [
-        ("fig", whether_reporting_test_counts),
-        ("fig", input_type_distribution),
-        ("tab", input_type_name)
+        ("tab", specification),
+        ("tab", oracle)
     ]
 
     df = read_csv(FILE_DIR, FILE_NAME)
     config_data = read_config_json(CONFIG_DATA_NAME)
     config_figure = read_config_json(CONFIG_FIGURE_NAME)
-    
+
     for type, sub_proc in PROCEDURE:
         if type == "fig":
-            sub_proc(df, config_data, config_figure) # type: ignore
+            sub_proc(df, config_data, config_figure)    # type: ignore
         elif type == "tab":
-            sub_proc(df, config_data) # type: ignore
+            sub_proc(df, config_data)
 
-    print("\nRQ5 is done. \n")
+    print("\nrq5 is done. \n")
