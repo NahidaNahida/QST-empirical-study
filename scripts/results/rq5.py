@@ -155,7 +155,7 @@ def oracle(
 ) -> None:
     TEMP_CONFIG = {
         "headers": ["Test oracles", "Testing protocols", "Primary studies", "\#"],
-        "tab_space": "p{0.2\columnwidth}  p{0.44\columnwidth} p{0.34\columnwidth} c",
+        "tab_space": "c  p{0.47\columnwidth} p{0.37\columnwidth} c",
     }
 
     output_dict, saving_path = oracle_common(

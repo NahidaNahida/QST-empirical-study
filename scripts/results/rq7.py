@@ -132,7 +132,7 @@ def baseline_names(
     TEMP_CONFIG = {
         "if_sort": False,  # Sort based on the frequencies, otherwise the baseline order
         "headers": ["SE problems", "Categories", "Baselines (Correspondings primary studies)"], 
-        "tab_space": "p{0.15\\columnwidth}  p{0.18\\columnwidth} p{0.65\\columnwidth}",
+        "tab_space": "p{0.15\\columnwidth}  c  p{0.7\\columnwidth}",
         "skip_category": "Ablation"
     }
 
