@@ -47,6 +47,8 @@ def data_preprocess(
 
     return req_data, saving_path
 
+import re
+
 def parse_data_str(
     metadata: str,
     skip_invalid_key: bool = True,
@@ -115,19 +117,20 @@ def parse_data_str(
 
         key, values = block.split(":", 1)
         key = key.strip()
+        # remove <...> from key
+        key = re.sub(r"<.*?>", "", key).strip()
+
         if skip_invalid_key and key.lower() == "un-specified":
             continue
 
-        # remove <...>
+        # remove <...> from values
         cleaned_values = re.sub(r"<.*?>", "", values)
 
         items = [v for v in smart_split(cleaned_values) if v]
 
-        # 若 skip_invalid_value=True，则忽略 value 为 "Un-specified"
         if skip_invalid_value:
             items = [v for v in items if v.strip().lower() != "un-specified"]
 
-        # 若值全部被过滤掉 → 直接跳过（符合之前旧逻辑）
         if skip_invalid_value and not items:
             continue
 
@@ -144,6 +147,7 @@ def parse_data_str(
             return all_values
 
     return result
+
 
 def parse_column(target_data: list[str], skip_invalid_key: bool=True, skip_invalid_value: bool=True):
     """Invalid data will return "{}."""

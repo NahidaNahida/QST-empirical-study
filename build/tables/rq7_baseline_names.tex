@@ -1,25 +1,26 @@
 
-\begin{tabular}{p{0.15\columnwidth}  p{0.18\columnwidth} p{0.65\columnwidth}}
+\begin{tabular}{p{0.15\columnwidth}  c  p{0.7\columnwidth}}
     \toprule[1pt]
     \multicolumn{1}{c}{\textbf{SE problems}} & \multicolumn{1}{c}{\textbf{Categories}} & \multicolumn{1}{c}{\textbf{Baselines (Correspondings primary studies)}} \\
     \cmidrule(lr){1-1} \cmidrule(lr){2-2} \cmidrule(lr){3-3}  
     Software testing & SOTA & QuraTest (\cite{\PaperFortyFive, \PaperOneHundredAndFive}), SimBAy (\cite{\PaperThirtySix}), ETO (\cite{\PaperThirtyNine}), Quito (\cite{\PaperFortyFive}), Pure-state test cases (\cite{\PaperFortySix}), Pearson's chi-squared test (\cite{\PaperOneHundredAndTwelve}), QMutPy (\cite{\PaperOneHundredAndThirteen}), Muskit (\cite{\PaperOneHundredAndThirteen}), QSharpCheck (\cite{\PaperOneHundredAndNineteen}) \\ 
-     & Adaption & Adaptive random testing (\cite{\PaperFiftyTwo}), Tradifuzz (\cite{\PaperEightySix}), Swap test (\cite{\PaperOneHundredAndTwelve}), Statevector test (\cite{\PaperOneHundredAndTwelve}), G-test (\cite{\PaperOneHundredAndTwelve}), Multinomial test (\cite{\PaperOneHundredAndTwelve}), Monte Carlo Pearson's chi-squared test (\cite{\PaperOneHundredAndTwelve}), Monte Carlo G-test (\cite{\PaperOneHundredAndTwelve}), Monte Carlo multinomial test (\cite{\PaperOneHundredAndTwelve}) \\ 
-     & Naivety & Random testing (\cite{\PaperFive, \PaperFiftyTwo, \PaperSixty, \PaperOneHundredAndSeven}), Random search (\cite{\PaperSeventeen, \PaperTwenty, \PaperTwentyOne, \PaperFortyThree}), Random state vector generator (\cite{\PaperFortyFive, \PaperOneHundredAndThree}), Random circuit generator (\cite{\PaperSix}), Random coherent noise (\cite{\PaperThirtySix}), SAMPLE (\cite{\PaperThirtyEight}), Random quantum circuit generator (\cite{\PaperFortyFive}), Noise prediction model based on linear regression (\cite{\PaperSixtySeven}) \\ 
+     & Adaption & Adaptive random testing (\cite{\PaperFiftyTwo}), Tradifuzz (\cite{\PaperEightySix}) \\ 
+     & Adapted & Swap test (\cite{\PaperOneHundredAndTwelve}), Statevector test (\cite{\PaperOneHundredAndTwelve}), G-test (\cite{\PaperOneHundredAndTwelve}), Multinomial test (\cite{\PaperOneHundredAndTwelve}), Monte Carlo Pearson's chi-squared test (\cite{\PaperOneHundredAndTwelve}), Monte Carlo G-test (\cite{\PaperOneHundredAndTwelve}), Monte Carlo multinomial test (\cite{\PaperOneHundredAndTwelve}) \\ 
+     & Naive & Random testing (\cite{\PaperFive, \PaperFiftyTwo, \PaperSixty, \PaperOneHundredAndSeven}), Random search (\cite{\PaperSeventeen, \PaperTwenty, \PaperTwentyOne, \PaperFortyThree}), Random state vector generator (\cite{\PaperFortyFive, \PaperOneHundredAndThree}), Random circuit generator (\cite{\PaperSix}), Random coherent noise (\cite{\PaperThirtySix}), SAMPLE (\cite{\PaperThirtyEight}), Random quantum circuit generator (\cite{\PaperFortyFive}), Noise prediction model based on linear regression (\cite{\PaperSixtySeven}) \\ 
     \cmidrule(lr){1-1} \cmidrule(lr){2-2} \cmidrule(lr){3-3} 
     Runtime assertion & SOTA & QECA (\cite{\PaperFourteen, \PaperOneHundredAndTwentyOne}), Stat (\cite{\PaperFourteen}), Proq (\cite{\PaperOneHundredAndFifteen}) \\ 
     \cmidrule(lr){1-1} \cmidrule(lr){2-2} \cmidrule(lr){3-3} 
     Fault localization & Adaption & Spectrum-based fault localization (\cite{\PaperOneHundredAndNine}) \\ 
-     & Naivety & Naive linear search (\cite{\PaperThirtyOne, \PaperEightyFour}), Naive binary search (\cite{\PaperThirtyOne, \PaperEightyFour}) \\ 
+     & Naive & Naive linear search (\cite{\PaperThirtyOne, \PaperEightyFour}), Naive binary search (\cite{\PaperThirtyOne, \PaperEightyFour}) \\ 
     \cmidrule(lr){1-1} \cmidrule(lr){2-2} \cmidrule(lr){3-3} 
     Program repair & SOTA & LLM-QAPR (\cite{\PaperFortyFour}) \\ 
-     & Adaption & GenProg (\cite{\PaperEightyThree}), TBar (\cite{\PaperEightyThree}) \\     & Composite & Syn-QFST (\cite{\PaperFortyFour}), Syn-QSD (\cite{\PaperFortyFour}), Quito (\cite{\PaperFortyFour}), QuSBT (\cite{\PaperFortyFour}) \\     & Naivety & Basic-QAPR (\cite{\PaperFortyFour}) \\
+     & Adaption & GenProg (\cite{\PaperEightyThree}), TBar (\cite{\PaperEightyThree}) \\     & Composite & Syn-QFST (\cite{\PaperFortyFour}), Syn-QSD (\cite{\PaperFortyFour}), Quito (\cite{\PaperFortyFour}), QuSBT (\cite{\PaperFortyFour}) \\     & Naive & Basic-QAPR (\cite{\PaperFortyFour}) \\
     \cmidrule(lr){1-3}
 \multicolumn{3}{p{\columnwidth}}{\textbf{Number of deduplicated baselines:} \newline
-    Software testing (26): SOTA (9), Adaption (9), Naivety (8)\newline
+    Software testing (26): SOTA (9), Adaption (2), Adapted (7), Naive (8)\newline
     Runtime assertion (3): SOTA (3)\newline
-    Fault localization (3): Adaption (1), Naivety (2)\newline
-    Program repair (8): SOTA (1), Adaption (2), Composite (4), Naivety (1)}\\
+    Fault localization (3): Adaption (1), Naive (2)\newline
+    Program repair (8): SOTA (1), Adaption (2), Composite (4), Naive (1)}\\
     \bottomrule[1pt]
 \end{tabular}
         
