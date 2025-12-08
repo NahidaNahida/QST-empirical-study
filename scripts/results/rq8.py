@@ -137,8 +137,8 @@ def varied_and_adaptive_shots(
     
     # Instant configuration
     TEMP_CONFIG = {
-        "headers": ["Types", "Configurations", "Primary studies"],
-        "tab_space": "p{0.13\\columnwidth}  p{0.68\\columnwidth} p{0.20\\columnwidth}",
+        "headers": ["Categories", "Configuration schemes", "Primary studies"],
+        "tab_space": "c  p{0.75\\columnwidth} p{0.20\\columnwidth}",
         "target_names": ["Varied", "Adaptive"]
     }
 
@@ -269,7 +269,7 @@ def number_of_repetitions(
     # Produce the histogram
     horizontal_histogram(
         repetition_counts, 
-        {"x": "# of primary studies", "y": "# of individual repetitions"}, 
+        {"x": "# of primary studies", "y": "# of experimental repetitions"}, 
         saving_path,
         config_figure,
         fig_figsize=TEMP_CONFIG["figsize"],

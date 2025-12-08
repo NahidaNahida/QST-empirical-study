@@ -4,7 +4,6 @@ Code for the data analysis of RQ10 Available Toolings
 
 from src import (
     read_csv, read_config_json, data_clean, number2camelform,
-    line_chart_frequencies, pie_chart, horizontal_bar_chart, horizontal_boxplot,
     vertical_tables, vertical_grouped_table,
     parse_column, data_preprocess, paperids2citation
 )
@@ -63,6 +62,8 @@ def available_sources(
     req_data: list[dict] = parse_column(data, skip_invalid_key=False, skip_invalid_value=False)  # Keep "Un-specified" in the raw data
     req_metadata = {}
     new_bibtex = []  # For generate the .bib for the program sources
+
+ 
     for paper_id, data_dict in zip(paper_ids, req_data):
         if data_dict == {}:
             continue
@@ -121,7 +122,24 @@ def available_sources(
     print(f"Bibtex for program sources has been saved to {new_bib_path}")    
 
     # Generate latex table
-    vertical_tables(sorted_metadata, TEMP_CONFIG["headers"], saving_path, TEMP_CONFIG["tab_space"])
+    num_sources = len(sorted_metadata)
+    num_repos = 0
+    for meta_data in sorted_metadata.values():
+        if meta_data["url"] != "N/A":
+            num_repos += 1
+
+    add_counts = f"\\textbf{{Number of sources}}: {num_sources}; \\textbf{{Number of repositories}}: {num_repos}"
+    additional_line = (
+        f"\\cmidrule(lr){{1-{len(TEMP_CONFIG['headers'])}}} \n"
+        f"    \\multicolumn{{{len(TEMP_CONFIG['headers'])}}}{{l}}{{{add_counts}}} \\\\   "
+    )
+    vertical_tables(
+        sorted_metadata, 
+        TEMP_CONFIG["headers"], 
+        saving_path, 
+        TEMP_CONFIG["tab_space"], 
+        addition_line=additional_line
+    )
  
     
 def available_artifact(
