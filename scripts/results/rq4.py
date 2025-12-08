@@ -145,6 +145,7 @@ def input_type_name(
     # Instant configuration
     TEMP_CONFIG = {
         "headers": ["Test input types", "Input properties", "Primary studies", "\#"],
+        "cite_key": "", # "studied",
         "tab_space": "p{0.25\\columnwidth}  p{0.35\\columnwidth} p{0.38\\columnwidth} c",
     }
     
@@ -203,7 +204,7 @@ def input_type_name(
         output_type_data.sort(key=lambda x: x["paper_number"], reverse=True)
         for meta_dict in output_type_data:
             id_list = meta_dict["paper_ids"]
-            meta_dict["paper_ids"] = f"\\cite{{{', '.join(str(x) for x in id_list)}}}"
+            meta_dict["paper_ids"] = f"\\cite{TEMP_CONFIG['cite_key']}{{{', '.join(str(x) for x in id_list)}}}"
  
 
     vertical_tables(

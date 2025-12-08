@@ -488,9 +488,15 @@ def horizontal_bar_chart(
     # print(f"Number of categories: {len(set(data_vals))}.")
     print(f"The horizontal bar chart has been saved to {save_path}")
  
+import os
+from typing import Optional
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.ticker import MaxNLocator
+
 def horizontal_histogram(
     data: list[int] | list[float],
-    legends: dict[str, str], 
+    legends: dict[str, str],
     save_path: str,
     config_figure: dict,
     fig_figsize: tuple = (3.5, 2.25),
@@ -498,86 +504,122 @@ def horizontal_histogram(
     fig_color: str = "#B7B5B7F8",
     fig_xinteger: bool = True,
     title: str | None = None,
-    bins: int | list[float] | list[int] = 10,        # ✅ 可以是数量或分段列表
-    upper_limit: float | None = None,    # ✅ 上限阈值
+    bins: int | list[float] | list[int] = 10,
+    upper_limit: float | None = None,
 ) -> None:
     # 检查数据类型
     if not all(isinstance(x, (int, float)) for x in data):
         raise ValueError("❌ data must be a list of int or float values.")
-
-    # 统一配置
+ 
     common_configuration(config_figure)
 
-    # ✅ 拆分数据（upper_limit）
+    if len(data) == 0:
+        raise ValueError("data is empty")
+
+    arr = np.asarray(data)
+
+    # 当存在 upper_limit 时：lower < upper_limit，upper >= upper_limit
     if upper_limit is not None:
-        lower_data = [x for x in data if x <= upper_limit]
-        upper_data = [x for x in data if x > upper_limit]
+        lower_data = arr[arr < upper_limit].tolist()
+        upper_data = arr[arr >= upper_limit].tolist()
     else:
-        lower_data = data
+        lower_data = arr.tolist()
         upper_data = []
 
-    # ✅ 处理 bins 参数
+    # 处理 bins 参数：构造 bin_edges（针对 lower_data 范围到 upper_limit（如果有））
     if isinstance(bins, (list, np.ndarray)):
-        # 确保最后一个 bin 边界 ≤ upper_limit
-        if upper_limit is not None and bins[-1] > upper_limit:
-            bins = [b for b in bins if b <= upper_limit]
-            if bins[-1] < upper_limit:
-                bins.append(upper_limit)
-    elif not isinstance(bins, int):
+        bin_edges = np.asarray(bins, dtype=float)
+        if upper_limit is not None:
+            # 丢弃大于 upper_limit 的边界，并确保最后一个边界恰好等于 upper_limit
+            bin_edges = bin_edges[bin_edges <= upper_limit]
+            if bin_edges.size == 0:
+                raise ValueError("bins list has no edges <= upper_limit")
+            if bin_edges[-1] < upper_limit:
+                bin_edges = np.concatenate([bin_edges, [upper_limit]])
+    elif isinstance(bins, int):
+        # 自动生成：从 lower_bound 到 upper_limit（若有），或从 min(data) 到 max(data)
+        if upper_limit is not None:
+            left = np.nanmin(lower_data) if len(lower_data) > 0 else 0.0
+            right = upper_limit
+        else:
+            left = float(np.min(arr))
+            right = float(np.max(arr))
+            if left == right:
+                # 单值情形，扩展一点范围
+                left = left - 0.5
+                right = right + 0.5
+        bin_edges = np.linspace(left, right, bins + 1, dtype=float)
+    else:
         raise TypeError("bins must be either int or list[float|int]")
 
-    # ✅ 分段统计
-    counts, bin_edges = np.histogram(lower_data, bins=bins if len(lower_data) > 0 else 1)
+    # 若 lower_data 为空，直接 counts 全为0（长度为 len(bin_edges)-1）
+    if len(lower_data) == 0:
+        counts = np.zeros(len(bin_edges) - 1, dtype=int)
+    else:
+        # 使用 np.digitize 构造左闭右开区间 [edge_i, edge_{i+1})
+        # 但 np.digitize 的索引是 1..N_edges-1
+        indices = np.digitize(lower_data, bin_edges, right=False)  # right=False => left-closed
+        counts = np.zeros(len(bin_edges) - 1, dtype=int)
+        for idx in indices:
+            # idx 属于 1..len(bin_edges)-1 对应 counts[idx-1]
+            if 1 <= idx <= counts.size:
+                counts[idx - 1] += 1
+            # idx == 0 表示 value < bin_edges[0]（理论上不应发生，除非数据小于第一个边界）
+            elif idx == 0:
+                # 将其放到第一个桶（可选策略）
+                counts[0] += 1
+            # idx > counts.size 表示 value >= bin_edges[-1]（但我们提前把大于等于 upper_limit 分离了）
+            else:
+                # 忽略或统计为溢出（这里忽略）
+                pass
 
+    # 构造标签：所有常规 bin 都显示为 [left, right)；当 upper_limit 为 None，保留最后一个区间右闭（可选）
     bin_labels = []
-    for i in range(len(bin_edges) - 1):
+    n_bins = len(bin_edges) - 1
+    for i in range(n_bins):
         left, right = bin_edges[i], bin_edges[i + 1]
-        # 判断整数或浮点数
-        if all(float(x).is_integer() for x in [left, right]):
-            left_str, right_str = f"{int(left)}", f"{int(right)}"
+        # 格式化数值，尽量显示整数如果是整数
+        def fmt(x):
+            return f"{int(x)}" if float(x).is_integer() else f"{x:.2f}"
+        left_s, right_s = fmt(left), fmt(right)
+
+        # 默认左闭右开
+        if upper_limit is None and i == n_bins - 1:
+            # 如果没有 upper_limit，保留最后一个 bin 右闭（和 np.histogram 保持一致）
+            label = fr"$[{left_s},\, {right_s}]$"
         else:
-            left_str, right_str = f"{left:.2f}", f"{right:.2f}"
-
-        # 默认是左闭右开区间
-        interval_type = "[a, b)"
-        if i == len(bin_edges) - 2 and upper_limit is None:
-            # 最后一个区间（没有 upper_limit）右端闭
-            interval_type = "[a, b]"
-
-        # 构造 LaTeX 字符串
-        if interval_type == "[a, b)":
-            label = fr"$[{left_str},\, {right_str})$"
-        else:
-            label = fr"$[{left_str},\, {right_str}]$"
-
+            label = fr"$[{left_s},\, {right_s})$"
         bin_labels.append(label)
 
-    # ✅ 合并 upper_limit 以上的数据
-    if upper_limit is not None and len(upper_data) > 0:
-        counts = np.append(counts, len(upper_data))
-        bin_labels.append(fr"$[{upper_limit},\, +\infty)$")
+    # 如果有 upper_limit，则追加一个 [upper_limit, +∞) 并把上界及以上的数据计入
+    if upper_limit is not None:
+        upper_count = len(upper_data)
+        counts = np.append(counts, upper_count)
+        # 格式化 upper_limit
+        upper_s = f"{int(upper_limit)}" if float(upper_limit).is_integer() else f"{upper_limit:.2f}"
+        bin_labels.append(fr"$[{upper_s},\, +\infty)$")
 
-    # ✅ 若 bins 是整数列表，则强制整数化 x 轴
-    if isinstance(bins, list) and all(isinstance(b, int) for b in bins):
+    # 如果 bins 本来就是整数边界的列表，则强制 x 轴整数
+    if isinstance(bins, (list, np.ndarray)) and all(float(b).is_integer() for b in bin_edges):
         fig_xinteger = True
 
     # 绘图
     _, ax = plt.subplots(figsize=fig_figsize)
     y = np.arange(len(bin_labels))
-    bar_height = fig_barheight
+    bars = ax.barh(y, counts, height=fig_barheight, color=fig_color, alpha=0.85, edgecolor="black")
 
-    bars = ax.barh(y, counts, height=bar_height, color=fig_color, alpha=0.85, edgecolor="black")
     ax.set_ylim(-0.5, len(bin_labels) - 0.5)
     ax.set_xlim(0, max(counts) * 1.18 if max(counts) > 0 else 1)
 
     # 标注频数
+    max_c = max(counts) if len(counts) > 0 else 0
     for i, bar in enumerate(bars):
-        value = counts[i]
-        ax.text(bar.get_width() + max(counts) * 0.01 if max(counts) > 0 else 0.1,
-                bar.get_y() + bar.get_height()/2,
+        value = int(counts[i])
+        ax.text(bar.get_width() + (max_c * 0.01 if max_c > 0 else 0.1),
+                bar.get_y() + bar.get_height() / 2,
                 f"{value}", va="center", ha="left", fontsize=10)
 
-    # 坐标轴
+    # 坐标轴与标签
     ax.set_yticks(y)
     ax.set_yticklabels(bin_labels, fontsize=config_figure["size"]["usual_fontsize"])  # type: ignore
     ax.set_ylabel(legends["y"], fontsize=config_figure["size"]["axis_fontsize"], fontweight='bold')
@@ -599,9 +641,10 @@ def horizontal_histogram(
     # 保存
     os.makedirs(os.path.dirname(save_path), exist_ok=True)
     plt.savefig(save_path, format='pdf', bbox_inches='tight')
- 
+    plt.close()
 
     print(f"The horizontal histogram has been saved to {save_path}")
+
     
 def vertical_bar_chart(
     data: list[str],

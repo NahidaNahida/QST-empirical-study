@@ -190,6 +190,7 @@ def sources_for_variants(
     TEMP_CONFIG = {
         "target_items": ["Real-world bugs", "Imperfect models", "Mutation toolings"],
         "headers": ["Approaches", "Sources", "Primary studies", "\\#"],
+        "cite_key": "", # "studied",
         "tab_space": "p{0.32\\columnwidth} p{0.32\\columnwidth}  p{0.32\\columnwidth} c"
     }
  
@@ -255,7 +256,7 @@ def sources_for_variants(
         for meta_dict in approach_list:
             target_list = meta_dict["paper_list"].copy()
             meta_dict["paper_list"] = (
-                f"\\cite{{{', '.join(str(x) for x in target_list)}}}"
+                f"\\cite{TEMP_CONFIG['cite_key']}{{{', '.join(str(x) for x in target_list)}}}"
             )
 
     vertical_tables(
