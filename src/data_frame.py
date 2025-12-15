@@ -5,9 +5,9 @@ from typing import Any, Dict, List, Tuple, Union, Iterable, Optional, overload, 
  
 
 def data_clean(data: list[str], mode: Literal["all", "outer"]="all") -> list[str]:
-    if mode == "all":   # Remove all the existing "[" and "]"
+    if mode == "all":   # Remove all existing "[" and "]"
         clean_data = [item.replace("[", "").replace("]", "") for item in data]
-    elif mode == "outer":   # Merely remove "[" and "]" at the outermost position
+    elif mode == "outer":   # Only remove "[" and "]" at the outermost positions
         clean_data = []
         for item in data:
             item = item.strip()
@@ -26,7 +26,7 @@ def data_preprocess(
     saving_name: str | list[str]
 ) -> tuple[Any, Any]:
     """Preprocess data for plotting and return required data and saving path."""
-    # --- 数据部分 ---
+    # --- Data section ---
     if isinstance(header_item, str):
         header = config_data["headers"][header_item]
         req_data = df[header].tolist()
@@ -36,7 +36,7 @@ def data_preprocess(
             for temp_item in header_item
         ]
 
-    # --- 路径部分 ---
+    # --- Path section ---
     if isinstance(saving_name, str):
         saving_path = os.path.join(root_dir, *saving_dir, saving_name)
     else:
@@ -55,20 +55,22 @@ def parse_data_str(
     skip_invalid_value: bool = True
 ) -> dict | list:
     """
-    Parse multiple square brackets [] blocks in a string.
-    Each block is in the format of [key: val1, val2, ...]
-    - Support nested [] but only capture outermost blocks
+    Parse multiple square bracket [] blocks in a string.
+    Each block follows the format: [key: val1, val2, ...]
+    - Support nested [] but only capture the outermost blocks
     - Skip content inside <...> (may contain commas)
     - If skip_invalid_key=True, ignore keys that are 'Un-specified' (case-insensitive)
     - If skip_invalid_value=True, ignore values that are 'Un-specified'
-    - If skip_invalid_key=True and the block is [Un-specified], skip entirely
-    - 保证 [] 内部的内容完整（即使包含逗号），并保留其原始格式
-    - 若输入形如 [Quantum state], [Quantum gate]（无冒号），则返回 list
+    - If skip_invalid_key=True and the block is [Un-specified], skip the entire block
+    - Ensure the content inside [] remains intact (even if it contains commas),
+      and preserve its original format
+    - If the input is in the form [Quantum state], [Quantum gate] (no colon),
+      return a list
     """
 
     result = {}
 
-    # --- 提取最外层 [] ---
+    # --- Extract outermost [] blocks ---
     blocks, stack, current = [], 0, []
     for ch in metadata:
         if ch == "[":
@@ -117,13 +119,13 @@ def parse_data_str(
 
         key, values = block.split(":", 1)
         key = key.strip()
-        # remove <...> from key
+        # Remove <...> from key
         key = re.sub(r"<.*?>", "", key).strip()
 
         if skip_invalid_key and key.lower() == "un-specified":
             continue
 
-        # remove <...> from values
+        # Remove <...> from values
         cleaned_values = re.sub(r"<.*?>", "", values)
 
         items = [v for v in smart_split(cleaned_values) if v]
@@ -136,7 +138,7 @@ def parse_data_str(
 
         result.setdefault(key, []).extend(items)
 
-    # --- 若没有 key:value 格式，则返回 list ---
+    # --- If there is no key:value format, return a list ---
     if not result and blocks:
         if all(":" not in b for b in blocks):
             all_values = []
@@ -150,11 +152,11 @@ def parse_data_str(
 
 
 def parse_column(target_data: list[str], skip_invalid_key: bool=True, skip_invalid_value: bool=True):
-    """Invalid data will return "{}."""
+    """Invalid data will return '{}'."""
     parsed_metadata = []
     for metadata in target_data:
-        # Jugde the valid data for parse, i.e., in the form of "[]".
-        # This can directly exclude "N/A".
+        # Judge whether the data is valid for parsing, i.e., in the form of "[]".
+        # This can directly exclude values such as "N/A".
         if ('['  in str(metadata) 
             and ']' in str(metadata) 
             and metadata.lower() not in ["[none]", "[un-specified]"]): 
@@ -172,10 +174,10 @@ import re
 
 def get_min_max(num_list):
     """
-    给定一个list，元素可能为：
+    Given a list whose elements may be:
     - '123'
     - 'From 100 to 200'
-    返回所有数值的 (min, max)
+    Return the (min, max) of all numerical values found.
     """
     numbers = []
 
@@ -185,7 +187,7 @@ def get_min_max(num_list):
 
         item = item.strip()
 
-        # 匹配 "From X to Y"
+        # Match "From X to Y"
         match = re.search(r"[Ff]rom\s*([-\d\.]+)\s*[Tt]o\s*([-\d\.]+)", item)
         if match:
             x, y = match.groups()
@@ -195,7 +197,7 @@ def get_min_max(num_list):
             except ValueError:
                 continue
         else:
-            # 尝试直接解析为数字
+            # Try to directly parse as a number
             try:
                 numbers.append(float(item))
             except ValueError:
@@ -210,39 +212,39 @@ def dict2upsetform(
     data_dict: Dict[str, List[Any]]
 ) -> Tuple[List[List[str]], List[int]]:
     """
-    将多个列表(每个含n个集合)转换为：
-      1️⃣ 各组合的列名列表，如 [['A'], ['A', 'B']]
-      2️⃣ 对应每个组合的出现次数列表
+    Convert multiple lists (each containing n sets) into:
+        + A list of column name combinations, e.g., [['A'], ['A', 'B']]
+        + A list of occurrence counts corresponding to each combination
 
-    参数:
-      data_dict: dict[str, list]，每个键对应一个列表
+    Parameters:
+      data_dict: dict[str, list], each key corresponds to a list
     """
 
-    # 默认的“无效数据”标志集合
-    invalid_mark = (None, {}, set())  # 可根据需要扩展，比如加上 np.nan
+    # Default markers for "invalid data"
+    invalid_mark = (None, {}, set())  # Can be extended, e.g., to include np.nan
 
-    # 检查各列表长度是否一致
+    # Check whether all lists have the same length
     lengths = [len(v) for v in data_dict.values()]
     if len(set(lengths)) != 1:
         raise ValueError("All lists must be of the same length")
     
-    # 构造布尔矩阵：True 表示有效数据
+    # Construct a boolean matrix: True indicates valid data
     df = pd.DataFrame({
         k: [not (x in invalid_mark or (isinstance(x, set) and len(x) == 0))
             for x in v]
         for k, v in data_dict.items()
     })
     
-    # 每一行的组合（哪些列为 True）
+    # Combination for each row (which columns are True)
     combos = []
     for _, row in df.iterrows():
         combo = tuple(col for col, val in row.items() if val)
         combos.append(combo)
     
-    # 统计频数
+    # Count frequencies
     freq = pd.Series(combos).value_counts()
     
-    # 输出两个列表
+    # Output two lists
     combo_list = [list(k) for k in freq.index]
     count_list = freq.values.tolist()
     
@@ -268,6 +270,7 @@ if __name__ == "__main__":
         print(parse_column(unittest))
         print(parse_column(unittest, skip_invalid_key=False))
         print(parse_column(unittest, skip_invalid_value=False))
+
     def unittest1():
         unittest = [
             ["300", "233", "From 100 to 400", "500"],
