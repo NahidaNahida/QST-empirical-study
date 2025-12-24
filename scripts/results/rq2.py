@@ -126,7 +126,7 @@ def number_of_variants(
 ) -> None:
 
     TEMP_CONFIG = {
-        "target_items": ["Mutation-level", "Version-level"],
+        "target_items": ["Mutant-level", "Version-level"],
         "figsize": (3.5, 0.55),
         "legendsize": (10, 1),
         "bar_height": 0.25,
@@ -134,7 +134,7 @@ def number_of_variants(
         "fig_median_offset" : (-2, 20),
         "fig_max_offset": (0, 4),
         "samplesize_name": None,
-        "xinteger": {"Mutation-level": False, "Version-level": True},
+        "xinteger": {"Mutant-level": False, "Version-level": True},
         "no_ytick": True,
     }
 
@@ -175,7 +175,7 @@ def number_of_variants(
         if not legend_saved:
             saving_path = f"{general_saving_path}_legend.pdf"
             horizontal_boxplot(
-                [temp_list], {"x": "# of objects", "y": ""}, saving_path, config_figure,
+                [temp_list], {"x": "# of buggy variants", "y": ""}, saving_path, config_figure,
                 samplesize_name=TEMP_CONFIG["samplesize_name"], fig_figsize=TEMP_CONFIG["legendsize"],
                 fig_color=TEMP_CONFIG["color"],fig_xinteger=TEMP_CONFIG["xinteger"], 
                 legend_only=True,fig_median_offset=TEMP_CONFIG["fig_median_offset"]
@@ -188,7 +188,7 @@ def sources_for_variants(
     saving_name: str = "rq2_sources_for_variants.tex"
 ) -> None:
     TEMP_CONFIG = {
-        "target_items": ["Real-world bugs", "Imperfect models", "Mutation toolings"],
+        "target_items": ["Real-world bugs", "Imperfect models", "Mutation tooling"],
         "headers": ["Approaches", "Sources", "Primary studies", "\\#"],
         "cite_key": "", # "studied",
         "tab_space": "p{0.32\\columnwidth} p{0.32\\columnwidth}  p{0.32\\columnwidth} c"
@@ -342,7 +342,7 @@ def mutation_operators(
 
     two_dimensional_heatmap(
         count_dict,
-        {"x": "Objects", "y": "Actions"},
+        {"x": "Targets", "y": "Actions"},
         TEMP_CONFIG["desired_order"],
         saving_path,
         config_figure,
