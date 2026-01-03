@@ -138,7 +138,7 @@ def varied_and_adaptive_shots(
     # Instant configuration
     TEMP_CONFIG = {
         "headers": ["Categories", "Configuration schemes", "Primary studies"],
-        "tab_space": "c  p{0.75\\columnwidth} p{0.20\\columnwidth}",
+        "tab_space": "c  p{0.75\\columnwidth} p{0.2\\columnwidth}",
         "target_names": ["Varied", "Adaptive"]
     }
 

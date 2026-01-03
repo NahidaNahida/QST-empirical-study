@@ -146,7 +146,12 @@ def input_type_name(
     TEMP_CONFIG = {
         "headers": ["Test input types", "Input properties", "Primary studies", "\#"],
         "cite_key": "", # "studied",
-        "tab_space": "p{0.25\\columnwidth}  p{0.35\\columnwidth} p{0.38\\columnwidth} c",
+        "tab_space": (
+            r">{\centering\arraybackslash}p{0.22\columnwidth}"  
+            r"p{0.4\columnwidth}" 
+            r"p{0.25\columnwidth}" 
+            r">{\centering\arraybackslash}p{0.02\columnwidth}"
+        )
     }
     
     # Get the target data

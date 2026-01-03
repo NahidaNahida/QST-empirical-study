@@ -108,7 +108,7 @@ def metrics_table(
     # Instant configuration
     TEMP_CONFIG = {
         "headers": ["SE problems", "Effectiveness (\#)", "Cost (\#)"],
-        "tab_space": "p{0.14\\columnwidth}  p{0.42\\columnwidth} p{0.42\\columnwidth}",
+        "tab_space": "c  p{0.46\columnwidth} p{0.38\columnwidth}",
         "if_top_k": 5,
         "if_only_numbers": True
     }

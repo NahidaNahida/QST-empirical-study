@@ -168,7 +168,7 @@ def backend_output(
 
     # Instant configuration
     TEMP_CONFIG = {
-        "figsize": (6, 0.75),
+        "figsize": (8, 0.75),
         "annote_color": "black"
     }
     

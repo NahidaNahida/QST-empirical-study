@@ -127,7 +127,7 @@ def number_of_variants(
 
     TEMP_CONFIG = {
         "target_items": ["Mutant-level", "Version-level"],
-        "figsize": (3.5, 0.55),
+        "figsize": (5, 0.55),
         "legendsize": (10, 1),
         "bar_height": 0.25,
         "color": "#69DAFFF8",
@@ -191,7 +191,12 @@ def sources_for_variants(
         "target_items": ["Real-world bugs", "Imperfect models", "Mutation tooling"],
         "headers": ["Approaches", "Sources", "Primary studies", "\\#"],
         "cite_key": "", # "studied",
-        "tab_space": "p{0.32\\columnwidth} p{0.32\\columnwidth}  p{0.32\\columnwidth} c"
+        "tab_space": (
+            r">{\centering\arraybackslash}p{0.3\columnwidth} "
+            r">{\centering\arraybackslash}p{0.3\columnwidth} "
+            r"p{0.32\columnwidth} "
+            r">{\centering\arraybackslash}p{0.05\columnwidth}"
+        )
     }
  
 

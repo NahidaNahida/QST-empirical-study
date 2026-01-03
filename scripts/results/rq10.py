@@ -35,7 +35,7 @@ def available_sources(
 ) -> None:
     TEMP_CONFIG = {
         "headers": ["Program sources", "Repository links", "Primary studies", "\\#"],
-        "tab_space": "p{{0.34\\columnwidth}}  p{{0.4\\columnwidth}} p{{0.215\\columnwidth}} c"
+        "tab_space": "p{{0.25\\columnwidth}}  p{{0.49\\columnwidth}} p{{0.215\\columnwidth}} c"
     }
 
     # Get the target data
@@ -149,7 +149,7 @@ def available_artifact(
 ) -> None:
 
     TEMP_CONFIG = {
-        "tab_space": "c p{0.99\\columnwidth}"
+        "tab_space": "c p{0.95\\columnwidth}"
     }
 
     # Get the target data

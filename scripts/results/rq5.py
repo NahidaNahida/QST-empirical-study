@@ -100,7 +100,12 @@ def specification(
 ) -> None:
     TEMP_CONFIG = {
         "headers": ["Program specifications", "Output types", "Primary studies", "\#"],
-        "tab_space": "p{0.25\\columnwidth}  p{0.35\\columnwidth} p{0.38\\columnwidth} c",
+        "tab_space": (
+            r">{\centering\arraybackslash}p{0.25\columnwidth}",  
+            r"p{0.3\columnwidth}",
+            r"p{0.42\columnwidth}" 
+            r"c"
+        ),
     }
 
     output_dict, saving_path = oracle_common(
@@ -133,7 +138,7 @@ def specification(
     add_list = [f"{oracle_type} ({temp_num})" for oracle_type, temp_num in add_list]
     
     add_line = f"""\\cmidrule(lr){{1-4}} \n    
-    \\multicolumn{{{len(TEMP_CONFIG['headers'])}}}{{p{{1.2\\columnwidth}}}}{{\\textbf{{Total number 
+    \\multicolumn{{{len(TEMP_CONFIG['headers'])}}}{{p{{1.1\\columnwidth}}}}{{\\textbf{{Total number 
     of primary studies for each program specification:}} {
         ', '.join(str(x) for x in add_list)
     }}}\\\\"""
@@ -155,7 +160,12 @@ def oracle(
 ) -> None:
     TEMP_CONFIG = {
         "headers": ["Test oracles", "Testing protocols", "Primary studies", "\#"],
-        "tab_space": "c  p{0.47\columnwidth} p{0.37\columnwidth} c",
+        "tab_space": (
+            r">{\centering\arraybackslash}p{0.15\columnwidth}"  
+            r"p{0.4\columnwidth}" 
+            r"p{0.4\columnwidth}" 
+            r"c"
+        )
     }
 
     output_dict, saving_path = oracle_common(
@@ -186,7 +196,7 @@ def oracle(
     add_list = [f"{oracle_type} ({temp_num})" for oracle_type, temp_num in add_list]
     
     add_line = f"""\\cmidrule(lr){{1-4}} \n    
-    \\multicolumn{{{len(TEMP_CONFIG['headers'])}}}{{p{{1.2\\columnwidth}}}}{{\\textbf{{Total number 
+    \\multicolumn{{{len(TEMP_CONFIG['headers'])}}}{{p{{1.1\\columnwidth}}}}{{\\textbf{{Total number 
     of primary studies for each test oracle:}} {
         ', '.join(str(x) for x in add_list)
     }}}\\\\"""

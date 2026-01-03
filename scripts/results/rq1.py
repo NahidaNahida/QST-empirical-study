@@ -92,12 +92,12 @@ def algorithm_and_subroutine_names(
 def learning_models_names(
     df: pd.DataFrame,
     config_data: dict, 
-    data_keywords: list = ["Quantum learning-based models"],
+    data_keywords: list = ["Quantum machine learning models"],
     saving_name: str = "rq1_learning_models_names.tex"
 ) -> None:
     TEMP_CONFIG = {
-        "headers": ["Quantum learning-based models", "Primary studies", "\\#"],
-        "tab_space": "p{0.7\\columnwidth}  p{0.2\\columnwidth} c"
+        "headers": ["Quantum machine learning models", "Primary studies", "\\#"],
+        "tab_space": "p{0.6\\columnwidth}  p{0.3\\columnwidth} c"
     }
 
     # Get the target data
@@ -177,7 +177,7 @@ def number_of_objects(
     """
     # Instant configuration
     TEMP_CONFIG = {
-        "figsize": (3.5, 0.75),
+        "figsize": (5, 0.75),
         "legendsize": (10, 1),
         "bar_height": 0.25,
         "color": "#FFFDCEF8",
