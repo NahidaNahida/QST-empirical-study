@@ -95,7 +95,7 @@ def circuit_complexity(
     }
     
     TEMP_CONFIG_BOX = {
-        "figsize": (3.5, 0.55),
+        "figsize": (5, 0.55),
         "legendsize": (10, 1),
         "bar_height": 0.25,
         "color":{"min": "#69DAFFF8", "max": "yellow"},
