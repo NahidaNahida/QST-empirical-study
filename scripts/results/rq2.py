@@ -347,7 +347,7 @@ def mutation_operators(
 
     two_dimensional_heatmap(
         count_dict,
-        {"x": "Targets", "y": "Actions"},
+        {"x": "Mutation targets", "y": "Mutation actions"},
         TEMP_CONFIG["desired_order"],
         saving_path,
         config_figure,

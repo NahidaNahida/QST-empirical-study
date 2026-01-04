@@ -766,12 +766,22 @@ def horizontal_boxplot(
 ) -> None:
     # --- （1）x轴只显示整数 & 自动简化显示（1k, 1M 等） ---
     def format_large_ticks(x, pos):
+ 
         if abs(x) >= 1_000_000:
-            return f"{x/1_000_000:.0f}M"
+            if fig_xinteger:
+                # 正式模式：只允许整数 M
+                return f"{x/1_000_000:.0f}M"
+            else:
+                # 非整数模式：允许小数 M，避免 1M 1M
+                return f"{x/1_000_000:.2f}M".rstrip('0').rstrip('.')
+
         elif abs(x) >= 1_000:
             return f"{x/1_000:.0f}K"
+
         else:
-            return f"{int(x)}" if fig_xinteger and abs(x-int(x))<1e-3 else f"{x:.2f}"
+            if fig_xinteger and abs(x - round(x)) < 1e-6:
+                return f"{int(round(x))}"
+            return f"{x:.2f}"
         
     """绘制带数据散点与统计标注的水平箱线图"""
     common_configuration(config_figure)
