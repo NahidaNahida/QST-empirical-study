@@ -88,7 +88,8 @@ def available_sources(
             # Add to the required list
             if tex_source_name not in req_metadata.keys():
                 req_metadata[tex_source_name] = {
-                    "url": f"{{\\footnotesize \\url{{{url_link}}}}}" if url_link.lower() != "un-specified" else f"N/A",
+                    # "url": f"{{\\footnotesize \\url{{{url_link}}}}}" if url_link.lower() != "un-specified" else f"N/A",
+                    "url": f"{{\\url{{{url_link}}}}}" if url_link.lower() != "un-specified" else f"N/A",
                     "paper_ids": [paper_id],
                     "paper_numbers": 1
                 }
@@ -185,7 +186,8 @@ def available_artifact(
         for platform, url_link_list in artifact.items():
             url_link = url_link_list[0]
             url_string_list.append(
-                f"\\textit{{{platform}}}: {{\\footnotesize \\url{{{url_link}}}}}"
+                # f"\\textit{{{platform}}}: {{\\footnotesize \\url{{{url_link}}}}}"
+                f"\\textit{{{platform}}}: {{\\url{{{url_link}}}}}"
             )
 
             # Count the platforms
