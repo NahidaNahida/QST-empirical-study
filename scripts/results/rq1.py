@@ -216,7 +216,7 @@ def number_of_objects(
         temp_data: np.ndarray = np.array(program_numbers)
         temp_saving_path = f"{saving_path}_{specific_str}.pdf"
         horizontal_boxplot(
-            [temp_data], {"x": "# of objects", "y": ""}, temp_saving_path, config_figure,
+            [temp_data], {"x": "# of programs", "y": ""}, temp_saving_path, config_figure,
             samplesize_name=TEMP_CONFIG["samplesize_name"], fig_figsize=TEMP_CONFIG["figsize"],
             fig_color=TEMP_CONFIG["color"],fig_xinteger=TEMP_CONFIG["xinteger"],
             no_ytick=TEMP_CONFIG["no_ytick"]

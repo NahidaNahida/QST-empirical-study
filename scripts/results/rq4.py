@@ -144,7 +144,7 @@ def input_type_name(
 ) -> None:
     # Instant configuration
     TEMP_CONFIG = {
-        "headers": ["Test input types", "Input properties", "Primary studies", "\#"],
+        "headers": ["Test input types", "Test input properties", "Primary studies", "\#"],
         "cite_key": "", # "studied",
         "tab_space": (
             r">{\centering\arraybackslash}p{0.22\columnwidth}"  

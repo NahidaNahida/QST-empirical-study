@@ -120,7 +120,7 @@ def circuit_complexity(
 
     number_data = {}
 
-    req_terms = ["Qubit", "Gate", "Depth"]      # Do not change their names
+    req_terms = ["Width", "Size", "Depth"]      # Do not change their names
     parsed_data_dict = {
         complex_name: parse_column(data)      # Data: including {}
         for complex_name, data in zip (req_terms, multi_data) 
@@ -137,9 +137,9 @@ def circuit_complexity(
             if len(paper_data) == 0:  # Skip {}
                 continue
  
-            if req_term != "Gate":             # For the list[str] in "Qubit" and "Depth"
+            if req_term != "Size":             # For the list[str] in "Width (Qubit)" and "Depth"
                 min_num, max_num = get_min_max(paper_data)
-            else:                               # For the list[dict] in "Gate"
+            else:                               # For the list[dict] in "Size (Gate)"
                 temp_req_data = []
                 if "Total" in paper_data.keys():
                     temp_req_data.extend(paper_data["Total"])
@@ -168,7 +168,7 @@ def circuit_complexity(
 
     # Generate boxplots by order
     x_legend = {
-        req_terms[0]: "# of qubits", req_terms[1]: "# of gates", req_terms[2]: "Depths"
+        req_terms[0]: "Width", req_terms[1]: "Size", req_terms[2]: "Depth"
     }
     legend_saved = False    # Whether the legend is saved
     for req_term, temp_dict in number_data.items():
