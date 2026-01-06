@@ -4,9 +4,8 @@ Code for the data analysis of RQ3 Scalability Issue
 
 from src import (
     read_csv, read_config_json,
-    line_chart_frequencies, pie_chart, horizontal_bar_chart, horizontal_boxplot, upset_plot, data_clean,
-    vertical_tables,
-    parse_column, data_preprocess, paperids2citation, get_min_max, dict2upsetform
+    pie_chart, horizontal_boxplot, upset_plot, data_clean,
+    parse_column, data_preprocess, get_min_max, dict2upsetform
 )
 
  

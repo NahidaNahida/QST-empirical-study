@@ -156,7 +156,7 @@ def available_artifact(
     # Get the target data
     multi_data, saving_path = data_preprocess(
         df, 
-        ["rq10_artifacts", "primary_study_id", "SE_problem"],         
+        ["rq10_artifacts", "primary_study_id", "bib_SE_problem"],         
         config_data, 
         ROOT_DIR, 
         TAB_SAVING_DIR,

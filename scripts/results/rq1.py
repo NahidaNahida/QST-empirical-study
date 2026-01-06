@@ -4,7 +4,7 @@ Code for the data analysis of RQ1 Quantum Programs
 
 from src import (
     read_csv, read_config_json,
-    line_chart_frequencies, pie_chart, horizontal_bar_chart, horizontal_boxplot,
+    horizontal_bar_chart, horizontal_boxplot,
     vertical_tables,
     parse_column, data_preprocess, paperids2citation
 )

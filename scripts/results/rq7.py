@@ -132,7 +132,7 @@ def baseline_names(
     TEMP_CONFIG = {
         "if_sort": False,  # Sort based on the frequencies, otherwise the baseline order
         "headers": ["SE problems", "Categories", "Baselines (Correspondings primary studies)"], 
-        "tab_space": "c  c  p{0.7\columnwidth}",
+        "tab_space": "c  c  p{0.7\\columnwidth}",
         "skip_category": "Ablation"
     }
 
@@ -140,7 +140,7 @@ def baseline_names(
         df, 
         [
             "rq7_baseline_names", "rq7_baseline_motivation",
-            "primary_study_id", "SE_problem"
+            "primary_study_id", "bib_SE_problem"
         ], 
         config_data, 
         ROOT_DIR, 
@@ -329,8 +329,8 @@ def statistical_tests_for_comparison(
     """
 
     TEMP_CONFIG = {
-        "headers": ["Statistical tests (\#)", "Associated statistics (\#)"], 
-        "tab_space": "p{0.36\columnwidth}  p{0.62\columnwidth}"
+        "headers": ["Statistical tests (\\#)", "Associated statistics (\\#)"], 
+        "tab_space": "p{0.36\\columnwidth}  p{0.62\\columnwidth}"
     }
 
     data, saving_path = data_preprocess(

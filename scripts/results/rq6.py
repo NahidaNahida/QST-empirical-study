@@ -107,15 +107,15 @@ def metrics_table(
 
     # Instant configuration
     TEMP_CONFIG = {
-        "headers": ["SE problems", "Effectiveness (\#)", "Cost (\#)"],
-        "tab_space": "c  p{0.46\columnwidth} p{0.38\columnwidth}",
+        "headers": ["SE problems", "Effectiveness (\\#)", "Cost (\\#)"],
+        "tab_space": "c  p{0.46\\columnwidth} p{0.38\\columnwidth}",
         "if_top_k": 5,
         "if_only_numbers": True
     }
 
     multi_data, saving_path = data_preprocess(
         df, 
-        ["rq6_effectiveness", "rq6_cost", "primary_study_id", "SE_problem"], 
+        ["rq6_effectiveness", "rq6_cost", "primary_study_id", "bib_SE_problem"], 
         config_data, 
         ROOT_DIR, 
         TAB_SAVING_DIR,

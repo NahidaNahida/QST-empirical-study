@@ -4,8 +4,8 @@ Code for the data analysis of RQ2 Buggy Objects
 
 from src import (
     read_csv, read_config_json,
-    vertical_bar_chart, pie_chart, horizontal_boxplot, upset_plot, data_clean,
-    vertical_tables, two_dimensional_table, two_dimensional_heatmap,
+    vertical_bar_chart, pie_chart, horizontal_boxplot,
+    vertical_tables, two_dimensional_heatmap,
     parse_column, data_preprocess, number2camelform
 )
 
