@@ -5,8 +5,7 @@ Code for the data analysis of RQ9 Execution Backends
 from src import (
     read_csv, read_config_json,
     line_chart_general, bar_chart_general, upset_plot, horizontal_stacked_bar_chart,
-    vertical_tables,
-    parse_column, data_preprocess, paperids2citation, get_min_max, dict2upsetform, number2camelform
+    parse_column, data_preprocess, paperids2citation, get_min_max, dict2upsetform
 )
 
  

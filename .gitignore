@@ -146,8 +146,9 @@ Desktop.ini
 # Files
 doc/annotated_data/literature_pool.xlsx
 doc/annotated_data/others.csv 
+doc/search_methods.md
+run.py
+update_private.bat
 
 # Directories
 private/
-run.py
-update_private.bat

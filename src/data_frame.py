@@ -1,7 +1,12 @@
+"""
+Docstring for src.data_frame
+Data frame related utilities for data preprocessing and parsing.
+"""
+
 import re
 import pandas as pd
 import os 
-from typing import Any, Dict, List, Tuple, Union, Iterable, Optional, overload, Literal
+from typing import Any, Dict, List, Tuple, Literal
  
 
 def data_clean(data: list[str], mode: Literal["all", "outer"]="all") -> list[str]:
@@ -26,7 +31,7 @@ def data_preprocess(
     saving_name: str | list[str]
 ) -> tuple[Any, Any]:
     """Preprocess data for plotting and return required data and saving path."""
-    # --- Data section ---
+    # Data section
     if isinstance(header_item, str):
         header = config_data["headers"][header_item]
         req_data = df[header].tolist()
@@ -36,7 +41,7 @@ def data_preprocess(
             for temp_item in header_item
         ]
 
-    # --- Path section ---
+    # Path section
     if isinstance(saving_name, str):
         saving_path = os.path.join(root_dir, *saving_dir, saving_name)
     else:
@@ -169,8 +174,7 @@ def parse_column(target_data: list[str], skip_invalid_key: bool=True, skip_inval
             parsed_metadata.append({})
     return parsed_metadata
 
-
-import re
+ 
 
 def get_min_max(num_list):
     """
@@ -213,8 +217,8 @@ def dict2upsetform(
 ) -> Tuple[List[List[str]], List[int]]:
     """
     Convert multiple lists (each containing n sets) into:
-        + A list of column name combinations, e.g., [['A'], ['A', 'B']]
-        + A list of occurrence counts corresponding to each combination
+    - A list of column name combinations, e.g., [['A'], ['A', 'B']]
+    - A list of occurrence counts corresponding to each combination
 
     Parameters:
       data_dict: dict[str, list], each key corresponds to a list

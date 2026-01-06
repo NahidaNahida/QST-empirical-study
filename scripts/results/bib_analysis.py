@@ -31,7 +31,7 @@ def year(
     TEMP_CONFIG = {
         "offset": 0.7,              # Offset above the data point for the label
         "figsize": (3.5, 2.25),
-        "ylim": [0, 25],            # y-axis display range
+        "ylim": [0, 25],            # Y-axis display range
     }
     
     req_data, saving_path = data_preprocess(

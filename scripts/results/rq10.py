@@ -1,5 +1,5 @@
 """
-Code for the data analysis of RQ10 Available Toolings
+Code for the data analysis of RQ10 Available Tooling
 """
 
 from src import (
@@ -59,7 +59,11 @@ def available_sources(
     )
 
     # Extract the required term
-    req_data: list[dict] = parse_column(data, skip_invalid_key=False, skip_invalid_value=False)  # Keep "Un-specified" in the raw data
+    req_data: list[dict] = parse_column(
+        data, 
+        skip_invalid_key=False, 
+        skip_invalid_value=False
+    ) # Keep "Un-specified" in the raw data
     req_metadata = {}
     new_bibtex = []  # For generate the .bib for the program sources
 

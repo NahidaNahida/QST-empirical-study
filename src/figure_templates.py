@@ -1,3 +1,8 @@
+"""
+Docstring for src.figure_templates
+Templates for various types of figures used in data visualization.
+"""
+
 from collections import Counter
 from typing import Literal
 import matplotlib.pyplot as plt
