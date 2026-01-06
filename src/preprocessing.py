@@ -1,3 +1,8 @@
+"""
+Docstring for src.preprocesssing
+Utilities for preprocessing bibliographic data from Excel to BibTeX and CSV formats.
+"""
+
 import pandas as pd
 import bibtexparser
 from bibtexparser.bibdatabase import BibDatabase
@@ -15,11 +20,11 @@ output_dir = os.path.join(root_dir, "doc", "literature_pool", "merged")
 
 def xls2bib(file_name: str, sheet_name: Optional[str] = None):
     """
-    将 Excel 文件转换为 BibTeX 文件，根据 Document Type 映射 BibTeX 类型
+    Convert an Excel file to a BibTeX file, mapping Document Type to BibTeX entry types.
     """
     def row_to_bibtex(row):
         raw_type = str(row.get('Document Type', '')).strip()
-        entrytype = doc_type_mapping.get(raw_type, 'misc')  # 默认 misc
+        entrytype = doc_type_mapping.get(raw_type, 'misc')  # default: misc
 
         entry = {}
         entry['ENTRYTYPE'] = entrytype
@@ -29,42 +34,43 @@ def xls2bib(file_name: str, sheet_name: Optional[str] = None):
         entry['year'] = str(int(row['Publication Year'])) if pd.notnull(row.get('Publication Year')) else ''
         entry['abstract'] = row['Abstract'] if isinstance(row.get('Abstract'), str) else ''
 
-        # 根据类型设置出版源字段（更完整的判断）
+        # Set publication source fields based on entry type (more comprehensive rules)
         source = row.get('Source Title')
         if isinstance(source, str) and source.strip():
             src = source.strip()
-            # 准备用于判断的 entrytype（小写）
+            # Prepare entry type for comparison (lowercase)
             et = entrytype.lower()
 
-            # 哪些 entry types 应该使用 booktitle
+            # Entry types that should use booktitle
             booktitle_types = {'inproceedings', 'conference', 'incollection', 'inbook'}
 
             if et in booktitle_types:
-                # 会议论文 / 书中章节：把 Source Title 当作 booktitle（所属会议或书名）
+                # Conference papers / book chapters: use Source Title as booktitle
                 entry['booktitle'] = src
             elif et == 'article':
-                # 期刊文章：journal
+                # Journal articles
                 entry['journal'] = src
             elif et == 'proceedings':
-                # 整个论文集（proceedings）：将 Source Title 放到 title（proceedings 的 title 字段）
-                # 保留原始 title（Article Title）优先，不覆盖，如果没有则使用 Source Title
+                # Entire proceedings volume: put Source Title into title if not already present
+                # Preserve the original title (Article Title) if it exists
                 if not entry.get('title'):
                     entry['title'] = src
                 else:
-                    # 如果已经有 title，可以把 proceedings 名放到 note（或 leave out）
+                    # If title already exists, store proceedings name in note (or leave out)
                     entry.setdefault('note', src)
             elif et == 'book':
-                # 整本书：通常 Source Title 是书名 -> 当作 title（仅当没有 Article Title 时）
+                # Whole book: Source Title is usually the book title
                 if not entry.get('title'):
                     entry['title'] = src
                 else:
-                    # 如果 title 已有，可能 Source Title 是出版社或丢失信息，可以放到 publisher 或 note
+                    # If title already exists, Source Title may be publisher or missing info
                     entry.setdefault('publisher', src)
             else:
-                # 其它类型（techreport, phdthesis, misc 等），默认把 Source Title 放到 note（可根据需要调整）
+                # Other types (techreport, phdthesis, misc, etc.)
+                # Default: put Source Title into note (can be adjusted if needed)
                 entry.setdefault('note', src)
 
-        # 其他可选字段
+        # Other optional fields
         if pd.notnull(row.get('Volume')):
             entry['volume'] = str(int(row['Volume']))
         if pd.notnull(row.get('Issue')):
@@ -77,14 +83,14 @@ def xls2bib(file_name: str, sheet_name: Optional[str] = None):
         return entry
 
 
-    # 读取 Excel 文件
+    # Read Excel file
     input_path =  os.path.join(input_dir, f"{file_name}.xls")
     excel_file = pd.ExcelFile(input_path)
     if sheet_name is None:
-        sheet_name = excel_file.sheet_names[0] # type: ignore
+        sheet_name = excel_file.sheet_names[0]  # type: ignore
     df = pd.read_excel(excel_file, sheet_name=sheet_name)
 
-    # Document Type 映射到 BibTeX 类型
+    # Map Document Type to BibTeX entry types
     doc_type_mapping = {
         'Article': 'article',
         'Review': 'article',
@@ -96,37 +102,41 @@ def xls2bib(file_name: str, sheet_name: Optional[str] = None):
         'Note': 'misc'
     }
 
-    # 构建 BibTeX 数据库
+    # Build BibTeX database
     database = BibDatabase()
-    for _, row in df.iterrows(): # type: ignore
+    for _, row in df.iterrows():  # type: ignore
         database.entries.append(row_to_bibtex(row))
 
     output_path = os.path.join(input_dir, f"{file_name}.bib")
-    # 写入文件
+    # Write to file
     with open(output_path, 'w', encoding='utf-8') as bibtex_file:
         bibtexparser.dump(database, bibtex_file)
 
-    print(f"✅ BibTeX 文件已生成：{output_path}")
+    print(f"✅ BibTeX file generated: {output_path}")
 
 
 def merge_bib(bib_file_list: list[str], output_name: str):
     """
-    合并多个 BibTeX 文件，根据标题去重，保留信息最完整的条目（非空字段最多）
-    :param bib_file_list: List[str] 待合并的 .bib 文件路径
-    :param output_file: str 输出的 BibTeX 文件路径
+    Merge multiple BibTeX files, deduplicate entries by title,
+    and keep the most complete entry (with the most non-empty fields).
+
+    - bib_file_list: List[str], paths of .bib files to be merged
+    - output_file: str, output BibTeX file path
     """
 
-    removed_count = 0  # 新增计数器
+    removed_count = 0  # Counter for removed/merged duplicates
 
     def merge_entries(entry_a: dict, entry_b: dict) -> dict:
         """
-        将两个 BibTeX 条目合并，字段取并集。
-        若两者都有该字段，优先选非空的；若都非空，可选长度更长的版本。
+        Merge two BibTeX entries by taking the union of fields.
+        If both entries contain the same field:
+        - Prefer the non-empty value
+        - If both are non-empty and different, keep the longer one
         """
         nonlocal removed_count
-        removed_count += 1  # 每次 merge_entries 被调用，说明 entry_b 被判定为重复
+        removed_count += 1  # Each call indicates entry_b is considered a duplicate
 
-        merged = dict(entry_a)  # 先复制第一个
+        merged = dict(entry_a)
         for k, v in entry_b.items():
             v = str(v).strip()
             if not v:
@@ -134,19 +144,19 @@ def merge_bib(bib_file_list: list[str], output_name: str):
             if k not in merged or not merged[k].strip():
                 merged[k] = v
             else:
-                # 如果都有值，但不同，可以选更长的那个或保留原值
+                # If both have values and they differ, keep the longer one
                 if merged[k].strip() != v and len(v) > len(merged[k]):
                     merged[k] = v
         return merged
 
     def normalize_title(title: str) -> str:
-        """统一 title 格式，去除特殊引号、空格、大小写"""
+        """Normalize title format: remove special quotes, spaces, and case differences."""
         if not title:
             return ''
         t = title.lower().strip()
         t = unicodedata.normalize('NFKC', t)
         t = t.replace("’", "'").replace("‘", "'").replace("“", '"').replace("”", '"')
-        return ''.join(ch for ch in t if ch.isalnum() or ch.isspace())  # 去掉标点
+        return ''.join(ch for ch in t if ch.isalnum() or ch.isspace())  # remove punctuation
 
     title_dict = {}
     no_title_entries = []
@@ -168,24 +178,22 @@ def merge_bib(bib_file_list: list[str], output_name: str):
             else:
                 title_dict[norm_title] = entry
 
-    merged = BibDatabase()
-    merged.entries = list(title_dict.values()) + no_title_entries
-
     merged_database = BibDatabase()
     merged_database.entries = list(title_dict.values()) + no_title_entries
 
-    # 写入输出文件
+    # Write output file
     output_path = os.path.join(output_dir, f"{output_name}.bib")
     with open(output_path, 'w', encoding='utf-8') as f:
         bibtexparser.dump(merged_database, f)
 
     total_entries = len(merged_database.entries)
-    print(f"✅ 合并完成，总条目数：{total_entries}")
-    print(f"📄 移除/合并重复条目数：{removed_count}")
+    print(f"Merge completed. Total entries: {total_entries}")
+    print(f"Removed/merged duplicate entries: {removed_count}")
  
 def bib2csv(output_name: str):
     """
-    将 BibTeX 文件导入到 Excel，只保留指定列，并增加一列保存原始 BibTeX
+    Import a BibTeX file into Excel format,
+    keep only selected columns, and add a column containing the raw BibTeX entry.
     """
     output_path = os.path.join(output_dir, f"{output_name}.bib")
     with open(output_path, 'r', encoding='utf-8') as f:
@@ -193,7 +201,7 @@ def bib2csv(output_name: str):
 
     rows = []
     for entry in bib_database.entries:
-        # 手动重建 BibTeX 字符串
+        # Manually reconstruct BibTeX string
         bibtex_str = f"@{entry.get('ENTRYTYPE', 'misc')}{{{entry.get('ID', '')},\n"
         for key, value in entry.items():
             if key not in ['ENTRYTYPE', 'ID']:
@@ -209,14 +217,14 @@ def bib2csv(output_name: str):
             'Link': entry.get('url', ''),
             'Publisher': entry.get('publisher', ''),
             'Abstract': entry.get('abstract', ''),
-            'BibTeX': bibtex_str  # 新增这一列
+            'BibTeX': bibtex_str  # newly added column
         })
 
     df = pd.DataFrame(rows)
     csv_file_path = os.path.join(output_dir, f"{output_name}.csv")
     df.to_csv(csv_file_path, index=False, encoding='utf-8-sig')
 
-    print(f"✅ CSV 文件已生成：{csv_file_path}")
+    print(f"CSV file generated: {csv_file_path}")
 
 def preprocess_all(bib_file_name: str, output_name: str):
     xls2bib(bib_file_name)

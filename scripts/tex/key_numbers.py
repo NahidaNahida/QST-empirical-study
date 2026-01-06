@@ -1,3 +1,9 @@
+"""
+Docstring for scripts.tex.key_numbers
+Generate key number LaTeX commands for the study.
+"""
+
+
 import os
 from src import read_csv, read_config_json, tex_command_template, tex_file_generation
 import pandas as pd

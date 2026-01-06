@@ -6,7 +6,7 @@ from src import (
     read_csv, read_config_json,
     pie_chart, horizontal_histogram, horizontal_bar_chart,
     vertical_tables,
-    parse_column, data_preprocess, paperids2citation, get_min_max, dict2upsetform, number2camelform
+    parse_column, data_preprocess, number2camelform
 )
 
  
@@ -197,7 +197,7 @@ def varied_and_adaptive_shots(
 
     # Reformulate the data form
     for shot_config_list in final_config.values():
-        # ✅ 按 "paper_number" 从大到小排序
+        # Sort by the number of papers
         shot_config_list.sort(
             key=lambda x: len(x.get("paper_ids", [])),
             reverse=True

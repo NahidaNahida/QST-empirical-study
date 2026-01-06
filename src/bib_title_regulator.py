@@ -1,3 +1,8 @@
+"""
+Docstring for src.bib_title_regulator
+Utilities for normalizing titles in BibTeX entries.
+"""
+
 import re
 import bibtexparser
 from bibtexparser.bwriter import BibTexWriter

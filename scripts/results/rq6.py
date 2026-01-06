@@ -31,18 +31,22 @@ warnings.filterwarnings("ignore")
 
 def top_k_with_ties(sorted_list, k):
     """
-    sorted_list: 已按目标值降序排序的列表，如 [(metric, [paper_ids]), ...]
-    k: 希望至少保留的前 k 项，但会继续保留并列的项
+    Inputs:
 
-    返回：保留并列后的列表
+    - sorted_list: A list sorted in descending order of the target value, 
+      such as `[(metric, [paper_ids]), ...]`
+    - k: The number of items you want to keep at least the top `k`, but 
+      will continue to retain items that are tied.
+    
+    Returns: A list of items that are tied.
     """
     if not isinstance(k, int) or k <= 0 or len(sorted_list) <= k:
         return sorted_list
 
-    # 第 k 个元素的 count
+    # Find the k-th count
     kth_count = len(sorted_list[k - 1][1])
 
-    # 保留所有 count >= kth_count
+    # Return all items with count >= k-th count
     return [
         item for item in sorted_list
         if len(item[1]) >= kth_count
@@ -162,18 +166,17 @@ def metrics_table(
         new_metric_dict = {}
         for metric_type, meta_metric_data in metric_dict.items():
 
-            # 排序：根据出现次数（list 长度）降序
+            # Sort by the number of primary studies in descending order
             sorted_meta_metric_data = sorted(
                 meta_metric_data.items(),
                 key=lambda x: len(x[1]),
                 reverse=True
             )
 
-            # ====== 新增功能：保留 top-k ======
+            # Retain the top-k with ties
             top_k = TEMP_CONFIG.get("if_top_k", None)
             if isinstance(top_k, int) and top_k > 0:
                 sorted_meta_metric_data = top_k_with_ties(sorted_meta_metric_data, top_k)
-            # =================================
 
             final_data_list = []
             for metric_name, paper_id_list in sorted_meta_metric_data:
@@ -189,8 +192,6 @@ def metrics_table(
         metric_dict.clear()
         metric_dict.update(new_metric_dict)
         
-
-
     vertical_tables(
         final_metric_names,
         TEMP_CONFIG["headers"],
@@ -203,8 +204,7 @@ def metrics_table(
 if __name__ == "__main__":
     PROCEDURE = [
         ("fig", whether_reporting_metrics),
-        ("tab", metrics_table),
-        # ("tab", input_type_name)
+        ("tab", metrics_table)
     ]
 
     df = read_csv(FILE_DIR, FILE_NAME)

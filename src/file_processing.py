@@ -1,8 +1,12 @@
+"""
+Docstring for src.file_processing
+Utilities for file reading and writing operations.
+"""
+
+
 import os
 import pandas as pd
 import json
-from typing import Optional
-from pathlib import Path
 from num2words import num2words
 
 def read_csv(

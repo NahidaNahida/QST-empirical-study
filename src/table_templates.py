@@ -1,4 +1,7 @@
-"Templates for generating Latex Table"
+"""
+Docstring for src.table_templates
+Templates for various types of tables used in data presentation.
+"""
 
 import os, re
 
@@ -157,7 +160,7 @@ def vertical_tables(
 def vertical_grouped_table(
     data: dict,
     save_path: str,
-    tab_space: str = "c|c",  # 一行显示多少列，通常根据子字典长度
+    tab_space: str = "c|c",  # Number of columns per row, usually depends on sub-dictionary length
     addition_line: str | None = None
 ):
     """
@@ -175,23 +178,23 @@ def vertical_grouped_table(
     for idx, key in enumerate(keys):
         val_list = data[key]
 
-        # 顶层 key 作为组标题
+        # Top-level key as group header
         content_lines += f"""
     \\multicolumn{{{num_columns}}}{{l}}{{\\textbf{{{key}:}}}} \\\\
     """
 
-        # 子元素内容
+        # Sub-item content
         if isinstance(val_list, list):
             for sub_dict in val_list:
                 content_lines += " & ".join(str(v) for v in sub_dict.values()) + " \\\\\n    "
         elif isinstance(val_list, dict):
             content_lines += " & ".join(str(v) for v in val_list.values()) + " \\\\\n    "
 
-        # ✅ 如果不是最后一个 key，再加分割线
+        # Add separator line if not the last key, or if it is the last key and addition_line is provided
         if idx < n_keys - 1 or idx == n_keys - 1 and addition_line is not None:
             content_lines += f"\\cmidrule(lr){{1-{num_columns}}}\n"
 
-    # 可选额外行
+    # Optional additional line
     if addition_line is None:
         addition_line = ""
     
@@ -213,7 +216,7 @@ def two_dimensional_table(
     data_dict: dict[str, dict[str, str]],
     save_path: str
 ) -> None:
-    # 行、列（按字典键排序，也可改成 list(data_dict.keys()) 保持原顺序）
+    # Rows and columns (sorted by dictionary keys; can be changed to list(...) to preserve original order)
     rows = sorted(data_dict.keys())
 
     col_set = set()
@@ -221,29 +224,29 @@ def two_dimensional_table(
         col_set.update(data_dict[r].keys())
     cols = sorted(col_set)
 
-    # 对齐方式：第一列 l，其他列 c
+    # Column alignment: first column c, remaining columns c
     tab_space = "c|" + "c" * len(cols)
 
-    # 表头（第一行）
-    headers_str = " & ".join([""] + cols)  # 第一列是 row 名，所以列标题第一格空
+    # Table header (first row)
+    headers_str = " & ".join([""] + cols)  # First cell is empty because it corresponds to row names
 
     # cmidrule
-    # 若 C 列为列名数量，则为：\cmidrule(r){2-<C+1>}
+    # If there are C column headers, use: \cmidrule(r){2-<C+1>}
     cmidrule_header = rf"\cmidrule(r){{2-{len(cols)+1}}}"
 
-    # 数据内容
+    # Data content
     lines = []
     for r in rows:
-        row_vals = [r]  # 第一列是行名
+        row_vals = [r]  # First column is the row name
         for c in cols:
             row_vals.append(data_dict[r].get(c, ""))
         lines.append(" & ".join(row_vals) + "\\\\")
     data_content = "\n    ".join(lines)
 
-    # 若需要额外加一行，可修改此处
-    addition_line = ""  # 默认为空
+    # Add an extra line here if needed
+    addition_line = ""  # Empty by default
 
-    # 整体模板
+    # Full LaTeX template
     latex_code = f"""
 \\begin{{tabular}}{{{tab_space}}}
     \\toprule[1pt]
@@ -260,4 +263,3 @@ def two_dimensional_table(
         f.write(latex_code)
     
     print(f"LaTeX code saved to {save_path}")
-

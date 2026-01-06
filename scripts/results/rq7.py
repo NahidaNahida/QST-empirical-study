@@ -4,9 +4,9 @@ Code for the data analysis of RQ7 Contrastive Analysis
 
 from src import (
     read_csv, read_config_json,
-    line_chart_frequencies, pie_chart, horizontal_bar_chart, vertical_bar_chart, data_clean,
+    horizontal_bar_chart, vertical_bar_chart,
     vertical_tables,
-    parse_column, data_preprocess, paperids2citation, get_min_max, dict2upsetform, number2camelform
+    parse_column, data_preprocess, number2camelform
 )
 
  
@@ -195,20 +195,18 @@ def baseline_names(
             else:
                 name_list.append({single_baseline: [paper_tag]})
 
-    # --------------------------------------------------------------------------
     # Reformulate & sort baselines
-    # --------------------------------------------------------------------------
     for se_problem, baseline_list in req_data.items():
         for baseline_dict in baseline_list:
-            # 1. Remove "Ablation"
+            # Remove "Ablation"
             baseline_dict.pop(TEMP_CONFIG["skip_category"], None)
 
-            # 2. Remove empty entries
+            # Remove empty entries
             empty_keys = [k for k, v in baseline_dict.items() if not v]
             for k in empty_keys:
                 del baseline_dict[k]
 
-            # 3. Sort & format (use list() to avoid RuntimeError)
+            # Sort & format (use list() to avoid RuntimeError)
             new_entries = {}
             for baseline_category, baseline_name_list in list(baseline_dict.items()):
                 if not isinstance(baseline_name_list, list):
@@ -236,8 +234,9 @@ def baseline_names(
 
  
         if TEMP_CONFIG["if_sort"]:
-            # 对同一 se_problem 下的 category 列表按该 category 的 baseline 总数降序排序，
-            # 以便 baselines 数量大的 category 排在前面。
+            # Sort the category list under the same se_problem in descending order by the total 
+            # number of baselines of that category, so that the categories with a large number 
+            # of baselines can be ranked at the top.
             baseline_list.sort(
                 key=lambda d: sum(
                     len(v) for k, v in d.items()
@@ -246,7 +245,8 @@ def baseline_names(
                 reverse=True
             )
         else:
-            # 按 BASELINE_ORDER 顺序排序，未出现的元素排在后面，保持原相对顺序
+            # Sort in the order of BASELINE_ORDER. Elements that do not appear are placed at the 
+            # end, maintaining the original relative order
             baseline_order_index = {name: i for i, name in enumerate(BASELINE_ORDER)}
             
             baseline_list.sort(
@@ -260,41 +260,34 @@ def baseline_names(
         req_data[se_problem] = [d for d in baseline_list if d]
 
 
-    # --------------------------------------------------------------------------
     # Transform to LaTeX table-friendly format + Build summary_dict
-    # --------------------------------------------------------------------------
     summary_dict = {}
 
     for se_problem, baseline_list in req_data.items():
         new_list = []
-        category_count_map = {}  # 记录各类 baseline 频数
+        category_count_map = {}  # Record the count of each category
 
         for baseline_dict in baseline_list:
             for category, baseline in baseline_dict.items():
                 if category.endswith("_formatted"):  # only include formatted entries
                     clean_category = category.replace("_formatted", "")
 
-                    # baseline 为字符串，因此需要得到原 baseline 个数
-                    # baseline_dict 内部的同名非-formatted key是列表，长度就是数量
                     raw_list = baseline_dict.get(clean_category, [])
                     count = len(raw_list)
 
-                    # 记录计数
+                    # Record count
                     if count > 0:
                         category_count_map[clean_category] = count
 
-                    # 保存给 req_data 用（LaTeX）
                     new_list.append({
                         "category": clean_category,
                         "baseline": baseline
                     })
 
-        # 替换回 req_data
+        # Replace back to req_data
         req_data[se_problem] = new_list
 
-        # -------------------------
         # Build summary entry
-        # -------------------------
         total_count = sum(category_count_map.values())
         category_parts = [
             f"{cata} ({num})" for cata, num in category_count_map.items() if num > 0
@@ -305,9 +298,8 @@ def baseline_names(
     additional_line = f"\\textbf{{Number of deduplicated baselines:}} \\newline\n    {additional_line}"
     additional_line = f"\\multicolumn{{{len(TEMP_CONFIG['headers'])}}}{{p{{\\columnwidth}}}}{{{additional_line}}}\\\\"
     additional_line = f"\\cmidrule(lr){{1-{len(TEMP_CONFIG['headers'])}}}\n{additional_line}"
-    # --------------------------------------------------------------------------
+
     # Generate LaTeX table
-    # --------------------------------------------------------------------------
     vertical_tables(
         req_data,
         TEMP_CONFIG["headers"],

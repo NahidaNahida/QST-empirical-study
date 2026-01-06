@@ -1,5 +1,5 @@
 """
-Code for the data analysis of RQ5 Test Oracles
+Code for the data analysis of RQ5 Output Analysis
 """
 
 from src import (
@@ -123,18 +123,18 @@ def specification(
         for meta_dict in oracle_data_list:
             match = re.search(r"\{(.*)\}", meta_dict["paper_ids"])
             if match:
-                content = match.group(1)  # \PaperOneHundredAndFourteen, \PaperOneHundredAndSeventeen
-                # 按逗号拆分，并去掉多余空格
+                content = match.group(1)  
+                # Split by commas and remove any extra Spaces
                 items = [item.strip() for item in content.split(",")]
             paper_id_collection.extend(items)
         temp_num = len(set(paper_id_collection))
-        add_list.append((oracle_type, temp_num))  # 临时存成元组 (类型, 数量)
+        add_list.append((oracle_type, temp_num))  # Temporary tuple (type, count)
 
 
-    # 按 temp_num 从大到小排序
+    # Sort by temp_num in descending order
     add_list.sort(key=lambda x: x[1], reverse=True)
 
-    # 再格式化成字符串
+    # Format into strings
     add_list = [f"{oracle_type} ({temp_num})" for oracle_type, temp_num in add_list]
     
     add_line = f"""\\cmidrule(lr){{1-4}} \n    
@@ -183,16 +183,16 @@ def oracle(
             match = re.search(r"\{(.*)\}", meta_dict["paper_ids"])
             if match:
                 content = match.group(1)  # \PaperOneHundredAndFourteen, \PaperOneHundredAndSeventeen
-                # 按逗号拆分，并去掉多余空格
+                # Split by commas and remove any extra Spaces
                 items = [item.strip() for item in content.split(",")]
             paper_id_collection.extend(items)
         temp_num = len(set(paper_id_collection))
-        add_list.append((oracle_type, temp_num))  # 临时存成元组 (类型, 数量)
+        add_list.append((oracle_type, temp_num))  # Temporary tuple (type, count)
 
-    # 按 temp_num 从大到小排序
+    # Sort by temp_num in descending order
     add_list.sort(key=lambda x: x[1], reverse=True)
 
-    # 再格式化成字符串
+    # Format into strings
     add_list = [f"{oracle_type} ({temp_num})" for oracle_type, temp_num in add_list]
     
     add_line = f"""\\cmidrule(lr){{1-4}} \n    

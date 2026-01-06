@@ -15,8 +15,7 @@ from scripts import (
     FILE_DIR, 
     CONFIG_DATA_NAME, 
     CONFIG_FIGURE_NAME,
-    FIG_SAVING_DIR,
-    TAB_SAVING_DIR
+    FIG_SAVING_DIR
 )
 
 import pandas as pd
@@ -128,8 +127,8 @@ def circuit_complexity(
     data_size = len(parsed_data_dict[req_terms[0]])
     for data_idx in range(data_size):
         # Calculate the maxinum and minimum
-        # For "Qubit" and "Depth", the metadata are only lists.
-        # For "Gate", we merely consider the total numbers
+        # For "Width" and "Depth", the metadata are only lists.
+        # For "Size", we merely consider the total numbers
         for req_term in req_terms:
             paper_data = parsed_data_dict[req_term][data_idx]
             

@@ -6,7 +6,7 @@ from src import (
     read_csv, read_config_json,
     horizontal_stacked_bar_chart, upset_plot,
     vertical_tables,
-    parse_column, data_preprocess, paperids2citation, get_min_max, dict2upsetform, number2camelform
+    parse_column, data_preprocess, dict2upsetform, number2camelform
 )
 
  
@@ -219,8 +219,6 @@ def input_type_name(
         TEMP_CONFIG["tab_space"],
         if_cmidrule=True
     )
-
-
 
 if __name__ == "__main__":
     PROCEDURE = [

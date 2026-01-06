@@ -1,5 +1,5 @@
 """
-Code for the data analysis of RQ2 Buggy Objects
+Code for the data analysis of RQ2 Buggy Variants
 """
 
 from src import (
@@ -192,10 +192,10 @@ def sources_for_variants(
         "headers": ["Approaches", "Sources", "Primary studies", "\\#"],
         "cite_key": "", # "studied",
         "tab_space": (
-            r">{\centering\arraybackslash}p{0.3\columnwidth} "
-            r">{\centering\arraybackslash}p{0.3\columnwidth} "
-            r"p{0.32\columnwidth} "
-            r">{\centering\arraybackslash}p{0.05\columnwidth}"
+            ">{\\centering\\arraybackslash}p{0.3\\columnwidth}\n"
+            ">{\\centering\\arraybackslash}p{0.3\\columnwidth}\n"
+            "p{0.32\\columnwidth}\n"
+            ">{\\centering\\arraybackslash}p{0.05\\columnwidth}"
         )
     }
  

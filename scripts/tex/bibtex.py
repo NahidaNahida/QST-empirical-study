@@ -1,3 +1,16 @@
+"""
+This module provides utilities for generating normalized BibTeX files and
+corresponding LaTeX citation commands from annotated CSV data.
+
+Main functionalities include:
+- Normalizing BibTeX keys following a Google Scholar–like convention.
+- Filtering and exporting BibTeX entries into a consolidated .bib file.
+- Generating LaTeX citation commands that map internal paper IDs to BibTeX keys.
+
+The module relies on project-specific helper functions for CSV/config reading,
+BibTeX normalization, and LaTeX file generation.
+"""
+
 import os
 from src import read_csv, read_config_json, tex_command_template, tex_file_generation, normalize_bibtex_str, number2camelform
 import bibtexparser
@@ -39,7 +52,7 @@ def normalize_bib_key(entry: dict[str, str]) -> str:
     title = entry.get("title", "")
     title_first = re.sub(r"[^a-zA-Z]", "", title.split()[0]) if title else "Untitled"
 
-    # Splicing the new key
+    # Splice the new key
     new_key = f"{last_name}{year}{title_first}".lower()
     return new_key
 
@@ -63,76 +76,77 @@ def bib_file(
     file_name = configs["final_list_name"]
     header = configs["headers"]["bibtex"]
 
-    # Readin the data
+    # Read in the data
     df = read_csv(data_dir, file_name)
     bibtex_list = df[header].tolist()
 
     # Output to the saving path
-    os.makedirs(saving_dir, exist_ok=True) # Check the existence of the target directory
+    os.makedirs(saving_dir, exist_ok=True)  # Check the existence of the target directory
     saving_path = os.path.join(saving_dir, saving_name)
     with open(saving_path, "w", encoding="utf-8") as f:
         for bib_entry in bibtex_list:
             bib_db = bibtexparser.loads(bib_entry)
             entry = bib_db.entries[0]
 
-            # 获取标准化的 key
+            # Get the normalized BibTeX key
             new_key = normalize_bib_key(entry)
 
-            # 替换旧 key
+            # Replace the old key
             entry["ID"] = new_key
 
-            # Retain fields as needed
+            # Retain required fields only
             filtered_entry = {k: v for k, v in entry.items() if k in req_fields}
-            filtered_entry["ID"] = entry["ID"]  # 保留 key
+            filtered_entry["ID"] = entry["ID"]  # Preserve the key
             filtered_entry["ENTRYTYPE"] = entry.get("ENTRYTYPE", "article")
 
-            # Convert to bibtex format
+            # Convert to BibTeX format
             new_db = BibDatabase()
             new_db.entries = [filtered_entry]
             writer = BibTexWriter()
             writer.indent = "    "
-            writer.order_entries_by = None # type: ignore
+            writer.order_entries_by = None  # type: ignore
 
             bib_str = writer.write(new_db)
 
-
-            # Normalize the bib in terms of capital and lower-case letter
+            # Normalize the BibTeX string in terms of capitalization
             normalized_bib_str = normalize_bibtex_str(bib_str)
 
             f.write(normalized_bib_str.strip() + "\n\n")
 
     print(f"There are {len(bibtex_list)} pieces of literature saved at {saving_path}.")
 
+
 def id_commands(configs: dict, saving_dir: str, saving_name: str="paper_ids.tex") -> None:
     file_name = configs["final_list_name"]
     bib_header = configs["headers"]["bibtex"]
     id_header = configs["headers"]["primary_study_id"]
 
-    # Readin the data
+    # Read in the data
     df = read_csv(data_dir, file_name)
     bib_list = df[bib_header].tolist()
     id_list = df[id_header]
 
-    # Generate tex commands
+    # Generate LaTeX commands
     tex_commands = []
     for idx, bib in zip(id_list, bib_list):
-        # Transfer the number to corresponding English word
+        # Convert the numeric ID to its corresponding English camel-case word
         camel_case_word = number2camelform(int(idx))
  
-        # Parse bib entries
+        # Parse BibTeX entry
         bib_db = bibtexparser.loads(bib)
         entry = bib_db.entries[0]
 
-        # Generate normalized keys with the same style to Google Scholar
+        # Generate normalized keys using the same style as Google Scholar
         normalized_key = normalize_bib_key(entry)
 
-        # Generate Latex commends
+        # Generate LaTeX commands
         tex_commands.append(
             tex_command_template(f"Paper{camel_case_word}", normalized_key, mode="citation")
         )
 
     tex_file_generation(saving_dir, saving_name, tex_commands)
     print(f"Commands for paper IDs are created.")
+
 
 if __name__ == "__main__":
     # =================================================
