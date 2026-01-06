@@ -1,6 +1,11 @@
 # QST-empirical-study
 This repository includes the data, documentation, and code for our article entitled *A Methodological Analysis of Empirical Studies in Quantum Software Testing*. This article systematically conducts a methodological analysis of empirical studies in quantum software testing based on a pool of 59 primary studies.
 
+Long-term archive in Zenodo:
+
++ Badge: [![DOI](https://zenodo.org/badge/1076040404.svg)](https://doi.org/10.5281/zenodo.18159892)
++ Link: [https://doi.org/10.5281/zenodo.18159892](https://doi.org/10.5281/zenodo.18159892)
+
 ## Data and Documentation
 
 ### Raw Data for Systematic Literature Review
