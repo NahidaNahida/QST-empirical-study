@@ -48,7 +48,7 @@ Now, it is ready to run our code.
 
 ### Implementation
 
-We provide a `.bat` file to reproduce the results of the bibliometric analysis and the ten research questions at one breath, by running the following command:
+We provide a `.bat` file to reproduce the results of the bibliometric analysis and the ten research questions within one batch, by running the following command:
 
 ```bat
 ./run.bat
