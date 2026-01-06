@@ -23,7 +23,7 @@ We provide the source code to generate the figures and tables mentioned above.
 1. Use the following command to clone this repository.
 
    ```bat
-   git clone https://github.com/NahidaNahida/mstcs.git
+   git clone https://github.com/NahidaNahida/QST-empirical-study.git
    ```
 
 2. Create a virtual Conda environment.
