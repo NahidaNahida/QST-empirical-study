@@ -99,7 +99,7 @@ def specification(
     saving_name: str = "rq5_program_specification.tex",     
 ) -> None:
     TEMP_CONFIG = {
-        "headers": ["Program specifications", "Types for output analysis", "Primary studies", "\#"],
+        "headers": ["Program specifications", "Types for output analysis", "Primary studies", "\\#"],
         "tab_space": (
             ">{\\centering\\arraybackslash}p{0.25\\columnwidth}\n"  
             "p{0.3\\columnwidth}\n"
@@ -159,7 +159,7 @@ def oracle(
     saving_name: str = "rq5_oracle_type.tex",     
 ) -> None:
     TEMP_CONFIG = {
-        "headers": ["Test oracles", "Testing protocols", "Primary studies", "\#"],
+        "headers": ["Test oracles", "Evaluation mechanisms", "Primary studies", "\\#"],
         "tab_space": (
             ">{\\centering\\arraybackslash}p{0.15\\columnwidth}\n"
             "p{0.4\\columnwidth}\n"

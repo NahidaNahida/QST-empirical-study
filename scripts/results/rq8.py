@@ -231,7 +231,7 @@ def number_of_repetitions(
 
     # Instant configuration
     TEMP_CONFIG = {
-        "figsize": (6, 2),
+        "figsize": (6, 2.5),
         "bar_height": 0.25,
         "color": "#FFFCCEF8",
         "interval": 50,

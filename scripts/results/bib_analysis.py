@@ -176,7 +176,7 @@ def se_problem(
     # Extract target data for analysis
     req_data, saving_path = data_preprocess(
         df, 
-        "SE_problem", 
+        "bib_SE_problem", 
         config_data, 
         ROOT_DIR, 
         FIG_SAVING_DIR,

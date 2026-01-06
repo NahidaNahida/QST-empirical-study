@@ -6,46 +6,46 @@
     "headers": {
         "initial_filtering": "Basic-Testing4Quantum?",
         "second_filtering": "Basic-QSTAndEmpirical?",
-        "SE_problem": "Basic-PaperScope",
         "root_paper_id": "RootPaperID",
         "primary_study_id": "PaperID",
         "bibtex": "BibTeX",
 
         "bib_year": "Year",
-        "bib_venue_name": "Basic-UnifiedVenue",
+        "bib_venue_name": "Basic-VenueName",
         "bib_venue_type": "Basic-VenueType",
+        "bib_SE_problem": "Basic-SEProblem",
 
-        "rq1_program_names": "Programs-ProgramName",
-        "rq1_object_numbers": "Programs-#OfAlgorithms",
+        "rq1_program_names": "RQ1-AlgorithmName",
+        "rq1_object_numbers": "RQ1-#OfPrograms",
 
-        "rq2_generation_approaches": "BuggyObjects-FaultGeneration",
-        "rq2_buggy_numbers": "BuggyObjects-#OfBuggyVariants",
+        "rq2_generation_approaches": "RQ2-BuggyVariantGeneration",
+        "rq2_buggy_numbers": "RQ2-#OfBuggyVariants",
 
-        "rq3_whether_scalability": "Scalability-InvolveScalability?",
-        "rq3_qubits": "Scalability-#OfQubits",	
-        "rq3_gates": "Scalability-#OfGates",
-        "rq3_depth": "Scalability-CircuitDepth",
+        "rq3_whether_scalability": "RQ3-InvolveScalability?",
+        "rq3_qubits": "RQ3-CircuitWidth",	
+        "rq3_gates": "RQ3-CircuitSize",
+        "rq3_depth": "RQ3-CircuitDepth",
 
-        "rq4_input_types": "TestCases-InputType",
-        "rq4_whether_counts": "TestCases-ReportTestCounts?",
+        "rq4_input_types": "RQ4-TestInputType",
+        "rq4_whether_counts": "RQ4-ReportTestSuiteSize?",
 
-        "rq5_outputs": "TestOracle-ProgramSpecification",
-        "rq5_oracles": "TestOracle-OracleName",
+        "rq5_outputs": "RQ5-ProgramSpecification",
+        "rq5_oracles": "RQ5-TestOracleName",
 
-        "rq6_effectiveness": "Metrics-Effectiveness",
-        "rq6_cost": "Metrics-Cost",
+        "rq6_effectiveness": "RQ6-EffectivenessMetric",
+        "rq6_cost": "RQ6-CostMetric",
 
-        "rq7_baseline_names": "AdoptedBaseline-BaselineNames",
-        "rq7_baseline_motivation": "AdoptedBaseline-InclusionMethod",
-        "rq7_baseline_comparison": "BaselineComparison-Method",
+        "rq7_baseline_names": "RQ7-BaselineName",
+        "rq7_baseline_motivation": "RQ7-BaselineCategory",
+        "rq7_baseline_comparison": "RQ7-StatisticalTest",
 
-        "rq8_shots": "StatisticalRepeats-Shots",
-        "rq8_repetitions": "StatisticalRepeats-IndependentRepeats",
+        "rq8_shots": "RQ8-Shots",
+        "rq8_repetitions": "RQ8-ExperimentalRepetitions",
 
-        "rq9_backend_type": "Backends-BackendType",
-        "rq9_backend_output": "Backends-BackendOutput",
+        "rq9_backend_type": "RQ9-BackendType",
+        "rq9_backend_output": "RQ9-CategoryOfIdealSimulator",
 
-        "rq10_program_sources": "Toolings-AvailableProgramSource",
-        "rq10_artifacts": "Toolings-ArtifactAvailableLink"
+        "rq10_program_sources": "RQ10-AvailableProgramSource",
+        "rq10_artifacts": "RQ10-AvailableArtifactLink"
     }
 }
