@@ -1,7 +1,7 @@
 # QST-empirical-study
 This repository includes the data, documentation, and code for our article entitled *A Methodological Analysis of Empirical Studies in Quantum Software Testing*. This article systematically conducts a methodological analysis of empirical studies in quantum software testing based on a pool of 59 primary studies.
 
-Long-term archive in Zenodo: 
+Besides, we provide a long-term archive in Zenodo: 
 [![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.18159892-blue)](https://doi.org/10.5281/zenodo.18159892)
 
 ## Data and Documentation
@@ -51,10 +51,10 @@ Now, it is ready to run our code.
 
 ### Implementation
 
-We provide a `.bat` file to reproduce the results of the bibliometric analysis and the ten research questions within one batch, by running the following command:
+We provide the [`run.bat`](./run.bat) file to reproduce the results of the bibliometric analysis and the ten research questions within one batch. Make sure the required source `final_list.csv` is located at the directory `./doc/annotated_data`, then run the following command:
 
 ```bat
 ./run.bat
 ```
 
-The corresponding source codes are offered in [`results`](./scripts/results).
+The corresponding results will be generated at the folders in [`build`](`./build`). All the source codes for data generation are offered in [`results`](./scripts/results).
